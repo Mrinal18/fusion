@@ -1,0 +1,21 @@
+@startuml
+class Dataset {
+	
+}
+
+class Model {
+	
+}
+
+class Loss {
+	
+}
+
+class Task {
+	
+}
+
+class Architectures {
+	
+}
+@enduml
