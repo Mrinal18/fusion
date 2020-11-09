@@ -1,0 +1,123 @@
+@startuml
+
+interface BaseObjectiveInterface {}
+
+abstract BaseObjective {
+	#loss 
+}
+
+BaseObjectiveInterface <|-- BaseObjective
+BaseObjectiveInterface o-- BaseLossInterface
+
+interface BaseLossInterface {
+	{abstract} +__init__()
+	{abstract} +forward(inputs, targets)
+}
+
+abstract AbstractBaseLoss
+
+BaseLossInterface <|-- AbstractBaseLoss
+
+class MutualInformationLoss {
+	#estimator
+}
+AbstractBaseLoss <|-- MutualInformationLoss 
+
+class Local {}
+class CrossLocal {}
+class CrossSpatial {}
+class Similarity {}
+
+MutualInformationLoss <|-- Local
+MutualInformationLoss <|-- CrossLocal
+MutualInformationLoss <|-- CrossSpatial
+MutualInformationLoss <|-- Similarity
+
+
+
+class MMVAE {}
+AbstractBaseLoss <|-- MMVAE
+
+class CCA {
+	
+}
+AbstractBaseLoss <|-- CCA 
+
+class Reconstruction {
+	
+}
+AbstractBaseLoss <|-- Reconstruction 
+
+class Supervised {}
+AbstractBaseLoss <|-- Supervised
+
+interface BaseMutualInformationEstimatorInterface {
+	#critic
+	+score(x, y)
+}
+
+abstract AbstractMutualInformationEstimator {}
+
+class FenchelDualLoss
+class InfoNoiseContrastiveEstimation
+class DonskerVaradganLoss
+class NguyenWainwrightJordan
+
+BaseMutualInformationEstimatorInterface <|-- AbstractMutualInformationEstimator
+AbstractMutualInformationEstimator <|-- FenchelDualLoss
+AbstractMutualInformationEstimator <|-- NguyenWainwrightJordan
+AbstractMutualInformationEstimator <|-- DonskerVaradganLoss
+AbstractMutualInformationEstimator <|-- InfoNoiseContrastiveEstimation
+
+interface BasePenaltyInterface {
+}
+
+abstract AbstractScorePenalty {
+	+penalty(scores)
+}
+
+class L2ScorePenalty {
+}
+
+BasePenaltyInterface <|-- AbstractScorePenalty 
+AbstractScorePenalty <|-- L2ScorePenalty
+
+abstract AbstractGradientPenalty {
+	#_get_gradient(input, output)
+	+penalty(module, input)
+}
+
+class MeschederGradientPenalty {
+}
+
+BasePenaltyInterface <|-- AbstractGradientPenalty
+AbstractGradientPenalty <|-- MeschederGradientPenalty
+
+
+interface BaseCriticInterface {
+	#normalization
+	#temprerature
+	#score_clipping
+	#score_penalty
+}
+
+abstract AbstractBaseCritic {}
+
+class ConcatenatedCritic
+class SeparableCritic
+class CosineSimilarityCritic
+class BillinearCritic
+class MultiplicativeCritic
+
+BaseCriticInterface <|-- AbstractBaseCritic
+AbstractBaseCritic <|-- ConcatenatedCritic
+AbstractBaseCritic <|-- SeparableCritic
+SeparableCritic <|-- CosineSimilarityCritic
+AbstractBaseCritic <|-- BillinearCritic
+AbstractBaseCritic <|-- MultiplicativeCritic
+
+MutualInformationLoss o-- BaseMutualInformationEstimatorInterface
+BaseMutualInformationEstimatorInterface o-- BaseCriticInterface
+BaseCriticInterface o-- BasePenaltyInterface
+
+@enduml

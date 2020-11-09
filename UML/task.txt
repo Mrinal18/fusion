@@ -1,0 +1,21 @@
+@startuml
+
+interface BaseTaskInterface {
+	{abstract} +run()
+}
+
+abstract AbstractBaseTask
+
+BaseTaskInterface <|-- AbstractBaseTask
+
+class Pretraining
+class LinearEvaluation
+class LogRegEvaluation
+class Saliency
+
+AbstractBaseTask <|-- Pretraining
+AbstractBaseTask <|-- LinearEvaluation
+AbstractBaseTask <|-- LogRegEvaluation
+AbstractBaseTask <|-- Saliency
+
+@enduml

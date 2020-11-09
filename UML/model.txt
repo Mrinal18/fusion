@@ -17,9 +17,13 @@ BaseModelInterface <|-- AbstractMultiBaseModel
 class Supervised
 class DIM
 class AE
+class LinearEvaluator
+class FeatureExtractor
 
 AbstractUniBaseModel <|-- Supervised
 AbstractMultiBaseModel <|-- AE
 AbstractMultiBaseModel <|-- DIM
+AbstractUniBaseModel <|-- LinearEvaluator
+AbstractUniBaseModel <|-- FeatureExtractor
 
 @enduml
