@@ -1,0 +1,34 @@
+@startuml
+
+interface BaseArchitectureInterface {
+	{abstract} +__init__()
+	{abstract} +forward(inputs)
+	{abstract} +init_weights()
+}
+
+abstract AbstractBaseArchitecture {
+}
+
+BaseArchitectureInterface <|-- AbstractBaseArchitecture
+
+class BasicLayer {}
+class LinearEmbedding {}
+class ConvolutionalEmbedding {}
+
+AbstractBaseArchitecture <|-- BasicLayer
+AbstractBaseArchitecture <|-- LinearEmbedding
+AbstractBaseArchitecture <|-- ConvolutionalEmbedding
+
+class DcganEncoder {}
+class DcganDecoder {}
+
+class DcganVaeEncoder {}
+class DcganVaeDecoder {}
+
+AbstractBaseArchitecture <|-- DcganEncoder
+AbstractBaseArchitecture <|-- DcganDecoder
+
+DcganEncoder <|-- DcganVaeEncoder
+DcganDecoder <|-- DcganVaeDecoder
+
+@enduml

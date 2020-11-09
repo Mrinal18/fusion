@@ -1,0 +1,32 @@
+@startuml
+
+interface BaseDatasetInterface {
+	#dataloaders
+	#num_classes
+	{abstract} +load()
+	{abstract} +get_all_loaders()
+	{abstract} +get_cv_loaders()
+	{abstract} +get_loader(set_id)
+	{abstract} +num_classes()
+	{abstract} +prepare_transforms(set_id)
+}
+
+abstract AbstractBaseDataset
+
+BaseDatasetInterface <|-- AbstractBaseDataset
+
+class TwoViewMnist {
+}
+
+class MnistSvhn {
+	
+}
+
+class OasisTorchIO {
+	
+}
+
+AbstractBaseDataset <|-- TwoViewMnist
+AbstractBaseDataset <|-- MnistSvhn
+AbstractBaseDataset <|-- OasisTorchIO
+@enduml

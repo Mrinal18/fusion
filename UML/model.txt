@@ -1,0 +1,25 @@
+@startuml
+
+interface BaseModelInterface {
+	{abstract} +__init__()
+	{abstract} +forward(inputs)
+	{abstract} +get_encoder(source_id)
+}
+
+abstract AbstractUniBaseModel
+abstract AbstractMultiBaseModel {
+	{abstract} #source_forward(source_id)
+}
+
+BaseModelInterface <|-- AbstractUniBaseModel
+BaseModelInterface <|-- AbstractMultiBaseModel
+
+class Supervised
+class DIM
+class AE
+
+AbstractUniBaseModel <|-- Supervised
+AbstractMultiBaseModel <|-- AE
+AbstractMultiBaseModel <|-- DIM
+
+@enduml
