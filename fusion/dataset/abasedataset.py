@@ -6,13 +6,13 @@ import zope.interface
 class ABaseDataset:
     @zope.interface.interfacemethod
     def __init__(
-        self, 
+        self,
         dataset_dir,
         fold=0,
-        num_folds=5
+        num_folds=5,
         views=[0],
-        batch_size=2, 
-        shuffle=False, 
+        batch_size=2,
+        shuffle=False,
         drop_last=False,
         num_workers=0
     ):
@@ -44,7 +44,7 @@ class ABaseDataset:
         return {set_id: self._data_loaders[set_id] for set_id in ['train', 'val']}
 
     @zope.interface.interfacemethod
-    def get_loader(set_id):
+    def get_loader(self, set_id):
         """Returns loader with specific set
 
         Args:
@@ -59,7 +59,7 @@ class ABaseDataset:
         return self._num_classes
 
     @zope.interface.interfacemethod
-    def _prepare_transforms(set_id):
+    def _prepare_transforms(self, set_id):
         """Creates set of data transforms for specific set of data.
 
         Args:
