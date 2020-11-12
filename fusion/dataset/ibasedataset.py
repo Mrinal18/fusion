@@ -4,9 +4,11 @@ import zope.interface
 class IBaseDataset(zope.interface.Interface):
 
     num_classes = zope.interface.Attribute(
-        """Number of classes""")
+        """Number of classes"""
+    )
     data_loaders = zope.interface.Attribute(
-        """Dictionary with data loaders""")
+        """Dictionary with data loaders"""
+    )
 
     def load():
         """Loads the dataset
