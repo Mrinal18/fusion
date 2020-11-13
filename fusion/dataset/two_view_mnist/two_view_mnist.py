@@ -2,7 +2,7 @@ from fusion.dataset.abasedataset import ABaseDataset
 from fusion.dataset.two_view_mnist.transforms import TwoViewMnistTransform
 from fusion.dataset.two_view_mnist.transforms import RandomRotationTransform
 from fusion.dataset.two_view_mnist.transforms import UniformNoiseTransform
-from torch.utils.data import DataLoader, data
+from torch.utils.data import DataLoader
 import torchvision
 
 
@@ -49,13 +49,13 @@ class TwoViewMnist(ABaseDataset):
             self._data_loaders[set_id] = data_loader
 
     def _prepare_transforms(self, set_id):
-        del set_id
         if len(self._views) == 2:
             transforms = TwoViewMnistTransform()
         elif len(self._views) == 1:
-            if self._views[0] == 0:
+            view = self._views[0]
+            if view == 0:
                 transforms = RandomRotationTransform()
-            elif self._views[1] == 1:
+            elif view == 1:
                 transforms = UniformNoiseTransform()
             else:
                 raise NotImplementedError
