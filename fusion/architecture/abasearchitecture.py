@@ -21,7 +21,7 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         self._weights_initlization_type = weights_initlization_type
 
     @abc.abstractmethod
-    def _init_weights():
+    def init_weights():
         """Weight initilization
         """
         pass

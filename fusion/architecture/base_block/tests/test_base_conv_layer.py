@@ -1,4 +1,4 @@
-from fusion.architecture.base_block.base_conv_layer import BaseConvLayer
+from fusion.architecture.base_block import BaseConvLayer
 import torch
 import torch.nn as nn
 import unittest

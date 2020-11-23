@@ -37,16 +37,16 @@ class BaseConvLayer(ABaseArchitecture):
             self._layer.append(
                 self._activation_class(**activation_args)
             )
-        self._init_weights()
+        self.init_weights()
 
     def forward(self, x):
-        x = self._layer[0]
+        x = self._layer[0](x)
         conv_latent = x
         for layer in self._layer[1:]:
             x = layer(x)
         return (x, conv_latent)
 
-    def _init_weights(self):
+    def init_weights(self):
         if self._weights_initlization_type == 'xavier_uniform':
             nn.init.xavier_uniform_(
                 self._layer[0].weight, gain=nn.init.calculate_gain("relu")
