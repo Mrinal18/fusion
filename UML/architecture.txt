@@ -11,14 +11,6 @@ abstract AbstractBaseArchitecture {
 
 BaseArchitectureInterface <|-- AbstractBaseArchitecture
 
-class BasicLayer {}
-class LinearEmbedding {}
-class ConvolutionalEmbedding {}
-
-AbstractBaseArchitecture <|-- BasicLayer
-AbstractBaseArchitecture <|-- LinearEmbedding
-AbstractBaseArchitecture <|-- ConvolutionalEmbedding
-
 class DcganEncoder {}
 class DcganDecoder {}
 
@@ -30,5 +22,21 @@ AbstractBaseArchitecture <|-- DcganDecoder
 
 DcganEncoder <|-- DcganVaeEncoder
 DcganDecoder <|-- DcganVaeDecoder
+
+abstract AbstractBaseBlock {}
+class BaseConvLayer {}
+
+BaseArchitectureInterface <|-- AbstractBaseBlock
+AbstractBaseBlock <|-- BaseConvLayer
+
+abstract AbstractProjectionHead {}
+class IndentityHead {}
+class LinearHead {}
+class ConvolutionalHead {}
+
+BaseArchitectureInterface <|-- AbstractProjectionHead
+AbstractProjectionHead <|-- IndentityHead
+AbstractProjectionHead <|-- LinearHead
+AbstractProjectionHead <|-- ConvolutionalHead
 
 @enduml

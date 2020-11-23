@@ -3,7 +3,7 @@
 interface BaseObjectiveInterface {}
 
 abstract BaseObjective {
-	#loss 
+	#loss
 }
 
 BaseObjectiveInterface <|-- BaseObjective
@@ -21,7 +21,7 @@ BaseLossInterface <|-- AbstractBaseLoss
 class MutualInformationLoss {
 	#estimator
 }
-AbstractBaseLoss <|-- MutualInformationLoss 
+AbstractBaseLoss <|-- MutualInformationLoss
 
 class Local {}
 class CrossLocal {}
@@ -39,14 +39,14 @@ class MMVAE {}
 AbstractBaseLoss <|-- MMVAE
 
 class CCA {
-	
+
 }
-AbstractBaseLoss <|-- CCA 
+AbstractBaseLoss <|-- CCA
 
 class Reconstruction {
-	
+
 }
-AbstractBaseLoss <|-- Reconstruction 
+AbstractBaseLoss <|-- Reconstruction
 
 class Supervised {}
 AbstractBaseLoss <|-- Supervised
@@ -79,7 +79,7 @@ abstract AbstractScorePenalty {
 class L2ScorePenalty {
 }
 
-BasePenaltyInterface <|-- AbstractScorePenalty 
+BasePenaltyInterface <|-- AbstractScorePenalty
 AbstractScorePenalty <|-- L2ScorePenalty
 
 abstract AbstractGradientPenalty {
