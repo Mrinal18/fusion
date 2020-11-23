@@ -1,8 +1,11 @@
+import copy
 from fusion.dataset.abasedataset import ABaseDataset
 from fusion.dataset.two_view_mnist.transforms import TwoViewMnistTransform
 from fusion.dataset.two_view_mnist.transforms import RandomRotationTransform
 from fusion.dataset.two_view_mnist.transforms import UniformNoiseTransform
-from torch.utils.data import DataLoader, data
+from sklearn.model_selection import StratifiedKFold
+import torch
+from torch.utils.data import DataLoader
 import torchvision
 
 
@@ -16,7 +19,8 @@ class TwoViewMnist(ABaseDataset):
         batch_size=2,
         shuffle=False,
         drop_last=False,
-        num_workers=0
+        num_workers=0,
+        seed=343,
     ):
         super(TwoViewMnist, self).__init__(
             dataset_dir,
@@ -26,12 +30,14 @@ class TwoViewMnist(ABaseDataset):
             batch_size=batch_size,
             shuffle=shuffle,
             drop_last=drop_last,
-            num_workers=num_workers
+            num_workers=num_workers,
+            seed=seed,
         )
+        self._num_classes = None
 
     def load(self):
         for set_id in ['train', 'test']:
-            train = True if set_id == 'train' else 'test'
+            train = True if set_id == 'train' else False
             transforms = self._prepare_transforms(set_id)
             dataset = torchvision.datasets.MNIST(
                 self._dataset_dir,
@@ -39,14 +45,51 @@ class TwoViewMnist(ABaseDataset):
                 download=True,
                 transform=transforms
             )
-            data_loader = DataLoader(
-                dataset,
-                batch_size=self._batch_size,
-                shuffle=self._shuffle,
-                drop_last=self._drop_last,
-                num_workers=self._num_workers
-            )
-            self._data_loaders[set_id] = data_loader
+            if set_id == 'train':
+                self._set_num_classes(dataset.targets)
+                cv_datasets = self._prepare_fold(dataset)
+                for set_id, dataset in cv_datasets.items():
+                    self._set_dataloader(dataset, set_id)
+            else:
+                self._set_dataloader(dataset, set_id)
+
+    def _set_dataloader(self, dataset, set_id):
+        data_loader = DataLoader(
+            dataset,
+            batch_size=self._batch_size,
+            shuffle=self._shuffle,
+            drop_last=self._drop_last,
+            num_workers=self._num_workers
+        )
+        self._data_loaders[set_id] = data_loader
+
+    def _set_num_classes(self, targets):
+        self.num_classes = len(torch.unique(targets))
+
+    def _prepare_fold(self, dataset):
+        kf = StratifiedKFold(
+            n_splits=self._num_folds,
+            shuffle=self._shuffle,
+            random_state=self._seed
+        )
+        X, y = dataset.data, dataset.targets
+        kf_g = kf.split(X, y)
+        for _ in range(1, self._fold): next(kf_g)
+        train_index, valid_index = next(kf.split(X, y))
+        valid_dataset = copy.deepcopy(dataset)
+        valid_dataset.data = dataset.data[valid_index]
+        valid_dataset.targets = dataset.targets[valid_index]
+        assert valid_dataset.data.size(0) == len(valid_index)
+        assert valid_dataset.targets.size(0) == len(valid_index)
+        train_dataset = copy.deepcopy(dataset)
+        train_dataset.data = dataset.data[train_index]
+        train_dataset.targets = dataset.targets[train_index]
+        assert train_dataset.data.size(0) == len(train_index)
+        assert train_dataset.targets.size(0) == len(train_index)
+        return {
+            'train': train_dataset,
+            'val': valid_dataset
+        }
 
     def _prepare_transforms(self, set_id):
         del set_id
@@ -62,3 +105,15 @@ class TwoViewMnist(ABaseDataset):
         else:
             raise NotImplementedError
         return transforms
+
+    def get_all_loaders(self):
+        return super().get_all_loaders()
+
+    def get_cv_loaders(self):
+        return super().get_cv_loaders()
+
+    def get_loader(self, set_id):
+        return super().get_loader(set_id)
+
+    def num_classes(self):
+        return super().num_classes
