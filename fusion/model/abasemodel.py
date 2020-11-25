@@ -5,6 +5,13 @@ import torch.nn as nn
 
 class BaseModel(abc.ABC, nn.Module):
     _encoder = None
+    @abc.abstractmethod
+    def __init__(
+        self,
+        architecture_class,
+        architecture_params
+    ):
+        pass
 
     @abc.abstractmethod
     def get_encoder(self, source_id=0):
