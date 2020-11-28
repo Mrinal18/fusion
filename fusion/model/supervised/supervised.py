@@ -10,10 +10,10 @@ class Supervised(AUniSourceModel):
         architecture,
         architecture_params
     ):
-        self._encoder = ...
+        self._encoder = architecture(**architecture_params)
         self._linear = nn.Linear(dim_l, num_classes)
 
-    def forward(self):
+    def forward(self, x):
         x, _ = self._encoder(x)
         x = self.linear(x)
         return x

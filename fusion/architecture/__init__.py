@@ -1,3 +1,12 @@
 from .abasearchitecture import ABaseArchitecture
+from .dcgan import DcganEncoder
 
-__all__ = ['ABaseArchitecture']
+from fusion.utils import ObjectProvider
+
+__all__ = [
+    'ABaseArchitecture',
+    'DcganEncoder',
+]
+
+architecture_provider = ObjectProvider()
+architecture_provider.register_object('DcganEncoder', DcganEncoder)
