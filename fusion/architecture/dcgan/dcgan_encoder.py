@@ -15,14 +15,14 @@ class DcganEncoder(ABaseArchitecture):
         norm_layer_class=nn.BatchNorm2d,
         dp_layer_class=None,
         activation_class=nn.LeakyReLU,
-        weights_initlization_type='xavier_uniform',
+        weights_initialization_type='xavier_uniform',
     ):
         super(DcganEncoder, self).__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             dp_layer_class=dp_layer_class,
             activation_class=activation_class,
-            weights_initlization_type=weights_initlization_type,
+            weights_initialization_type=weights_initialization_type,
         )
         self._dim_cls = dim_cls
         self._flatten = Flatten()

@@ -11,17 +11,17 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         norm_layer_class=None,
         dp_layer_class=None,
         activation_class=None,
-        weights_initlization_type=None
+        weights_initialization_type=None
     ):
         super(ABaseArchitecture, self).__init__()
         self._conv_layer_class = conv_layer_class
         self._norm_layer_class = norm_layer_class
         self._dp_layer_class = dp_layer_class
         self._activation_class = activation_class
-        self._weights_initlization_type = weights_initlization_type
+        self._weights_initialization_type = weights_initialization_type
 
     @abc.abstractmethod
-    def init_weights():
-        """Weight initilization
+    def init_weights(self):
+        """Weight initialization
         """
         pass
