@@ -10,7 +10,7 @@ class TaskDirector():
         self._builder.create_new_task(self._config.task)
         self._builder.add_dataset(self._config.dataset)
         self._builder.add_model(self._config.model)
-        self._builder.add_objective(self._config.objective)
+        self._builder.add_criterion(self._config.criterion)
         self._builder.add_runner(self._config.runner)
 
     def get_task(self):
@@ -33,7 +33,7 @@ class ATaskBuilder(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def add_objective(self, objective_config):
+    def add_criterion(self, criterion_config):
         pass
 
     @abc.abstractmethod
@@ -42,11 +42,17 @@ class ATaskBuilder(abc.ABC):
 
 
 class ATask(abc.ABC):
-    def __init__(self):
-        self._dataset = None
-        self._model = None
-        self._objective = None
-        self._runner = None
+    _dataset = None
+    _model = None
+    _criterion = None
+    _optimizer = None
+    _scheduler = None
+    _runner = None
+    _callbacks = None
+
+    @abc.abstractmethod
+    def __init__(self, task_args):
+        self._task_args = task_args
 
     @property
     def dataset(self):
@@ -65,12 +71,12 @@ class ATask(abc.ABC):
         self._model = model
 
     @property
-    def objective(self):
-        return self._objective
+    def criterion(self):
+        return self._criterion
 
-    @objective.setter
-    def objective(self, objective):
-        self._objective = objective
+    @criterion.setter
+    def criterion(self, criterion):
+        self._criterion = criterion
 
     @property
     def runner(self):

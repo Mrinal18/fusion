@@ -11,7 +11,7 @@ __all__ = [
     'MSELoss'
 ]
 
-objective_provider = ObjectProvider()
-objective_provider.register_object('CE', CrossEntropyLoss)
-objective_provider.register_object('BCE', BCEWithLogitsLoss)
-objective_provider.register_object('MSELoss', MSELoss)
+criterion_provider = ObjectProvider()
+criterion_provider.register_object('CE', CrossEntropyLoss)
+criterion_provider.register_object('BCE', BCEWithLogitsLoss)
+criterion_provider.register_object('MSELoss', MSELoss)

@@ -4,6 +4,7 @@ from typing import Mapping, Any
 
 
 class CatalystRunner(ABaseRunner, dl.Runner):
+
     def predict_batch(
         self,
         batch: Mapping[str, Any],
