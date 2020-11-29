@@ -13,14 +13,14 @@ class BaseConvLayer(ABaseArchitecture):
         dp_layer_args={},
         activation_class=None,
         activation_args={},
-        weights_initlization_type='xavier_uniform'
+        weights_initialization_type='xavier_uniform'
     ):
         super(BaseConvLayer, self).__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             dp_layer_class=dp_layer_class,
             activation_class=activation_class,
-            weights_initlization_type=weights_initlization_type
+            weights_initialization_type=weights_initialization_type
         )
         self._layer = nn.ModuleList()
         self._layer.append(
@@ -47,7 +47,7 @@ class BaseConvLayer(ABaseArchitecture):
         return (x, conv_latent)
 
     def init_weights(self):
-        if self._weights_initlization_type == 'xavier_uniform':
+        if self._weights_initialization_type == 'xavier_uniform':
             nn.init.xavier_uniform_(
                 self._layer[0].weight, gain=nn.init.calculate_gain("relu")
             )
