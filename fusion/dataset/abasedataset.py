@@ -27,7 +27,7 @@ class ABaseDataset(abc.ABC):
         self._shuffle = shuffle
         self._drop_last = drop_last
         self._num_workers = num_workers
-        self._seed = 343
+        self._seed = seed
 
     @abc.abstractmethod
     def load(self):

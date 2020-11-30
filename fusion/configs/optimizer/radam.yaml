@@ -1,0 +1,4 @@
+# @package _group_
+name: "RAdam"
+args:
+  lr: 4e-4

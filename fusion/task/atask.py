@@ -1,7 +1,7 @@
 import abc
 
 
-class TaskDirector():
+class TaskDirector:
     def __init__(self, task_builder, config):
         self._builder = task_builder
         self._config = config
@@ -12,6 +12,8 @@ class TaskDirector():
         self._builder.add_model(self._config.model)
         self._builder.add_criterion(self._config.criterion)
         self._builder.add_runner(self._config.runner)
+        self._builder.add_optimizer(self._config.optimizer)
+        self._builder.add_scheduler(self._config.scheduler)
 
     def get_task(self):
         return self._builder.task
@@ -40,6 +42,14 @@ class ATaskBuilder(abc.ABC):
     def add_runner(self, runner_config):
         pass
 
+    @abc.abstractmethod
+    def add_optimizer(self, optimizer_config):
+        pass
+
+    @abc.abstractmethod
+    def add_scheduler(self, scheduler_config):
+        pass
+
 
 class ATask(abc.ABC):
     _dataset = None
@@ -53,6 +63,10 @@ class ATask(abc.ABC):
     @abc.abstractmethod
     def __init__(self, task_args):
         self._task_args = task_args
+
+    @abc.abstractmethod
+    def run(self):
+        pass
 
     @property
     def dataset(self):
@@ -86,7 +100,22 @@ class ATask(abc.ABC):
     def runner(self, runner):
         self._runner = runner
 
-    @abc.abstractmethod
-    def run(self):
-        pass
+    @property
+    def optimizer(self):
+        return self._optimizer
 
+    @optimizer.setter
+    def optimizer(self, optimizer):
+        self._optimizer = optimizer
+
+    @property
+    def scheduler(self):
+        return self._scheduler
+
+    @scheduler.setter
+    def scheduler(self, scheduler):
+        self._scheduler = scheduler
+
+    @property
+    def task_args(self):
+        return self._task_args

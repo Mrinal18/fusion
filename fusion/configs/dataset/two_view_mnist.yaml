@@ -1,0 +1,14 @@
+# @package _group_
+name: TwoViewMnist
+input_size: 32
+data_type: "2D"
+args:
+  dataset_dir: ${global.dataset_dir}
+  fold: ${global.fold}
+  num_folds: ${global.num_folds}
+  views: ${global.views}
+  batch_size: ${global.batch_size}
+  shuffle: ${task.args.shuffle}
+  drop_last: ${task.args.drop_last}
+  num_workers: ${global.num_workers}
+  seed: ${global.seed}

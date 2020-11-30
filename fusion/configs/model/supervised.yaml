@@ -1,0 +1,6 @@
+# @package _group_
+name: "Supervised"
+args:
+  dim_l: ${global.dim_l}
+  architecture: ${architecture.name}
+  architecture_params: ${architecture.params}

@@ -1,18 +1,22 @@
-class BaseExperiment:
-    _arguments = {}
-
-    def __init__(self):
-        self.__dict__ = self._arguments
+from omegaconf import DictConfig, OmegaConf
+import hydra
+from fusion.task import TaskDirector, task_provider
 
 
-class Experiment(BaseExperiment):
+class Experiment:
     # Singleton
     # To have global within experiments arguments
+    def __init__(self, config):
+        self._config = config
 
-    def __init__(self, config_filename):
-        BaseExperiment.__init__(self)
-        config_args = self.read_config(config_filename)
-        self._arguments.update(config_args)
 
-    def read_config(config_filename):
-        pass
+@hydra.main(config_path="../configs", config_name="default_config")
+def my_experiment(cfg: DictConfig) -> None:
+    print(OmegaConf.to_yaml(cfg))
+    print (cfg.dataset.args.dataset_dir)
+    exp = Experiment(cfg)
+
+
+if __name__ == "__main__":
+    my_experiment()
+

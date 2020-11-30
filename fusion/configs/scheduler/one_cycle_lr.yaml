@@ -1,0 +1,4 @@
+# @package _group_
+name: "OneCycleLR"
+args:
+  max_lr: 0.01

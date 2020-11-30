@@ -1,0 +1,24 @@
+global:
+  dim_in: 1
+  dim_l: 64
+  dim_cls: []
+  dataset_dir: "../../data"
+  batch_size: 64
+  views: [0]
+  fold: 0
+  num_folds: 5
+  seed: 343
+  num_workers: 0
+defaults:
+  - dataset: two_view_mnist
+  - architecture: dcgan_encoder
+  - model: supervised
+  - criterion: ce
+  - task: pretraining
+  - optimizer: radam
+  - scheduler: one_cycle_lr
+
+
+
+
+

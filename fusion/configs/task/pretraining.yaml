@@ -1,0 +1,5 @@
+# @package _group_
+name: "PretrainingTask"
+args:
+  shuffle: True
+  drop_last: True
