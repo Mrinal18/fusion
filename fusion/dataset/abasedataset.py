@@ -45,14 +45,14 @@ class ABaseDataset(abc.ABC):
     def get_cv_loaders(self):
         """Returns dictionary with cross-validation loaders
         """
-        return {set_id: self._data_loaders[set_id] for set_id in ['train', 'val']}
+        return {set_id: self._data_loaders[set_id] for set_id in ['train', 'valid']}
 
     @abc.abstractmethod
     def get_loader(self, set_id):
         """Returns loader with specific set
 
         Args:
-            set_id (str): "\'train\', \'val\', \'test\'"
+            set_id (str): "\'train\', \'valid\', \'test\'"
         """
         return self._data_loaders[set_id]
 
@@ -68,6 +68,6 @@ class ABaseDataset(abc.ABC):
         """Creates set of data transforms for specific set of data.
 
         Args:
-            set_id (str): "\'train\', \'val', \'test\'"
+            set_id (str): "\'train\', \'valid', \'test\'"
         """
         pass

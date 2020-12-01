@@ -88,7 +88,7 @@ class TwoViewMnist(ABaseDataset):
         assert train_dataset.targets.size(0) == len(train_index)
         return {
             'train': train_dataset,
-            'val': valid_dataset
+            'valid': valid_dataset
         }
 
     def _prepare_transforms(self, set_id):

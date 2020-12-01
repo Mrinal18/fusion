@@ -50,6 +50,10 @@ class ATaskBuilder(abc.ABC):
     def add_scheduler(self, scheduler_config):
         pass
 
+    @property
+    def task(self):
+        return self._task
+
 
 class ATask(abc.ABC):
     _dataset = None
@@ -63,6 +67,7 @@ class ATask(abc.ABC):
     @abc.abstractmethod
     def __init__(self, task_args):
         self._task_args = task_args
+        print (task_args)
 
     @abc.abstractmethod
     def run(self):

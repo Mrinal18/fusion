@@ -6,8 +6,8 @@ class ABaseLoss(abc.ABC, nn.Module):
     _loss = None
 
     @abc.abstractmethod
-    def __init__(self, **kwargs):
-        pass
+    def __init__(self):
+        super(ABaseLoss, self).__init__()
 
     def forward(self, input, target):
         pass

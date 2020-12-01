@@ -2,5 +2,6 @@
 name: "Supervised"
 args:
   dim_l: ${global.dim_l}
+  num_classes: ???
   architecture: ${architecture.name}
-  architecture_params: ${architecture.params}
+  architecture_params: ${architecture.args}

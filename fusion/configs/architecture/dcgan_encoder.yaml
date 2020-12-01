@@ -1,8 +1,9 @@
 # @package _group_
 name: "DcganEncoder"
 args:
+  dim_in: ${global.dim_in}
   dim_h: 32
   dim_l: ${global.dim_l}
   dim_cls: ${global.dim_cls}
-  input_size: ${defaults.0.dataset.input_size}
+  input_size: ${dataset.input_size}
   weights_initialization_type: "xavier_uniform"

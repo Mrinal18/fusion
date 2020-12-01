@@ -9,41 +9,45 @@ from fusion.task import ATask, ATaskBuilder
 
 class PretrainingTaskBuilder(ATaskBuilder):
     def create_new_task(self, task_args):
-        self._task = PretrainingTask(task_args)
+        self._task = PretrainingTask(task_args.args)
 
     def add_dataset(self, dataset_config):
-        self._task.dataset = dataset_provider(
-            dataset_config.name, dataset_config.args
+        self._task.dataset = dataset_provider.get(
+            dataset_config.name, **dataset_config.args
         )
+        self._task.dataset.load()
 
     def add_model(self, model_config):
-        model_config.args['num_classes'] = self._task.dataset.num_classes()
-        self._task.model = model_provider(
-            model_config.name, model_config.args
+        model_config.args['num_classes'] = self._task.dataset.num_classes
+        self._task.model = model_provider.get(
+            model_config.name, **model_config.args
         )
 
     def add_criterion(self, criterion_config):
-        self._task.criterion = criterion_provider(
-            criterion_config.name, criterion_config.args
+        self._task.criterion = criterion_provider.get(
+            criterion_config.name, **criterion_config.args
         )
 
     def add_runner(self, runner_config):
-        self._task.runner = runner_provider(
-            runner_config.name, runner_config.args
+        self._task.runner = runner_provider.get(
+            runner_config.name, **{}
         )
 
     def add_optimizer(self, optimizer_config):
-        self._task.optimizer = optimizer_provider(
-            optimizer_config.name, optimizer_config.args
+        args = dict(**optimizer_config.args)
+        args['params'] = self._task.model.parameters()
+        self._task.optimizer = optimizer_provider.get(
+            optimizer_config.name, **args
         )
 
     def add_scheduler(self, scheduler_config):
-        scheduler_config.args['optimizer'] = self._task.optimizer
-        scheduler_config.args['steps_per_epoch'] = len(
+        args = dict(**scheduler_config.args)
+        args['optimizer'] = self._task.optimizer
+        args['steps_per_epoch'] = len(
             self._task.dataset.get_loader('train'))
-        scheduler_config.args['epochs'] = self._task.task_args['num_epochs']
-        self._task.scheduler = scheduler_provider(
-            scheduler_config.name, scheduler_config.args
+        args['epochs'] = self._task.task_args['num_epochs']
+        self._task.scheduler = scheduler_provider.get(
+            scheduler_config.name, **args
         )
 
 

@@ -1,5 +1,10 @@
 # @package _group_
 name: "PretrainingTask"
+shuffle: True
+drop_last: True
 args:
-  shuffle: True
-  drop_last: True
+  logdir: './'
+  num_epochs: 200
+  verbose: true
+  resume: false
+  timeit: true
