@@ -1,15 +1,13 @@
 import copy
 from fusion.dataset.abasedataset import ABaseDataset
-from fusion.dataset.two_view_mnist.transforms import TwoViewMnistTransform
-from fusion.dataset.two_view_mnist.transforms import RandomRotationTransform
-from fusion.dataset.two_view_mnist.transforms import UniformNoiseTransform
+from fusion.dataset.mnist_svhn.transforms import MNISTSVHNTransform
 from sklearn.model_selection import StratifiedKFold
 import torch
 from torch.utils.data import DataLoader
 import torchvision
 
 
-class TwoViewMnist(ABaseDataset):
+class MnistSvhn(ABaseDataset):
     def __init__(
             self,
             dataset_dir,
@@ -22,7 +20,7 @@ class TwoViewMnist(ABaseDataset):
             num_workers=0,
             seed=343,
     ):
-        super(TwoViewMnist, self).__init__(
+        super(MnistSvhn, self).__init__(
             dataset_dir,
             fold=fold,
             num_folds=num_folds,
@@ -39,7 +37,7 @@ class TwoViewMnist(ABaseDataset):
         for set_id in ['train', 'test']:
             train = True if set_id == 'train' else False
             transforms = self._prepare_transforms(set_id)
-            dataset = torchvision.datasets.MNIST(
+            dataset = torchvision.datasets.SVHN(
                 self._dataset_dir,
                 train=train,
                 download=True,
@@ -92,18 +90,7 @@ class TwoViewMnist(ABaseDataset):
         }
 
     def _prepare_transforms(self, set_id):
-        if len(self._views) == 2:
-            transforms = TwoViewMnistTransform()
-        elif len(self._views) == 1:
-            view = self._views[0]
-            if view == 0:
-                transforms = RandomRotationTransform()
-            elif view == 1:
-                transforms = UniformNoiseTransform()
-            else:
-                raise NotImplementedError
-        else:
-            raise NotImplementedError
+        transforms = MNISTSVHNTransform()
         return transforms
 
     def get_all_loaders(self):

@@ -1,8 +1,6 @@
-# Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 from fusion.experiment import Experiment
 import hydra
-from omegaconf import DictConfig, OmegaConf
-
+from omegaconf import DictConfig
 
 
 @hydra.main(config_path="fusion/configs", config_name="default_config")
