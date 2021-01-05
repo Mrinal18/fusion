@@ -1,10 +1,70 @@
 import copy
 from fusion.dataset.abasedataset import ABaseDataset
-from fusion.dataset.mnist_svhn.transforms import MNISTSVHNTransform
+from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
 from sklearn.model_selection import StratifiedKFold
+from torchnet.dataset import TensorDataset, ResampleDataset
 import torch
 from torch.utils.data import DataLoader
+from collections import namedtuple
 import torchvision
+import tqdm
+import os
+
+
+def rand_match_on_idx(l1, idx1, l2, idx2, max_d=10000, dm=10):
+    """
+    l*: sorted labels
+    idx*: indices of sorted labels in original list
+    """
+    _idx1, _idx2 = [], []
+    for l in l1.unique():  # assuming both have same idxs
+        l_idx1, l_idx2 = idx1[l1 == l], idx2[l2 == l]
+        n = min(l_idx1.size(0), l_idx2.size(0), max_d)
+        l_idx1, l_idx2 = l_idx1[:n], l_idx2[:n]
+        for _ in range(dm):
+            _idx1.append(l_idx1[torch.randperm(n)])
+            _idx2.append(l_idx2[torch.randperm(n)])
+    return torch.cat(_idx1), torch.cat(_idx2)
+
+
+def download_dataset(dataset_dir):
+    max_d = 10000  # maximum number of datapoints per class
+    dm = 30  # data multiplier: random permutations to match
+
+    # get the individual datasets
+    tx = torchvision.transforms.ToTensor()
+    if os.path.exists(os.path.join(dataset_dir, "MNIST")):
+        download = False
+    else:
+        download = True
+    train_mnist = torchvision.datasets.MNIST(dataset_dir, train=True, download=download, transform=tx)
+    test_mnist = torchvision.datasets.MNIST(dataset_dir, train=False, download=download, transform=tx)
+    if os.path.exists(os.path.join(dataset_dir, "MNIST_SVHN")):
+        download = False
+    else:
+        download = True
+        os.mkdir(os.path.join(dataset_dir, "MNIST_SVHN"))
+    train_svhn = torchvision.datasets.SVHN(os.path.join(dataset_dir, "MNIST_SVHN"), split="train", download=download,
+                                           transform=tx)
+    test_svhn = torchvision.datasets.SVHN(os.path.join(dataset_dir, "MNIST_SVHN"), split='test', download=download,
+                                          transform=tx)
+    # svhn labels need extra work
+    train_svhn.labels = torch.LongTensor(train_svhn.labels.squeeze().astype(int)) % 10
+    test_svhn.labels = torch.LongTensor(test_svhn.labels.squeeze().astype(int)) % 10
+
+    mnist_l, mnist_li = train_mnist.targets.sort()
+    svhn_l, svhn_li = train_svhn.labels.sort()
+    idx1, idx2 = rand_match_on_idx(mnist_l, mnist_li, svhn_l, svhn_li, max_d=max_d, dm=dm)
+    print('len train idx:', len(idx1), len(idx2))
+    torch.save(idx1, os.path.join(dataset_dir, "MNIST_SVHN", 'train-ms-mnist-idx.pt'))
+    torch.save(idx2, os.path.join(dataset_dir, "MNIST_SVHN", 'train-ms-svhn-idx.pt'))
+
+    mnist_l, mnist_li = test_mnist.targets.sort()
+    svhn_l, svhn_li = test_svhn.labels.sort()
+    idx1, idx2 = rand_match_on_idx(mnist_l, mnist_li, svhn_l, svhn_li, max_d=max_d, dm=dm)
+    print('len test idx:', len(idx1), len(idx2))
+    torch.save(idx1, os.path.join(dataset_dir, "MNIST_SVHN", 'test-ms-mnist-idx.pt'))
+    torch.save(idx2, os.path.join(dataset_dir, "MNIST_SVHN", 'test-ms-svhn-idx.pt'))
 
 
 class MnistSvhn(ABaseDataset):
@@ -34,24 +94,123 @@ class MnistSvhn(ABaseDataset):
         self._num_classes = None
 
     def load(self):
+        download_dataset(self._dataset_dir)
+        preloaded_mnist = {}
+        preloaded_svhn = {}
+
+        preloaded_mnist["train"] = torch.load(os.path.join(self._dataset_dir, "MNIST_SVHN",
+                                                           'train-ms-mnist-idx.pt'))
+        preloaded_svhn["train"] = torch.load(os.path.join(self._dataset_dir, "MNIST_SVHN",
+                                                          'train-ms-svhn-idx.pt'))
+        preloaded_mnist["test"] = torch.load(os.path.join(self._dataset_dir, "MNIST_SVHN",
+                                                          'test-ms-mnist-idx.pt'))
+        preloaded_svhn["test"] = torch.load(os.path.join(self._dataset_dir, "MNIST_SVHN",
+                                                         'test-ms-svhn-idx.pt'))
         for set_id in ['train', 'test']:
             train = True if set_id == 'train' else False
-            transforms = self._prepare_transforms(set_id)
-            dataset = torchvision.datasets.SVHN(
+
+            if os.path.exists(os.path.join(self._dataset_dir, "MNIST")):
+                download = False
+            else:
+                download = True
+
+            transforms_SVHN, transforms_MNIST = self._prepare_transforms(set_id)
+            dataset_mnist = torchvision.datasets.MNIST(
                 self._dataset_dir,
                 train=train,
-                download=True,
-                transform=transforms
+                download=download,
+                transform=transforms_MNIST
             )
+            dataset_svhn = torchvision.datasets.SVHN(
+                self._dataset_dir,
+                spilt=set_id,
+                download=download,
+                transform=transforms_SVHN
+            )
+
             if set_id == 'train':
+                if len(self._views) == 2:
+                    dataset = TensorDataset([
+                        ResampleDataset(
+                            dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
+                            size=len(preloaded_mnist[set_id])
+                        ),
+                        ResampleDataset(
+                            dataset_svhn, lambda d, i: preloaded_svhn[set_id][i],
+                            size=len(preloaded_svhn[set_id])
+                        )
+                    ])
+                else:
+                    if self.views[0] == 0:
+                        dataset = TensorDataset([
+                            ResampleDataset(
+                                dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
+                                size=len(preloaded_mnist)
+                            ),
+                        ])
+                    elif self.views[0] == 1:
+                        dataset = TensorDataset([
+                            ResampleDataset(
+                                dataset_svhn, lambda d, i: preloaded_mnist[set_id][i],
+                                size=len(preloaded_mnist)
+                            ),
+                        ])
+
+                Dataset_Special = namedtuple("Dataset_Special", ["data", "targets"])
+
+                data, targets = [None] * len(dataset), [None] * len(dataset)
+                k = 0
+                for x, y in tqdm.tqdm(dataset):
+                    data[k] = x
+                    targets[k] = y
+                    k += 1
+                dataset = Dataset_Special(data=data, targets=targets)
+
                 self._set_num_classes(dataset.targets)
                 cv_datasets = self._prepare_fold(dataset)
                 for set_id, dataset in cv_datasets.items():
                     self._set_dataloader(dataset, set_id)
             else:
+                if len(self._views) == 2:
+                    dataset = TensorDataset([
+                        ResampleDataset(
+                            dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
+                            size=len(preloaded_mnist[set_id])
+                        ),
+                        ResampleDataset(
+                            dataset_svhn, lambda d, i: preloaded_svhn[set_id][i],
+                            size=len(preloaded_svhn[set_id])
+                        )
+                    ])
+                else:
+                    if self.views[0] == 0:
+                        dataset = TensorDataset([
+                            ResampleDataset(
+                                dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
+                                size=len(preloaded_mnist)
+                            ),
+                        ])
+                    elif self.views[0] == 1:
+                        dataset = TensorDataset([
+                            ResampleDataset(
+                                dataset_svhn, lambda d, i: preloaded_mnist[set_id][i],
+                                size=len(preloaded_mnist)
+                            ),
+                        ])
+
+                Dataset_Special = namedtuple("Dataset_Special", ["data", "targets"])
+                data, targets = [None] * len(dataset), [None] * len(dataset)
+                k = 0
+                for x, y in tqdm.tqdm(dataset):
+                    data[k] = x
+                    targets[k] = y
+                    k += 1
+                dataset = Dataset_Special(data=data, targets=targets)
+
                 self._set_dataloader(dataset, set_id)
 
     def _set_dataloader(self, dataset, set_id):
+
         data_loader = DataLoader(
             dataset,
             batch_size=self._batch_size,
@@ -90,8 +249,10 @@ class MnistSvhn(ABaseDataset):
         }
 
     def _prepare_transforms(self, set_id):
-        transforms = MNISTSVHNTransform()
-        return transforms
+        transforms_SVHN = SVHNTransform()
+        transforms_MNIST = MNISTTransform()
+
+        return transforms_SVHN, transforms_MNIST
 
     def get_all_loaders(self):
         return super().get_all_loaders()
