@@ -127,86 +127,49 @@ class MnistSvhn(ABaseDataset):
                 download=download,
                 transform=transforms_SVHN
             )
-
-            if set_id == 'train':
-                if len(self._views) == 2:
+            if len(self._views) == 2:
+                dataset = TensorDataset([
+                    ResampleDataset(
+                        dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
+                        size=len(preloaded_mnist[set_id])
+                    ),
+                    ResampleDataset(
+                        dataset_svhn, lambda d, i: preloaded_svhn[set_id][i],
+                        size=len(preloaded_svhn[set_id])
+                    )
+                ])
+            else:
+                if self.views[0] == 0:
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
-                            size=len(preloaded_mnist[set_id])
+                            size=len(preloaded_mnist)
                         ),
+                    ])
+                elif self.views[0] == 1:
+                    dataset = TensorDataset([
                         ResampleDataset(
                             dataset_svhn, lambda d, i: preloaded_svhn[set_id][i],
-                            size=len(preloaded_svhn[set_id])
-                        )
+                            size=len(preloaded_mnist)
+                        ),
                     ])
-                else:
-                    if self.views[0] == 0:
-                        dataset = TensorDataset([
-                            ResampleDataset(
-                                dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
-                                size=len(preloaded_mnist)
-                            ),
-                        ])
-                    elif self.views[0] == 1:
-                        dataset = TensorDataset([
-                            ResampleDataset(
-                                dataset_svhn, lambda d, i: preloaded_mnist[set_id][i],
-                                size=len(preloaded_mnist)
-                            ),
-                        ])
 
-                Dataset_Special = namedtuple("Dataset_Special", ["data", "targets"])
+            Dataset_Special = namedtuple("Dataset_Special", ["data", "targets"])
 
-                data, targets = [None] * len(dataset), [None] * len(dataset)
-                k = 0
-                for x, y in tqdm.tqdm(dataset):
-                    data[k] = x
-                    targets[k] = y
-                    k += 1
-                dataset = Dataset_Special(data=data, targets=targets)
+            data, targets = [None] * len(dataset), [None] * len(dataset)
+            k = 0
+            for x, y in tqdm.tqdm(dataset):
+                data[k] = x
+                targets[k] = y
+                k += 1
+            dataset = Dataset_Special(data=data, targets=targets)
 
+            if set_id == 'train':
                 self._set_num_classes(dataset.targets)
                 cv_datasets = self._prepare_fold(dataset)
                 for set_id, dataset in cv_datasets.items():
                     self._set_dataloader(dataset, set_id)
             else:
-                if len(self._views) == 2:
-                    dataset = TensorDataset([
-                        ResampleDataset(
-                            dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
-                            size=len(preloaded_mnist[set_id])
-                        ),
-                        ResampleDataset(
-                            dataset_svhn, lambda d, i: preloaded_svhn[set_id][i],
-                            size=len(preloaded_svhn[set_id])
-                        )
-                    ])
-                else:
-                    if self.views[0] == 0:
-                        dataset = TensorDataset([
-                            ResampleDataset(
-                                dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
-                                size=len(preloaded_mnist)
-                            ),
-                        ])
-                    elif self.views[0] == 1:
-                        dataset = TensorDataset([
-                            ResampleDataset(
-                                dataset_svhn, lambda d, i: preloaded_mnist[set_id][i],
-                                size=len(preloaded_mnist)
-                            ),
-                        ])
-
-                Dataset_Special = namedtuple("Dataset_Special", ["data", "targets"])
-                data, targets = [None] * len(dataset), [None] * len(dataset)
-                k = 0
-                for x, y in tqdm.tqdm(dataset):
-                    data[k] = x
-                    targets[k] = y
-                    k += 1
-                dataset = Dataset_Special(data=data, targets=targets)
-
                 self._set_dataloader(dataset, set_id)
 
     def _set_dataloader(self, dataset, set_id):
@@ -254,6 +217,7 @@ class MnistSvhn(ABaseDataset):
 
         return transforms_SVHN, transforms_MNIST
 
+
     def get_all_loaders(self):
         return super().get_all_loaders()
 
@@ -265,3 +229,5 @@ class MnistSvhn(ABaseDataset):
 
     def num_classes(self):
         return super().num_classes
+
+
