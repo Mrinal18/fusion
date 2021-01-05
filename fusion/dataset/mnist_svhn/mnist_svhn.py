@@ -143,14 +143,14 @@ class MnistSvhn(ABaseDataset):
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
-                            size=len(preloaded_mnist)
+                            size=len(preloaded_mnist[set_id])
                         ),
                     ])
                 elif self.views[0] == 1:
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_svhn, lambda d, i: preloaded_svhn[set_id][i],
-                            size=len(preloaded_mnist)
+                            size=len(preloaded_svhn[set_id])
                         ),
                     ])
 
