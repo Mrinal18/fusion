@@ -92,6 +92,7 @@ class MnistSvhn(ABaseDataset):
             seed=seed,
         )
         self._num_classes = None
+        self._views = views
 
     def load(self):
         download_dataset(self._dataset_dir)
@@ -122,8 +123,8 @@ class MnistSvhn(ABaseDataset):
                 transform=transforms_MNIST
             )
             dataset_svhn = torchvision.datasets.SVHN(
-                self._dataset_dir,
-                spilt=set_id,
+                os.path.join(self._dataset_dir, "MNIST_SVHN"),
+                split=set_id,
                 download=download,
                 transform=transforms_SVHN
             )
@@ -138,30 +139,37 @@ class MnistSvhn(ABaseDataset):
                         size=len(preloaded_svhn[set_id])
                     )
                 ])
+                data, targets = torch.ones([len(dataset), 4, 32, 32]), torch.ones([len(dataset), 2])
             else:
-                if self.views[0] == 0:
+                if self._views[0] == 0:
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_mnist, lambda d, i: preloaded_mnist[set_id][i],
                             size=len(preloaded_mnist[set_id])
                         ),
                     ])
-                elif self.views[0] == 1:
+                elif self._views[0] == 1:
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_svhn, lambda d, i: preloaded_svhn[set_id][i],
                             size=len(preloaded_svhn[set_id])
                         ),
                     ])
+                data, targets = torch.ones([len(dataset), 1, 32, 32]), torch.ones([len(dataset), 1])
 
             Dataset_Special = namedtuple("Dataset_Special", ["data", "targets"])
-
-            data, targets = [None] * len(dataset), [None] * len(dataset)
             k = 0
-            for x, y in tqdm.tqdm(dataset):
-                data[k] = x
-                targets[k] = y
-                k += 1
+            for x in tqdm.tqdm(dataset):
+                if len(self._views) == 2:
+                    data[k][0],  data[k][1:] = x[0][0], x[1][0]
+
+                    targets[k] = torch.tensor([x[0][1], x[1][1]])
+                    k += 1
+                else:
+                    data[k] = x[0][0]
+                    targets[k] = torch.tensor(x[0][1])
+                    k += 1
+
             dataset = Dataset_Special(data=data, targets=targets)
 
             if set_id == 'train':
@@ -193,17 +201,21 @@ class MnistSvhn(ABaseDataset):
             random_state=self._seed
         )
         X, y = dataset.data, dataset.targets
-        kf_g = kf.split(X, y)
+        if len(self._views) == 2:
+            y_split = y[:, 0]
+        else:
+            y_split = y
+
+        kf_g = kf.split(X, y_split)
+        Dataset_Special = namedtuple("Dataset_Special", ["data", "targets"])
         for _ in range(1, self._fold): next(kf_g)
-        train_index, valid_index = next(kf.split(X, y))
-        valid_dataset = copy.deepcopy(dataset)
-        valid_dataset.data = dataset.data[valid_index]
-        valid_dataset.targets = dataset.targets[valid_index]
+        train_index, valid_index = next(kf.split(X, y_split))
+        valid_dataset = Dataset_Special(data=dataset.data[valid_index],
+                                        targets=dataset.targets[valid_index])
         assert valid_dataset.data.size(0) == len(valid_index)
         assert valid_dataset.targets.size(0) == len(valid_index)
-        train_dataset = copy.deepcopy(dataset)
-        train_dataset.data = dataset.data[train_index]
-        train_dataset.targets = dataset.targets[train_index]
+        train_dataset = Dataset_Special(data=dataset.data[train_index],
+                                        targets=dataset.targets[train_index])
         assert train_dataset.data.size(0) == len(train_index)
         assert train_dataset.targets.size(0) == len(train_index)
         return {
@@ -217,7 +229,6 @@ class MnistSvhn(ABaseDataset):
 
         return transforms_SVHN, transforms_MNIST
 
-
     def get_all_loaders(self):
         return super().get_all_loaders()
 
@@ -229,5 +240,3 @@ class MnistSvhn(ABaseDataset):
 
     def num_classes(self):
         return super().num_classes
-
-
