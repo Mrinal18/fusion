@@ -1,7 +1,7 @@
 from fusion.dataset.mnist_svhn.mnist_svhn import MnistSvhn
 import unittest
 
-class TestBaseConvLayer(unittest.TestCase):
+class TestMnistSvhn(unittest.TestCase):
     def test_forward(self):
         dataset = MnistSvhn(
             # TODO: Here hard coded path for the dataset
