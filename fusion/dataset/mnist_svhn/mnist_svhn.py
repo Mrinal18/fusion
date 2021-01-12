@@ -39,23 +39,22 @@ class MnistSvhn(ABaseDataset):
         self._download_dataset(self._dataset_dir)
 
         for set_id in ['train', 'valid', 'test']:
+            dataset = None
             if len(self._views) == 2:
                 dataset_mnist, indexes_mnist = self._load_mnist(set_id)
                 dataset_svhn, indexes_svhn = self._load_svhn(set_id)
                 if set_id == 'train':
-                    self._set_num_classes(dataset_mnist.dataset.targets)
+                    self._set_num_classes(dataset_mnist.targets)
                 else:
-                    assert (
-                            len(torch.unique(dataset_mnist.dataset.targets)
-                    ) == self.num_classes)
+                    assert (len(torch.unique(dataset_mnist.targets)) == self.num_classes)
                 dataset = TensorDataset([
                     ResampleDataset(
-                        dataset_mnist.dataset,
+                        dataset_mnist,
                         lambda d, i: indexes_mnist[i],
                         size=len(indexes_mnist)
                     ),
                     ResampleDataset(
-                        dataset_svhn.dataset,
+                        dataset_svhn,
                         lambda d, i: indexes_svhn[i],
                         size=len(indexes_svhn)
                     )
@@ -80,7 +79,6 @@ class MnistSvhn(ABaseDataset):
                             size=len(indexes_svhn)
                         )
                     ])
-
             self._set_dataloader(dataset, set_id)
 
     def _load_mnist(self, set_id):
@@ -89,6 +87,7 @@ class MnistSvhn(ABaseDataset):
             filename = f"{set_id}-ms-mnist-idx-{self._fold}.pt"
         else:
             filename = f"{set_id}-ms-mnist-idx.pt"
+        print('mnist', set_id, filename)
         indexes = torch.load(os.path.join(dataset_dir, filename))
         train = True if set_id != 'test' else False
         tx_mnist = MNISTTransform()
@@ -103,10 +102,11 @@ class MnistSvhn(ABaseDataset):
             )
             dataset.data = dataset.data[cv_indexes]
             dataset.targets = dataset.targets[cv_indexes]
-        dataset = DataLoader(
-            dataset, batch_size=self._batch_size, shuffle=self._shuffle,
-            pin_memory=True, num_workers=1
-        )
+        print('mnist', set_id, len(dataset.data), len(dataset.targets), len(indexes))
+        #dataset = DataLoader(
+        #    dataset, batch_size=self._batch_size, shuffle=self._shuffle,
+        #    pin_memory=False, num_workers=1
+        #)
         return dataset, indexes
 
     def _load_svhn(self, set_id):
@@ -115,6 +115,7 @@ class MnistSvhn(ABaseDataset):
             filename = f"{set_id}-ms-svhn-idx-{self._fold}.pt"
         else:
             filename = f"{set_id}-ms-svhn-idx.pt"
+        print ('svhn', set_id, filename)
         indexes = torch.load(os.path.join(dataset_dir, filename))
         split = 'train' if set_id != 'test' else 'test'
         tx_svhn = SVHNTransform()
@@ -129,10 +130,11 @@ class MnistSvhn(ABaseDataset):
             )
             dataset.data = dataset.data[cv_indexes]
             dataset.labels = dataset.labels[cv_indexes]
-        dataset = DataLoader(
-            dataset, batch_size=self._batch_size, shuffle=self._shuffle,
-            pin_memory=True, num_workers=1
-        )
+        print('svhn', set_id, len(dataset.data), len(dataset.labels), len(indexes))
+        #dataset = DataLoader(
+        #    dataset, batch_size=self._batch_size, shuffle=self._shuffle,
+        #    pin_memory=False, num_workers=1
+        #)
         return dataset, indexes
 
     def _set_dataloader(self, dataset, set_id):
@@ -142,7 +144,7 @@ class MnistSvhn(ABaseDataset):
             shuffle=self._shuffle,
             drop_last=self._drop_last,
             num_workers=self._num_workers,
-            pin_memory=True
+            pin_memory=False
         )
         set_id = 'infer' if set_id == 'test' else set_id
         self._data_loaders[set_id] = data_loader

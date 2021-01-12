@@ -7,12 +7,14 @@ class TestMnistSvhn(unittest.TestCase):
             # TODO: Here hard coded path for the dataset
             dataset_dir='/Users/afedorov/Research/code/fusion/data/',
             batch_size=8,
-            views = [0, 1]
+            views = [0, 1],
+            shuffle=False,
+            num_workers=2
         )
         dataset.load()
-        for set_id in ['train', 'valid', 'infer']:
-            d = dataset._data_loaders[set_id]
-            for batch_ndx, sample in enumerate(d):
+        for set_id in ['train']:
+            d = dataset.get_loader(set_id)
+            for i, sample in enumerate(d):
                 break
             print(sample[0][1])
             print(sample[1][1])
