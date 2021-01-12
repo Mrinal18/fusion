@@ -67,7 +67,6 @@ class ATask(abc.ABC):
     @abc.abstractmethod
     def __init__(self, task_args):
         self._task_args = task_args
-        print (task_args)
 
     @abc.abstractmethod
     def run(self):

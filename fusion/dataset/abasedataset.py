@@ -1,5 +1,4 @@
 import abc
-from abc import abstractmethod
 
 
 class ABaseDataset(abc.ABC):
@@ -63,11 +62,3 @@ class ABaseDataset(abc.ABC):
         """
         return self._num_classes
 
-    @abc.abstractmethod
-    def _prepare_transforms(self, set_id):
-        """Creates set of data transforms for specific set of data.
-
-        Args:
-            set_id (str): "\'train\', \'valid', \'test\'"
-        """
-        pass

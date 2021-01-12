@@ -15,7 +15,7 @@ class TestBaseConvLayer(unittest.TestCase):
                 'kernel_size': 1,
             }
         )
-        self.assertEqual(len(base_layer.forward(torch.rand(2,1,2))), 2)
+        self.assertEqual(len(base_layer.forward(torch.rand(2, 1, 2))), 2)
 
 
 if __name__ == '__main__':

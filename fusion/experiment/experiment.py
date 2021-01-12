@@ -1,5 +1,3 @@
-from omegaconf import DictConfig, OmegaConf
-import hydra
 from fusion.task import TaskDirector, task_builder_provider
 
 
@@ -8,7 +6,7 @@ class Experiment:
     # To have global within experiments arguments
     def __init__(self, config):
         self._config = config
-        print (config)
+        print(config)
         self._task = None
 
     def setup_new_experiment(self):
