@@ -6,11 +6,11 @@ class TestMnistSvhn(unittest.TestCase):
         BATCH_SIZE = 8
         dataset = MnistSvhn(
             # TODO: Here hard coded path for the dataset
-            dataset_dir='../../../../data/',
+            dataset_dir='../../../../data/MNIST_SVHN',
             batch_size=BATCH_SIZE,
             views = [0, 1],
             shuffle=True,
-            num_workers=1,
+            num_workers=0,
             drop_last=False
         )
         dataset.load()
