@@ -61,6 +61,7 @@ class TwoViewMnist(ABaseDataset):
             drop_last=self._drop_last,
             num_workers=self._num_workers
         )
+        set_id = 'infer' if set_id == 'test' else set_id
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets):
