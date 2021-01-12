@@ -44,17 +44,17 @@ class MnistSvhn(ABaseDataset):
                 dataset_mnist, indexes_mnist = self._load_mnist(set_id)
                 dataset_svhn, indexes_svhn = self._load_svhn(set_id)
                 if set_id == 'train':
-                    self._set_num_classes(dataset_mnist.targets)
+                    self._set_num_classes(dataset_mnist.dataset.targets)
                 else:
-                    assert (len(torch.unique(dataset_mnist.targets)) == self.num_classes)
+                    assert (len(torch.unique(dataset_mnist.dataset.targets)) == self.num_classes)
                 dataset = TensorDataset([
                     ResampleDataset(
-                        dataset_mnist,
+                        dataset_mnist.dataset,
                         lambda d, i: indexes_mnist[i],
                         size=len(indexes_mnist)
                     ),
                     ResampleDataset(
-                        dataset_svhn,
+                        dataset_svhn.dataset,
                         lambda d, i: indexes_svhn[i],
                         size=len(indexes_svhn)
                     )
@@ -103,10 +103,10 @@ class MnistSvhn(ABaseDataset):
             dataset.data = dataset.data[cv_indexes]
             dataset.targets = dataset.targets[cv_indexes]
         print('mnist', set_id, len(dataset.data), len(dataset.targets), len(indexes))
-        #dataset = DataLoader(
-        #    dataset, batch_size=self._batch_size, shuffle=self._shuffle,
-        #    pin_memory=False, num_workers=1
-        #)
+        dataset = DataLoader(
+            dataset, batch_size=self._batch_size, shuffle=self._shuffle,
+            pin_memory=False, num_workers=1
+        )
         return dataset, indexes
 
     def _load_svhn(self, set_id):
@@ -131,10 +131,10 @@ class MnistSvhn(ABaseDataset):
             dataset.data = dataset.data[cv_indexes]
             dataset.labels = dataset.labels[cv_indexes]
         print('svhn', set_id, len(dataset.data), len(dataset.labels), len(indexes))
-        #dataset = DataLoader(
-        #    dataset, batch_size=self._batch_size, shuffle=self._shuffle,
-        #    pin_memory=False, num_workers=1
-        #)
+        dataset = DataLoader(
+            dataset, batch_size=self._batch_size, shuffle=self._shuffle,
+            pin_memory=False, num_workers=1
+        )
         return dataset, indexes
 
     def _set_dataloader(self, dataset, set_id):
