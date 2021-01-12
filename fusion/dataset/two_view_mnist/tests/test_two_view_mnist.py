@@ -13,7 +13,7 @@ class TestTwoViewMnist(unittest.TestCase):
         self.assertEqual(dataset.num_classes, 10)
         self.assertEqual(len(dataset.get_loader('train')), 48000)
         self.assertEqual(len(dataset.get_loader('val')), 12000)
-        self.assertEqual(len(dataset.get_loader('test')), 10000)
+        self.assertEqual(len(dataset.get_loader('infer')), 10000)
         self.assertEqual(len(dataset.get_cv_loaders()), 2)
         self.assertEqual(len(dataset.get_all_loaders()), 3)
 
