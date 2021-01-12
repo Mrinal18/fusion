@@ -1,13 +1,10 @@
-import copy
 from fusion.dataset.abasedataset import ABaseDataset
 from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
 from sklearn.model_selection import StratifiedKFold
 from torchnet.dataset import TensorDataset, ResampleDataset
 import torch
 from torch.utils.data import DataLoader
-from collections import namedtuple
 import torchvision
-import tqdm
 import os
 
 
@@ -89,9 +86,9 @@ class MnistSvhn(ABaseDataset):
     def _load_mnist(self, set_id):
         dataset_dir = os.path.join(self._dataset_dir, "MNIST_SVHN")
         if set_id != 'test':
-            filename = f"{set_id}-ms-svhn-idx-{self._fold}.pt"
+            filename = f"{set_id}-ms-mnist-idx-{self._fold}.pt"
         else:
-            filename = f"{set_id}-ms-svhn-idx.pt"
+            filename = f"{set_id}-ms-mnist-idx.pt"
         indexes = torch.load(os.path.join(dataset_dir, filename))
         train = True if set_id != 'test' else False
         tx_mnist = MNISTTransform()
@@ -167,12 +164,6 @@ class MnistSvhn(ABaseDataset):
         for _ in range(1, self._fold): next(kf_g)
         train_index, valid_index = next(kf.split(X, y))
         return train_index, valid_index
-
-    def _prepare_transforms(self, set_id):
-        transforms_SVHN = SVHNTransform()
-        transforms_MNIST = MNISTTransform()
-
-        return transforms_SVHN, transforms_MNIST
 
     def get_all_loaders(self):
         return super().get_all_loaders()
