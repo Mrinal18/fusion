@@ -1,3 +1,4 @@
+import copy
 from fusion.dataset.abasedataset import ABaseDataset
 from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
 from sklearn.model_selection import StratifiedKFold
@@ -34,15 +35,35 @@ class MnistSvhn(ABaseDataset):
         )
         self._num_classes = None
         self._views = views
+        self._indexes = {}
 
     def load(self):
         self._download_dataset(self._dataset_dir)
+
+        # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry
+        samplers = {
+            'mnist': {
+                'train': lambda d, i: self._indexes['train']['mnist'][i],
+                'valid': lambda d, i: self._indexes['valid']['mnist'][i],
+                'test': lambda d, i: self._indexes['test']['mnist'][i],
+            },
+            'svhn': {
+                'train': lambda d, i: self._indexes['train']['svhn'][i],
+                'valid': lambda d, i: self._indexes['valid']['svhn'][i],
+                'test': lambda d, i: self._indexes['test']['svhn'][i],
+            }
+        }
 
         for set_id in ['train', 'valid', 'test']:
             dataset = None
             if len(self._views) == 2:
                 dataset_mnist, indexes_mnist = self._load_mnist(set_id)
                 dataset_svhn, indexes_svhn = self._load_svhn(set_id)
+                self._indexes[set_id] = {}
+                self._indexes[set_id]['mnist'] = indexes_mnist
+                self._indexes[set_id]['svhn'] = indexes_svhn
+                sampler_mnist = samplers['mnist'][set_id]
+                sampler_svhn = samplers['svhn'][set_id]
                 if set_id == 'train':
                     self._set_num_classes(dataset_mnist.dataset.targets)
                 else:
@@ -50,13 +71,13 @@ class MnistSvhn(ABaseDataset):
                 dataset = TensorDataset([
                     ResampleDataset(
                         dataset_mnist.dataset,
-                        lambda d, i: indexes_mnist[i],
-                        size=len(indexes_mnist)
+                        sampler_mnist,
+                        size=len(self._indexes[set_id]['mnist'])
                     ),
                     ResampleDataset(
                         dataset_svhn.dataset,
-                        lambda d, i: indexes_svhn[i],
-                        size=len(indexes_svhn)
+                        sampler_svhn,
+                        size=len(self._indexes[set_id]['svhn'])
                     )
                 ])
 
@@ -66,7 +87,7 @@ class MnistSvhn(ABaseDataset):
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_mnist.dataset,
-                            lambda d, i: indexes_mnist[i],
+                            sampler_mnist,
                             size=len(indexes_mnist)
                         ),
                     ])
@@ -75,11 +96,12 @@ class MnistSvhn(ABaseDataset):
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_svhn.dataset,
-                            lambda d, i: indexes_svhn[i],
+                            sampler_svhn,
                             size=len(indexes_svhn)
                         )
                     ])
             self._set_dataloader(dataset, set_id)
+
 
     def _load_mnist(self, set_id):
         dataset_dir = os.path.join(self._dataset_dir, "MNIST_SVHN")
@@ -92,7 +114,7 @@ class MnistSvhn(ABaseDataset):
         train = True if set_id != 'test' else False
         tx_mnist = MNISTTransform()
         dataset = torchvision.datasets.MNIST(
-            dataset_dir, train=train, download=True, transform=tx_mnist)
+            dataset_dir, train=train, download=False, transform=tx_mnist)
         if set_id != 'test':
             cv_indexes = torch.load(
                 os.path.join(
@@ -102,9 +124,10 @@ class MnistSvhn(ABaseDataset):
             )
             dataset.data = dataset.data[cv_indexes]
             dataset.targets = dataset.targets[cv_indexes]
+            print(dataset.targets[indexes[:10]])
         print('mnist', set_id, len(dataset.data), len(dataset.targets), len(indexes))
         dataset = DataLoader(
-            dataset, batch_size=self._batch_size, shuffle=self._shuffle,
+            dataset, batch_size=1, shuffle=False,
             pin_memory=False, num_workers=1
         )
         return dataset, indexes
@@ -120,7 +143,7 @@ class MnistSvhn(ABaseDataset):
         split = 'train' if set_id != 'test' else 'test'
         tx_svhn = SVHNTransform()
         dataset = torchvision.datasets.SVHN(
-            dataset_dir, split=split, download=True, transform=tx_svhn)
+            dataset_dir, split=split, download=False, transform=tx_svhn)
         if set_id != 'test':
             cv_indexes = torch.load(
                 os.path.join(
@@ -130,10 +153,11 @@ class MnistSvhn(ABaseDataset):
             )
             dataset.data = dataset.data[cv_indexes]
             dataset.labels = dataset.labels[cv_indexes]
+            print(dataset.labels[indexes[:10]])
         print('svhn', set_id, len(dataset.data), len(dataset.labels), len(indexes))
         dataset = DataLoader(
-            dataset, batch_size=self._batch_size, shuffle=self._shuffle,
-            pin_memory=False, num_workers=1
+            dataset, batch_size=1, shuffle=self._shuffle,
+            pin_memory=True, num_workers=1
         )
         return dataset, indexes
 
@@ -144,7 +168,7 @@ class MnistSvhn(ABaseDataset):
             shuffle=self._shuffle,
             drop_last=self._drop_last,
             num_workers=self._num_workers,
-            pin_memory=False
+            pin_memory=True
         )
         set_id = 'infer' if set_id == 'test' else set_id
         self._data_loaders[set_id] = data_loader
@@ -229,6 +253,9 @@ class MnistSvhn(ABaseDataset):
         svhn_l, svhn_li = train_svhn.labels[svhn_train_idxs].sort()
         idx1, idx2 = self._rand_match_on_idx(
             mnist_l, mnist_li, svhn_l, svhn_li, max_d=max_d, dm=dm)
+        print ('train')
+        print (train_mnist.targets[mnist_train_idxs][idx1[:10]])
+        print (train_svhn.labels[svhn_train_idxs][idx2[:10]])
         print('len train idx:', len(idx1), len(idx2))
         torch.save(idx1, os.path.join(
             dataset_dir, "MNIST_SVHN", f"train-ms-mnist-idx-{self._fold}.pt"))
@@ -245,6 +272,9 @@ class MnistSvhn(ABaseDataset):
         svhn_l, svhn_li = train_svhn.labels[svhn_valid_idxs].sort()
         idx1, idx2 = self._rand_match_on_idx(
             mnist_l, mnist_li, svhn_l, svhn_li, max_d=max_d, dm=dm)
+        print('valid')
+        print(train_mnist.targets[mnist_valid_idxs][idx1[:10]])
+        print(train_svhn.labels[svhn_valid_idxs][idx2[:10]])
         print('len train idx:', len(idx1), len(idx2))
         torch.save(idx1, os.path.join(
             dataset_dir, "MNIST_SVHN", f'valid-ms-mnist-idx-{self._fold}.pt'))
