@@ -1,4 +1,6 @@
 import abc
 
 class ABaseRunner(abc.ABC):
-    pass
+    def _unpack_batch(self, batch):
+        x, y = batch
+        return x, y
