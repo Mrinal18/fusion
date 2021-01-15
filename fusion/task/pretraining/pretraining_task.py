@@ -18,7 +18,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         self._task.dataset.load()
 
     def add_model(self, model_config):
-        model_config.args['num_classes'] = self._task.dataset.num_classes
+        model_config.args['num_classes'] = self._task.dataset.num_classes()
         self._task.model = model_provider.get(
             model_config.name, **model_config.args
         )

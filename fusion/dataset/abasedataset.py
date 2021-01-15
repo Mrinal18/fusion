@@ -62,3 +62,8 @@ class ABaseDataset(abc.ABC):
         """
         return self._num_classes
 
+    @num_classes.setter
+    def num_classes(self, value):
+        """Number of classes
+        """
+        self._num_classes = value

@@ -14,7 +14,7 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         return self.model([x_.to(self.device) for x_ in x]), y
 
     def _handle_batch(self, batch: Mapping[str, Any]) -> None:
-        x, y = batch
+        x, y = self._unpack_batch(batch)
         outputs = self.model(x)
         loss = self.criterion(outputs, y)
 
