@@ -53,5 +53,7 @@ class BaseConvLayer(ABaseArchitecture):
             )
             if not isinstance(self._layer[0].bias, type(None)):
                 nn.init.constant_(self._layer[0].bias, 0)
+        elif self._weights_initialization_type == 'skip':
+            pass
         else:
             raise NotImplementedError
