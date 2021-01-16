@@ -24,15 +24,18 @@ class LatentHead(ABaseArchitecture):
                 )
             else:
                 assert dim_h != 0
+                # add first hidden layer
                 self._head.append(nn.Linear(dim_in, dim_h, bias=use_bias))
                 if use_bn:
                     self._head.append(nn.BatchNorm1d(dim_h))
                 self._head.append(nn.ReLU(inplace=True))
+                # add other self._num_h_layers - 1 layers
                 for i in range(1, self._num_h_layers):
                     self._head.append(nn.Linear(dim_h, dim_h, bias=use_bias))
                     if use_bn:
                         self._head.append(nn.BatchNorm1d(dim_h))
                     self._head.append(nn.ReLU(inplace=True))
+                # add final layer
                 self._head.append(nn.Linear(dim_h, dim_l, bias=use_bias))
         self._head = nn.Sequential(*self._head)
         self.init_weights()

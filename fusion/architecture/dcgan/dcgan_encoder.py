@@ -72,7 +72,9 @@ class DcganEncoder(ABaseArchitecture):
                     activation_class=activation_class, activation_args={
                         'negative_slope': 0.2, 'inplace': True
                     }
-                ),
+                )
+            )
+            self._layers.append(
                 BaseConvLayer(
                     conv_layer_class, {
                         'in_channels': 8 * dim_h, 'out_channels': dim_l,
