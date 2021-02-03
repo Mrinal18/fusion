@@ -75,7 +75,7 @@ class MnistSvhn(ABaseDataset):
                         size=len(self._indexes[set_id]['svhn'])
                     )
                 ])
-
+                # collate_fn or tensor dataset with transforms
             else:
                 if self._views[0] == 0:
                     dataset_mnist, indexes_mnist = self._load(set_id, 'mnist')
