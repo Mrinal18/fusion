@@ -134,7 +134,6 @@ class DcganDecoder(ABaseArchitecture):
                     latents[conv_latent.size()[-1]] = conv_latent
         return x, latents
 
-
     def init_weights(self):
         for layer in self._layers:
             layer.init_weights()

@@ -8,8 +8,7 @@
 
 ### Coding ToDo List:
 - architecture
-  - DCGAN 
-    - Decoder
+  - DCGAN
     - VaeEncoder
     - VaeDecoder
 - model
