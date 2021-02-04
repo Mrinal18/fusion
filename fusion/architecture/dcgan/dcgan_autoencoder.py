@@ -1,5 +1,6 @@
+from .dcgan_encoder import DcganEncoder
+from .dcgan_decoder import DcganDecoder
 from fusion.architecture import ABaseArchitecture
-from fusion.architecture.dcgan import DcganDecoder, DcganEncoder
 import torch.nn as nn
 
 
@@ -34,9 +35,9 @@ class DcganAutoEncoder(ABaseArchitecture):
         )
 
     def forward(self, x):
-        z, _ = self._encoder(x)
-        x_hat, _ = self._decoder(z)
-        return z, x_hat
+        latent, _ = self._encoder(x)
+        x_hat, _ = self._decoder(latent)
+        return latent, x_hat
 
     def init_weights(self):
         self._encoder.init_weights()
