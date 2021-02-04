@@ -3,7 +3,7 @@ import torch
 import unittest
 
 
-class TestDcganEncoder(unittest.TestCase):
+class TestDcganDecoder(unittest.TestCase):
 
     def test_forward(self):
         # define parameters

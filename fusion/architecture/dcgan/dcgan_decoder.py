@@ -41,7 +41,7 @@ class DcganDecoder(ABaseArchitecture):
                         'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
                     },
                     norm_layer_class= self._norm_layer_class, norm_layer_args={
-                        'num_features': 8 *  self._dim_h
+                        'num_features': 8 * self._dim_h
                     },
                     activation_class= self._activation_class, activation_args={
                         'inplace': True
