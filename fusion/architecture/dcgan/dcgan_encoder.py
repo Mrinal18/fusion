@@ -9,7 +9,7 @@ class DcganEncoder(ABaseArchitecture):
         dim_in,
         dim_h,
         dim_l,
-        dim_cls,
+        dim_cls=None,
         input_size=32,
         conv_layer_class=nn.Conv2d,
         norm_layer_class=nn.BatchNorm2d,
@@ -105,14 +105,18 @@ class DcganEncoder(ABaseArchitecture):
                 'with size 32, 64 in current implementation.")
 
     def forward(self, x):
-        latents = {}
+        latents = None
+        if self._dim_cls is not None:
+            latents = {}
         for layer in self._layers:
             x, conv_latent = layer(x)
             # Add conv latent
-            if conv_latent.size()[-1] in self._dim_cls:
-                latents[conv_latent.size()[-1]] = conv_latent
+            if self._dim_cls is not None:
+                if conv_latent.size()[-1] in self._dim_cls:
+                    latents[conv_latent.size()[-1]] = conv_latent
         # Adds latent
-        latents[1] = x
+        if self._dim_cls is not None:
+            latents[1] = x
         # Flatten to get representation
         z = self._flatten(x)
         return z, latents
