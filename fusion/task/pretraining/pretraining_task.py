@@ -30,7 +30,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_runner(self, runner_config):
         self._task.runner = runner_provider.get(
-            runner_config.name, **{}
+            runner_config.name, **runner_config.args
         )
 
     def add_optimizer(self, optimizer_config):
