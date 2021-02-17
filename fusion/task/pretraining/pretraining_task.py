@@ -56,6 +56,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         self._task.runner = runner_provider.get(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             runner_config.name, **runner_args
 =======
             runner_config.name, **runner_config.args
@@ -63,6 +64,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 =======
             runner_config.name, **runner_args
 >>>>>>> Fix the hybrid config and add some fixes to make code run
+=======
+            runner_config.name, **runner_config.args
+>>>>>>> 1) Add linear_evaluation
         )
 
     def add_optimizer(self, optimizer_config):

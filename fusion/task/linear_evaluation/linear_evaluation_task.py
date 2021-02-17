@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import copy
+=======
+>>>>>>> 1) Add linear_evaluation
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
 from fusion.optimizer import optimizer_provider
@@ -13,6 +16,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
     def add_model(self, model_config):
         self._task.model = {}
         # get number of classes
+<<<<<<< HEAD
         num_classes = self._task.dataset._num_classes
         model_config.args['num_classes'] = num_classes
         pretrained_checkpoint = model_config.args.pretrained_checkpoint
@@ -24,6 +28,16 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
         )
         # load checkpoint
         checkpoint = load_checkpoint(pretrained_checkpoint)
+=======
+        num_classes = self._task.dataset.num_classes
+        model_config.args['num_classes'] = num_classes
+        # create model
+        pretrained_model = model_provider(
+            model_config.name, **model_config.args
+        )
+        # load checkpoint
+        checkpoint = load_checkpoint(model_config.pretrained_checkpoint)
+>>>>>>> 1) Add linear_evaluation
         unpack_checkpoint(checkpoint, pretrained_model)
         # create linear evaluators
         for id_view, encoder in pretrained_model.get_encoder_list():
@@ -46,7 +60,10 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
         )
 
     def add_runner(self, runner_config):
+<<<<<<< HEAD
         runner_args = {} if runner_config.args is None else runner_config.args
+=======
+>>>>>>> 1) Add linear_evaluation
         self._task.runner = runner_provider.get(
             runner_config.name, **runner_config.args
         )

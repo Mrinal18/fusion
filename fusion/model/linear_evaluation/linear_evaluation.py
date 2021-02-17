@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 from fusion.architecture.base_block import Flatten
 =======
 from fusion.utils.utils import Flatten
@@ -7,6 +8,9 @@ from fusion.utils.utils import Flatten
 =======
 from fusion.architecture.base_block import Flatten
 >>>>>>> Merge
+=======
+from fusion.utils.utils import Flatten
+>>>>>>> 1) Add linear_evaluation
 import torch
 import torch.nn as nn
 
