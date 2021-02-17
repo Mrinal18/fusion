@@ -33,7 +33,11 @@ class PretrainingTaskBuilder(ATaskBuilder):
     def add_runner(self, runner_config):
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
+<<<<<<< HEAD
             runner_config.name, **runner_args
+=======
+            runner_config.name, **runner_config.args
+>>>>>>> 1) Add linear_evaluation
         )
 
     def add_optimizer(self, optimizer_config):
