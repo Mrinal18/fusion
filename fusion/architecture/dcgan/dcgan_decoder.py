@@ -120,19 +120,19 @@ class DcganDecoder(ABaseArchitecture):
         )
 
     def forward(self, x):
-        x = self._unflatten(x)
+        x_hat = self._unflatten(x)
         latents = None
         # Adds latent
         if self._dim_cls is not None:
             latents = {}
-            latents[1] = x
+            latents[1] = x_hat
         for layer in self._layers:
-            x, conv_latent = layer(x)
+            x_hat, conv_latent = layer(x_hat)
             # Add conv latent
             if self._dim_cls is not None:
                 if conv_latent.size()[-1] in self._dim_cls:
                     latents[conv_latent.size()[-1]] = conv_latent
-        return x, latents
+        return x_hat, latents
 
     def init_weights(self):
         for layer in self._layers:

@@ -1,5 +1,7 @@
 from .abasemodel import AMultiSourceModel, AUniSourceModel
 from .supervised import Supervised
+from .misc import ModelOutput
+from .ae import AE
 
 from fusion.utils import ObjectProvider
 
@@ -11,5 +13,7 @@ __all__ = [
     'AMultiSourceModel',
     'AUniSourceModel',
     'Supervised',
+    'AE',
+    'ModelOutput',
     'model_provider',
 ]

@@ -118,8 +118,8 @@ class DcganEncoder(ABaseArchitecture):
         if self._dim_cls is not None:
             latents[1] = x
         # Flatten to get representation
-        z = self._flatten(x)
-        return z, latents
+        latent = self._flatten(x)
+        return latent, latents
 
     def init_weights(self):
         for layer in self._layers:
