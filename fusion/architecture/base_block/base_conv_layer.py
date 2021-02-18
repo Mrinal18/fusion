@@ -23,6 +23,7 @@ class BaseConvLayer(ABaseArchitecture):
             weights_initialization_type=weights_initialization_type
         )
         self._layer = nn.ModuleList()
+        print (conv_layer_args)
         self._layer.append(
             self._conv_layer_class(**conv_layer_args))
         if self._norm_layer_class:
