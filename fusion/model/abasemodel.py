@@ -19,14 +19,13 @@ class AMultiSourceModel(BaseModel):
     @abc.abstractmethod
     def __init__(self, sources, architecture, architecture_params):
         super(AMultiSourceModel, self).__init__()
-        architecture_params = dict(**architecture_params)
         self._views = sources
         self._model = nn.ModuleDict({})
         for i, view in enumerate(self._views):
             new_architecture_params = copy.deepcopy(architecture_params)
             new_architecture_params['dim_in'] = architecture_params['dim_in'][i]
-            self._model[view] = architecture_provider.get(
-                architecture, **architecture_params)
+            self._model[str(view)] = architecture_provider.get(
+                architecture, **new_architecture_params)
 
     @abc.abstractmethod
     def _source_forward(self, source_id, x):
