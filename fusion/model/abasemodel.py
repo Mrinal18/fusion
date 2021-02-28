@@ -54,3 +54,7 @@ class AUniSourceModel(BaseModel):
     def get_encoder(self, source_id=0):
         del source_id
         return self._encoder
+
+    def get_encoder_list(self):
+        return self._encoder
+

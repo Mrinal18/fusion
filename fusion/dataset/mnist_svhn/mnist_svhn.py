@@ -159,7 +159,7 @@ class MnistSvhn(ABaseDataset):
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets):
-        self.num_classes = len(torch.unique(targets))
+        self._num_classes = len(torch.unique(targets))
 
     def _prepare_fold(self, dataset, dataset_name):
         kf = StratifiedKFold(
