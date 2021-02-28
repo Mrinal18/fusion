@@ -19,8 +19,11 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_model(self, model_config):
         model_config.args['num_classes'] = self._task.dataset._num_classes
+<<<<<<< HEAD
         model_args = {**model_config.args}
         model_args.pop('pretrained_checkpoint')
+=======
+>>>>>>> Fix the hybrid config and add some fixes to make code run
         self._task.model = model_provider.get(
             model_config.name, **model_args
         )
@@ -34,10 +37,14 @@ class PretrainingTaskBuilder(ATaskBuilder):
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
 <<<<<<< HEAD
+<<<<<<< HEAD
             runner_config.name, **runner_args
 =======
             runner_config.name, **runner_config.args
 >>>>>>> 1) Add linear_evaluation
+=======
+            runner_config.name, **runner_args
+>>>>>>> Fix the hybrid config and add some fixes to make code run
         )
 
     def add_optimizer(self, optimizer_config):
