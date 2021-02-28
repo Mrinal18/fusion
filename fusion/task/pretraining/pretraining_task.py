@@ -18,7 +18,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         self._task.dataset.load()
 
     def add_model(self, model_config):
-        model_config.args['num_classes'] = self._task.dataset.num_classes()
+        model_config.args['num_classes'] = self._task.dataset._num_classes
         self._task.model = model_provider.get(
             model_config.name, **model_config.args
         )
@@ -29,8 +29,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
         )
 
     def add_runner(self, runner_config):
+        runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
-            runner_config.name, **runner_config.args
+            runner_config.name, **runner_args
         )
 
     def add_optimizer(self, optimizer_config):
@@ -41,7 +42,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         )
 
     def add_scheduler(self, scheduler_config):
-        args = dict(**scheduler_config.args)
+        args = dict(scheduler_config.args)
         args['optimizer'] = self._task.optimizer
         args['steps_per_epoch'] = len(
             self._task.dataset.get_loader('train'))

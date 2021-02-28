@@ -56,3 +56,9 @@ class AUniSourceModel(BaseModel):
         del source_id
         return self._encoder
 
+<<<<<<< HEAD
+=======
+    def get_encoder_list(self):
+        return self._encoder
+
+>>>>>>> Fix the hybrid config and add some fixes to make code run
