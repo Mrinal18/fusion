@@ -12,7 +12,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
     def add_model(self, model_config):
         self._task.model = {}
         # get number of classes
-        num_classes = self._task.dataset.num_classes
+        num_classes = self._task.dataset._num_classes
         model_config.args['num_classes'] = num_classes
         # create model
         pretrained_model = model_provider(
@@ -42,6 +42,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
         )
 
     def add_runner(self, runner_config):
+        runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
             runner_config.name, **runner_config.args
         )
