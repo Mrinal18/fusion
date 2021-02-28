@@ -1,4 +1,4 @@
-from fusion.utils.utils import Flatten
+from fusion.architecture.base_block import Flatten
 import torch
 import torch.nn as nn
 
