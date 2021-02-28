@@ -23,6 +23,7 @@ class BaseConvLayer(ABaseArchitecture):
             weights_initialization_type=weights_initialization_type
         )
         self._layer = nn.ModuleList()
+        print (conv_layer_args)
         self._layer.append(
             self._conv_layer_class(**conv_layer_args))
         if self._norm_layer_class:
@@ -53,5 +54,7 @@ class BaseConvLayer(ABaseArchitecture):
             )
             if not isinstance(self._layer[0].bias, type(None)):
                 nn.init.constant_(self._layer[0].bias, 0)
+        elif self._weights_initialization_type == 'skip':
+            pass
         else:
             raise NotImplementedError

@@ -9,7 +9,7 @@ class DcganEncoder(ABaseArchitecture):
         dim_in,
         dim_h,
         dim_l,
-        dim_cls,
+        dim_cls=None,
         input_size=32,
         conv_layer_class=nn.Conv2d,
         norm_layer_class=nn.BatchNorm2d,
@@ -22,69 +22,80 @@ class DcganEncoder(ABaseArchitecture):
             activation_class=activation_class,
             weights_initialization_type=weights_initialization_type,
         )
+        self._dim_in = dim_in
+        self._dim_h = dim_h
+        self._dim_l = dim_l
         self._dim_cls = dim_cls
+        self._input_size = input_size
         self._flatten = Flatten()
+        self._layers = None
+        self._construct()
+        self.init_weights()
+
+    def _construct(self):
         self._layers = nn.ModuleList([
             BaseConvLayer(
-                conv_layer_class, {
-                    'in_channels': dim_in, 'out_channels': dim_h,
+                self._conv_layer_class, {
+                    'in_channels': self._dim_in, 'out_channels': self._dim_h,
                     'kernel_size': 4, 'stride': 2, 'padding': 1, 'bias': False
                 },
-                activation_class=activation_class, activation_args={
+                activation_class=self._activation_class, activation_args={
                     'negative_slope': 0.2, 'inplace': True
                 }
             ),
             BaseConvLayer(
-                conv_layer_class, {
-                    'in_channels': dim_h, 'out_channels': 2 * dim_h,
+                self._conv_layer_class, {
+                    'in_channels': self._dim_h, 'out_channels': 2 * self._dim_h,
                     'kernel_size': 4, 'stride': 2, 'padding': 1, 'bias': False
                 },
-                norm_layer_class=norm_layer_class, norm_layer_args={
-                    'num_features': 2 * dim_h
+                norm_layer_class=self._norm_layer_class, norm_layer_args={
+                    'num_features': 2 * self._dim_h
                 },
-                activation_class=activation_class, activation_args={
+                activation_class=self._activation_class, activation_args={
                     'negative_slope': 0.2, 'inplace': True
                 }
             ),
             BaseConvLayer(
-                conv_layer_class, {
-                    'in_channels': 2 * dim_h, 'out_channels': 4 * dim_h,
+                self._conv_layer_class, {
+                    'in_channels': 2 * self._dim_h, 'out_channels': 4 * self._dim_h,
                     'kernel_size': 4, 'stride': 2, 'padding': 1, 'bias': False
                 },
-                norm_layer_class=norm_layer_class, norm_layer_args={
-                    'num_features': 4 * dim_h
+                norm_layer_class=self._norm_layer_class, norm_layer_args={
+                    'num_features': 4 * self._dim_h
                 },
-                activation_class=activation_class, activation_args={
+                activation_class=self._activation_class, activation_args={
                     'negative_slope': 0.2, 'inplace': True
                 }
             ),
         ])
-        if input_size == 64:
+        if self._input_size == 64:
             self._layers.append(
                 BaseConvLayer(
-                    conv_layer_class, {
-                        'in_channels': 4 * dim_h, 'out_channels': 8 * dim_h,
+                    self._conv_layer_class, {
+                        'in_channels': 4 * self._dim_h, 'out_channels': 8 * self._dim_h,
                         'kernel_size': 4, 'stride': 2, 'padding': 1, 'bias': False
                     },
-                    norm_layer_class=norm_layer_class, norm_layer_args={
-                        'num_features': 8 * dim_h
+                    norm_layer_class=self._norm_layer_class, norm_layer_args={
+                        'num_features': 8 * self._dim_h
                     },
-                    activation_class=activation_class, activation_args={
+                    activation_class=self._activation_class, activation_args={
                         'negative_slope': 0.2, 'inplace': True
                     }
-                ),
+                )
+            )
+            self._layers.append(
                 BaseConvLayer(
-                    conv_layer_class, {
-                        'in_channels': 8 * dim_h, 'out_channels': dim_l,
+                    self._conv_layer_class, {
+                        'in_channels': 8 * self._dim_h, 'out_channels': self._dim_l,
                         'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
                     },
                 ),
             )
-        elif input_size == 32:
+        elif self._input_size == 32:
             self._layers.append(
                 BaseConvLayer(
-                    conv_layer_class, {
-                        'in_channels': 4 * dim_h, 'out_channels': dim_l,
+                    self._conv_layer_class, {
+                        'in_channels': 4 * self._dim_h, 'out_channels': self._dim_l,
                         'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
                     },
                 )
@@ -92,20 +103,23 @@ class DcganEncoder(ABaseArchitecture):
         else:
             raise NotImplementedError("DCGAN only supports input square images ' + \
                 'with size 32, 64 in current implementation.")
-        self.init_weights()
 
     def forward(self, x):
-        latents = {}
+        latents = None
+        if self._dim_cls is not None:
+            latents = {}
         for layer in self._layers:
             x, conv_latent = layer(x)
             # Add conv latent
-            if conv_latent.size()[-1] in self._dim_cls:
-                latents[conv_latent.size()[-1]] = conv_latent
+            if self._dim_cls is not None:
+                if conv_latent.size()[-1] in self._dim_cls:
+                    latents[conv_latent.size()[-1]] = conv_latent
         # Adds latent
-        latents[1] = x
+        if self._dim_cls is not None:
+            latents[1] = x
         # Flatten to get representation
-        z = self._flatten(x)
-        return z, latents
+        latent = self._flatten(x)
+        return latent, latents
 
     def init_weights(self):
         for layer in self._layers:

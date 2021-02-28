@@ -33,13 +33,12 @@ class MnistSvhn(ABaseDataset):
             num_workers=num_workers,
             seed=seed,
         )
-        self._num_classes = None
         self._views = views
         self._indexes = {}
 
     def load(self):
         self._download_dataset(self._dataset_dir)
-
+        self._num_classes = 10
         # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry
         samplers = {
             'mnist': {
@@ -64,10 +63,6 @@ class MnistSvhn(ABaseDataset):
                 self._indexes[set_id] = {}
                 self._indexes[set_id]['mnist'] = indexes_mnist
                 self._indexes[set_id]['svhn'] = indexes_svhn
-                if set_id == 'train':
-                    self._set_num_classes(dataset_mnist.dataset.targets)
-                else:
-                    assert (len(torch.unique(dataset_mnist.dataset.targets)) == self.num_classes)
                 dataset = TensorDataset([
                     ResampleDataset(
                         dataset_mnist.dataset,
@@ -80,10 +75,12 @@ class MnistSvhn(ABaseDataset):
                         size=len(self._indexes[set_id]['svhn'])
                     )
                 ])
-
+                # collate_fn or tensor dataset with transforms
             else:
                 if self._views[0] == 0:
-                    dataset_mnist, indexes_mnist = self._load_mnist(set_id)
+                    dataset_mnist, indexes_mnist = self._load(set_id, 'mnist')
+                    self._indexes[set_id] = {}
+                    self._indexes[set_id]['mnist'] = indexes_mnist
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_mnist.dataset,
@@ -92,7 +89,9 @@ class MnistSvhn(ABaseDataset):
                         ),
                     ])
                 elif self._views[0] == 1:
-                    dataset_svhn, indexes_svhn = self._load_svhn(set_id)
+                    self._indexes[set_id] = {}
+                    self._indexes[set_id]['svhn'] = indexes_svhn
+                    dataset_svhn, indexes_svhn = self._load(set_id, 'svhn')
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_svhn.dataset,
@@ -101,6 +100,7 @@ class MnistSvhn(ABaseDataset):
                         )
                     ])
             self._set_dataloader(dataset, set_id)
+
 
     def _load(self, set_id, dataset_name):
         # define filename for pair indexes
