@@ -23,6 +23,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> Fix the hybrid config and add some fixes to make code run
         model_args = {**model_config.args}
@@ -42,6 +43,8 @@ class PretrainingTaskBuilder(ATaskBuilder):
         model_args = {**model_config.args}
         model_args.pop('pretrained_checkpoint')
 >>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
+=======
+>>>>>>> Fix the hybrid config and add some fixes to make code run
         self._task.model = model_provider.get(
             model_config.name, **model_args
         )
@@ -57,6 +60,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             runner_config.name, **runner_args
 =======
             runner_config.name, **runner_config.args
@@ -67,6 +71,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 =======
             runner_config.name, **runner_config.args
 >>>>>>> 1) Add linear_evaluation
+=======
+            runner_config.name, **runner_args
+>>>>>>> Fix the hybrid config and add some fixes to make code run
         )
 
     def add_optimizer(self, optimizer_config):

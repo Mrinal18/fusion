@@ -17,6 +17,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
         self._task.model = {}
         # get number of classes
 <<<<<<< HEAD
+<<<<<<< HEAD
         num_classes = self._task.dataset._num_classes
         model_config.args['num_classes'] = num_classes
         pretrained_checkpoint = model_config.args.pretrained_checkpoint
@@ -30,6 +31,9 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
         checkpoint = load_checkpoint(pretrained_checkpoint)
 =======
         num_classes = self._task.dataset.num_classes
+=======
+        num_classes = self._task.dataset._num_classes
+>>>>>>> Fix the hybrid config and add some fixes to make code run
         model_config.args['num_classes'] = num_classes
         # create model
         pretrained_model = model_provider(
@@ -61,9 +65,13 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 
     def add_runner(self, runner_config):
 <<<<<<< HEAD
+<<<<<<< HEAD
         runner_args = {} if runner_config.args is None else runner_config.args
 =======
 >>>>>>> 1) Add linear_evaluation
+=======
+        runner_args = {} if runner_config.args is None else runner_config.args
+>>>>>>> Fix the hybrid config and add some fixes to make code run
         self._task.runner = runner_provider.get(
             runner_config.name, **runner_config.args
         )
