@@ -19,8 +19,10 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_model(self, model_config):
         model_config.args['num_classes'] = self._task.dataset._num_classes
+        model_args = {**model_config.args}
+        model_args.pop('pretrained_checkpoint')
         self._task.model = model_provider.get(
-            model_config.name, **model_config.args
+            model_config.name, **model_args
         )
 
     def add_criterion(self, criterion_config):
