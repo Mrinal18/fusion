@@ -20,10 +20,15 @@ class PretrainingTaskBuilder(ATaskBuilder):
     def add_model(self, model_config):
         model_config.args['num_classes'] = self._task.dataset._num_classes
 <<<<<<< HEAD
+<<<<<<< HEAD
         model_args = {**model_config.args}
         model_args.pop('pretrained_checkpoint')
 =======
 >>>>>>> Fix the hybrid config and add some fixes to make code run
+=======
+        model_args = {**model_config.args}
+        model_args.pop('pretrained_checkpoint')
+>>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
         self._task.model = model_provider.get(
             model_config.name, **model_args
         )
