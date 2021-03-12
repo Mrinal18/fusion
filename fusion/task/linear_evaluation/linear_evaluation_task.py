@@ -1,7 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import copy
 =======
 >>>>>>> 1) Add linear_evaluation
+=======
+import copy
+>>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
 from fusion.optimizer import optimizer_provider
@@ -21,6 +25,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
         num_classes = self._task.dataset._num_classes
         model_config.args['num_classes'] = num_classes
         pretrained_checkpoint = model_config.args.pretrained_checkpoint
+<<<<<<< HEAD
         # create model
         model_args = copy.deepcopy({**model_config.args})
         model_args.pop('pretrained_checkpoint')
@@ -35,13 +40,21 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
         num_classes = self._task.dataset._num_classes
 >>>>>>> Fix the hybrid config and add some fixes to make code run
         model_config.args['num_classes'] = num_classes
+=======
+>>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
         # create model
-        pretrained_model = model_provider(
-            model_config.name, **model_config.args
+        model_args = copy.deepcopy({**model_config.args})
+        model_args.pop('pretrained_checkpoint')
+        pretrained_model = model_provider.get(
+            model_config.name, **model_args
         )
         # load checkpoint
+<<<<<<< HEAD
         checkpoint = load_checkpoint(model_config.pretrained_checkpoint)
 >>>>>>> 1) Add linear_evaluation
+=======
+        checkpoint = load_checkpoint(pretrained_checkpoint)
+>>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
         unpack_checkpoint(checkpoint, pretrained_model)
         # create linear evaluators
         for id_view, encoder in pretrained_model.get_encoder_list():
