@@ -1,3 +1,4 @@
+import copy
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
 from fusion.optimizer import optimizer_provider
@@ -14,12 +15,15 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
         # get number of classes
         num_classes = self._task.dataset._num_classes
         model_config.args['num_classes'] = num_classes
+        pretrained_checkpoint = model_config.args.pretrained_checkpoint
         # create model
-        pretrained_model = model_provider(
-            model_config.name, **model_config.args
+        model_args = copy.deepcopy({**model_config.args})
+        model_args.pop('pretrained_checkpoint')
+        pretrained_model = model_provider.get(
+            model_config.name, **model_args
         )
         # load checkpoint
-        checkpoint = load_checkpoint(model_config.pretrained_checkpoint)
+        checkpoint = load_checkpoint(pretrained_checkpoint)
         unpack_checkpoint(checkpoint, pretrained_model)
         # create linear evaluators
         for id_view, encoder in pretrained_model.get_encoder_list():
