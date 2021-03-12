@@ -16,6 +16,7 @@ global:
   seed: 343
   num_workers: 0
   logdir: ./out/${global.name}/${now:%Y-%m-%d}/
+  pretrained_checkpoint: None
 defaults:
   - dataset: mnist_svhn
   - architecture: dcgan_encoder
