@@ -45,7 +45,7 @@ class BaseConvLayer(ABaseArchitecture):
         conv_latent = x
         for layer in self._layer[1:]:
             x = layer(x)
-        return (x, conv_latent)
+        return x, conv_latent
 
     def init_weights(self):
         if self._weights_initialization_type == 'xavier_uniform':
