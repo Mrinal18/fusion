@@ -43,9 +43,12 @@ class AMultiSourceModel(BaseModel):
         return self._encoder
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     def get_encoder_list(self):
         return self._encoder
 
+=======
+>>>>>>> Refactor _model to _encoder
 =======
 >>>>>>> Refactor _model to _encoder
 
