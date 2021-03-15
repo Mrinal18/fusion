@@ -12,6 +12,10 @@ class BaseModel(abc.ABC, nn.Module):
     @abc.abstractmethod
     def get_encoder(self, source_id=0):
         pass
+    
+    @abc.abstractmethod
+    def get_encoder_list(self):
+        pass
 
 
 class AMultiSourceModel(BaseModel):
@@ -20,11 +24,11 @@ class AMultiSourceModel(BaseModel):
     def __init__(self, sources, architecture, architecture_params):
         super(AMultiSourceModel, self).__init__()
         self._views = sources
-        self._model = nn.ModuleDict({})
+        self._encoder = nn.ModuleDict({})
         for i, view in enumerate(self._views):
             new_architecture_params = copy.deepcopy(architecture_params)
             new_architecture_params['dim_in'] = architecture_params['dim_in'][i]
-            self._model[str(view)] = architecture_provider.get(
+            self._encoder[str(view)] = architecture_provider.get(
                 architecture, **new_architecture_params)
 
     @abc.abstractmethod
@@ -32,8 +36,11 @@ class AMultiSourceModel(BaseModel):
         pass
 
     def get_encoder(self, source_id=0):
-        assert source_id in self._model.keys()
-        return self._model[source_id]
+        assert source_id in self._encoder.keys()
+        return self._encoder[source_id]
+    
+    def get_encoder_list(self):
+        return self._encoder
 
 
 class AUniSourceModel(BaseModel):
@@ -47,5 +54,8 @@ class AUniSourceModel(BaseModel):
 
     def get_encoder(self, source_id=0):
         del source_id
+        return self._encoder
+
+    def get_encoder_list(self):
         return self._encoder
 

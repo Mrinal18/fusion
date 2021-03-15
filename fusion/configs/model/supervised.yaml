@@ -5,3 +5,4 @@ args:
   num_classes: ???
   architecture: ${architecture.name}
   architecture_params: ${architecture.args}
+  pretrained_checkpoint: ${global.pretrained_checkpoint}
