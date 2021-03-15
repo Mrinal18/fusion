@@ -22,7 +22,7 @@ class TestMnistSvhn(unittest.TestCase):
             print(sample[1][1])
             self.assertEqual((sample[0][1] == sample[1][1]).all(), True)
 
-        self.assertEqual(dataset.num_classes, 10)
+        self.assertEqual(dataset._num_classes, 10)
         self.assertEqual(len(dataset.get_loader('train')), 1345620 // BATCH_SIZE + 1)
         self.assertEqual(len(dataset.get_loader('valid')), 336420 // BATCH_SIZE + 1)
         self.assertEqual(len(dataset.get_loader('infer')), 300000 // BATCH_SIZE)

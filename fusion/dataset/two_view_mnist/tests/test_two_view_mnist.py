@@ -6,7 +6,7 @@ class TestTwoViewMnist(unittest.TestCase):
     def test_forward(self):
         dataset = TwoViewMnist(
             # TODO: Here hard coded path for the dataset
-            dataset_dir='/Users/afedorov/Research/data/MNIST',
+            dataset_dir='../../../../data/MNIST',
             batch_size=1
         )
         dataset.load()

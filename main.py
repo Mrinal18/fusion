@@ -3,7 +3,7 @@ import hydra
 from omegaconf import DictConfig
 
 
-@hydra.main(config_path="fusion/configs", config_name="default_config")
+@hydra.main(config_path="fusion/configs", config_name="default_pretraining")
 def my_experiment(cfg: DictConfig) -> None:
     exp = Experiment(cfg)
     exp.setup_new_experiment()

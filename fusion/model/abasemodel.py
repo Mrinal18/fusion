@@ -12,6 +12,10 @@ class BaseModel(abc.ABC, nn.Module):
     @abc.abstractmethod
     def get_encoder(self, source_id=0):
         pass
+    
+    @abc.abstractmethod
+    def get_encoder_list(self):
+        pass
 
 
 class AMultiSourceModel(BaseModel):
@@ -32,9 +36,11 @@ class AMultiSourceModel(BaseModel):
         pass
 
     def get_encoder(self, source_id=0):
-        assert source_id in self._model.keys()
-        return self._model[source_id]
-
+        assert source_id in self._encoder.keys()
+        return self._encoder[source_id]
+    
+    def get_encoder_list(self):
+        return self._encoder
 
 class AUniSourceModel(BaseModel):
     @abc.abstractmethod
@@ -47,5 +53,8 @@ class AUniSourceModel(BaseModel):
 
     def get_encoder(self, source_id=0):
         del source_id
+        return self._encoder
+
+    def get_encoder_list(self):
         return self._encoder
 

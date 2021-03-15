@@ -1,7 +1,7 @@
 # @package _group_
-name: "PretrainingTask"
+name: "LinearEvaluationTask"
 shuffle: True
-drop_last: True
+drop_last: False
 args:
   logdir: './'
   num_epochs: 1
