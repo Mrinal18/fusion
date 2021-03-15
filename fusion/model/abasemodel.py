@@ -42,9 +42,12 @@ class AMultiSourceModel(BaseModel):
     def get_encoder_list(self):
         return self._encoder
 
+<<<<<<< HEAD
     def get_encoder_list(self):
         return self._encoder
 
+=======
+>>>>>>> Refactor _model to _encoder
 
 class AUniSourceModel(BaseModel):
     @abc.abstractmethod
