@@ -13,7 +13,6 @@
     - VaeDecoder
 - model
   - DIM
-  - AE
 - criterion
   - loss
     - DIM
@@ -34,4 +33,3 @@
   - saliency
 - configs
   - needed yaml with hydra for all models
-  
