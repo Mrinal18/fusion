@@ -3,7 +3,7 @@ from collections import namedtuple
 
 ModelOutput = namedtuple(
     'ModelOutput',
-    ['latents', 'attrs']
+    ['z', 'attrs']
 )
 
 __all__ = [

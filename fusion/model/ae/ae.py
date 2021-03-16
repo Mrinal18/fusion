@@ -10,12 +10,12 @@ class AE(AMultiSourceModel):
         return self._encoder[source_id](x[int(source_id)])
 
     def forward(self, x):
-        ret = ModelOutput(latents={}, attrs={})
+        ret = ModelOutput(z={}, attrs={})
         ret.attrs['x'] = {}
         ret.attrs['x_hat'] = {}
-        for source_id, encoder in self._encoder.items():
+        for source_id, _ in self._encoder.items():
             ret.attrs['x'] = x[int(source_id)]
-            latent, x_hat = self._source_forward(source_id, x)
-            ret.latents[source_id] = latent
+            z, x_hat = self._source_forward(source_id, x)
+            ret.z[source_id] = z
             ret.attrs['x_hat'] = x_hat
         return ret

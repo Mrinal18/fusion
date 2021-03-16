@@ -35,9 +35,9 @@ class DcganAutoEncoder(ABaseArchitecture):
         )
 
     def forward(self, x):
-        latent, _ = self._encoder(x)
-        x_hat, _ = self._decoder(latent)
-        return latent, x_hat
+        z, _ = self._encoder(x)
+        x_hat, _ = self._decoder(z)
+        return z, x_hat
 
     def init_weights(self):
         self._encoder.init_weights()

@@ -13,6 +13,7 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         weights_initialization_type=None
     ):
         super(ABaseArchitecture, self).__init__()
+        self._layers = None
         self._conv_layer_class = conv_layer_class
         self._norm_layer_class = norm_layer_class
         self._dp_layer_class = dp_layer_class
@@ -24,3 +25,6 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         """Weight initialization
         """
         pass
+
+    def get_layers(self):
+        return self._layers
