@@ -12,7 +12,7 @@
     - VaeEncoder
     - VaeDecoder
 - model
-  - DIM
+  - MMVAE
 - criterion
   - loss
     - DIM
