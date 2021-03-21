@@ -87,18 +87,21 @@ class ConvHead(ABaseArchitecture):
         # https://github.com/Philip-Bachman/amdim-public/blob/8754ae149ed28da8066f696f95ba4ca0e3ffebd8/model.py#L392
         # initialize shortcut to be like identity (if possible)
         if self._dim_l >= self._dim_in:
-            if isinstance(self._conv_layer_class, nn.Conv3d):
+            eye_mask = None
+            if self._conv_layer_class is nn.Conv3d:
                 eye_mask = torch.zeros(
                     self._dim_l, self._dim_in, 1, 1, 1, dtype=bool)
                 for i in range(self._dim_in):
                     eye_mask[i, i, 0, 0, 0] = 1
-            elif isinstance(self._conv_layer_class, nn.Conv2d):
+            elif self._conv_layer_class is nn.Conv2d:
                 eye_mask = torch.zeros(
                     self._dim_l, self._dim_in, 1, 1, dtype=bool)
                 for i in range(self._dim_in):
                     eye_mask[i, i, 0, 0] = 1
-            self._identity_shortcut.weight.data.uniform_(-0.01, 0.01)
-            self._identity_shortcut.weight.data.masked_fill_(eye_mask, 1.0)
+            else:
+                raise NotImplementedError
+            self._identity_shortcut._layer[0].weight.data.uniform_(-0.01, 0.01)
+            self._identity_shortcut._layer[0].weight.data.masked_fill_(eye_mask, 1.0)
 
     def forward(self, x):
         identity, _ = self._identity_shortcut(x)
