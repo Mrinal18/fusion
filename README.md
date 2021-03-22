@@ -18,9 +18,7 @@
     - DIM
   - mi_estimator
     - critic
-      - Separable
       - Bilinear
-      - Cosine
     - penalty
     - measure
     - estimator
