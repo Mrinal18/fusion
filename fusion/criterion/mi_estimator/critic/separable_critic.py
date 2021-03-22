@@ -3,11 +3,10 @@ import torch
 
 
 class SeparableCritic(ABaseCritic):
-    def __init__(self, **critic_attrs):
-        super(SeparableCritic, self).__init__(**critic_attrs)
-
-    def score(self, x, y):
-        pass
+    def __call__(self, x, y):
+        self._check(x, y)
+        s = torch.mm(x, y.t())
+        return s
 
     @staticmethod
     def _check(x, y):
@@ -17,22 +16,20 @@ class SeparableCritic(ABaseCritic):
 
 
 class ScaledDotProduct(SeparableCritic):
-    def score(self, x, y):
-        self._check(x, y)
-        s = torch.mm(x, y.t())
+    def __call__(self, x, y):
+        s = super().__call__(x, y)
         dim_l = x.size(1)
         s = s / dim_l ** 0.5
         return s
 
 
 class CosineSimilarity(SeparableCritic):
-    def __init__(self, temperature=1., **critic_attrs):
-        super(SeparableCritic, self).__init__(**critic_attrs)
+    def __init__(self, temperature=1.):
         self._temperature = temperature
 
-    def score(self, x, y):
-        self._check(x, y)
-        s = torch.mm(x, y.t())
+    def __call__(self, x, y):
+        s = super().__call__(x, y)
+        dim_l = x.size(1)
         x_norm = torch.norm(x, dim=1)
         y_norm = torch.norm(y, dim=1)
         s = s / x_norm

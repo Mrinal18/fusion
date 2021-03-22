@@ -19,8 +19,6 @@
   - mi_estimator
     - critic
       - Bilinear
-    - penalty
-    - measure
     - estimator
   - misc
     - cca
