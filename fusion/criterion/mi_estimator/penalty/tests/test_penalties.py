@@ -7,7 +7,6 @@ class TestPenalties(unittest.TestCase):
     @staticmethod
     def _generate_data():
         batch_size = 2
-        dim_l = 32
         torch.manual_seed(42)
         x = torch.rand(batch_size, batch_size)
         return x
