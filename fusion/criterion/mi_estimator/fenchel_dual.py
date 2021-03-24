@@ -8,6 +8,20 @@ class FenchelDualEstimator(ABaseMIEstimator):
         self._measure = measure_provider.get(measure, **{})
 
     def __call__(self, x, y):
-        # TODO: implement this
-        pass
+        assert len(x.size()) == 2
+        assert len(y.size()) == 2
+        assert x.size(1) == y.size(1)
+
+        scores = self._critic(x, y)
+        penalty = None
+        if self._penalty is not None:
+            penalty = self._penalty(scores)
+
+
+
+
+
+
+
+
 
