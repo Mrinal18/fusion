@@ -42,7 +42,7 @@ class FenchelDualEstimator(ABaseMIEstimator):
 
         e_neg = self._measure.get_negative_expectation(scores)
         e_neg = e_neg.mean(2).mean(2)
-        e_neg = (e_pos * mask).sum() / mask.sum()
+        e_neg = (e_pos * n_mask).sum() / n_mask.sum()
 
         loss = e_neg - e_pos
         return loss, penalty
