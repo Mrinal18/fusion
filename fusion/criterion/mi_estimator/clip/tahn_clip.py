@@ -3,9 +3,6 @@ import torch
 
 
 class TahnClip(ABaseClip):
-    def __init__(self, clip_value=10.):
-        self._clip_value = clip_value
-
     def __call__(self, scores):
         if self._clip_value is not None:
             clipped = torch.tanh((1.0 / self._clip_value) * scores)
@@ -13,3 +10,5 @@ class TahnClip(ABaseClip):
         else:
             clipped = scores
         return clipped
+
+

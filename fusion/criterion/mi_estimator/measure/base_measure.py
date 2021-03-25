@@ -18,7 +18,7 @@ def log_sum_exp(x, axis=None):
 
 
 class ABaseMeasure(abc.ABC):
-    def __init__(self, average=True):
+    def __init__(self, average=False):
         self._average = average
 
     @abc.abstractmethod
@@ -29,8 +29,8 @@ class ABaseMeasure(abc.ABC):
     def get_negative_expectation(self, q):
         pass
 
-    def _if_average(self, E):
-        return E.mean() if self._average else E
+    def _if_average(self, e):
+        return e.mean() if self._average else e
 
 
 class GanMeasure(ABaseMeasure):
