@@ -28,7 +28,7 @@ class TestMIEstimators(unittest.TestCase):
         score, penalty = estimator(x, y)
         score = score.item()
         penalty = penalty.item()
-        self.assertAlmostEqual(score, 5.4309, places=4)
+        self.assertAlmostEqual(score, 5.4309, places=3)
         self.assertAlmostEqual(penalty, 10.2132, places=3)
 
     def test_fenchel_dual(self):
@@ -41,6 +41,7 @@ class TestMIEstimators(unittest.TestCase):
         penalty = penalty.item()
         self.assertAlmostEqual(score, 14.4711, places=3)
         self.assertAlmostEqual(penalty, 10.2132, places=3)
+
 
 
 if __name__ == '__main__':
