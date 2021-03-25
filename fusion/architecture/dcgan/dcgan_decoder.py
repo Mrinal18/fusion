@@ -17,6 +17,19 @@ class DcganDecoder(ABaseArchitecture):
         activation_class=nn.ReLU,
         weights_initialization_type='xavier_uniform',
     ):
+        """
+
+        :param dim_in:
+        :param dim_h:
+        :param dim_l:
+        :param dim_cls:
+        :param input_size:
+        :param input_dim:
+        :param conv_layer_class:
+        :param norm_layer_class:
+        :param activation_class:
+        :param weights_initialization_type:
+        """
         super(DcganDecoder, self).__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,

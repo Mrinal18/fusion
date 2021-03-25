@@ -9,15 +9,30 @@ from fusion.task import ATask, ATaskBuilder
 
 class PretrainingTaskBuilder(ATaskBuilder):
     def create_new_task(self, task_args):
+        """
+
+        :param task_args:
+        :return:
+        """
         self._task = PretrainingTask(task_args.args)
 
     def add_dataset(self, dataset_config):
+        """
+
+        :param dataset_config:
+        :return:
+        """
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
         )
         self._task.dataset.load()
 
     def add_model(self, model_config):
+        """
+
+        :param model_config:
+        :return:
+        """
         model_config.args['num_classes'] = self._task.dataset._num_classes
         model_args = {**model_config.args}
         model_args.pop('pretrained_checkpoint')
@@ -26,17 +41,31 @@ class PretrainingTaskBuilder(ATaskBuilder):
         )
 
     def add_criterion(self, criterion_config):
+        """
+        :param criterion_config:
+        :return:
+        """
         self._task.criterion = criterion_provider.get(
             criterion_config.name, **criterion_config.args
         )
 
     def add_runner(self, runner_config):
+        """
+
+        :param runner_config:
+        :return:
+        """
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
             runner_config.name, **runner_args
         )
 
     def add_optimizer(self, optimizer_config):
+        """
+
+        :param optimizer_config:
+        :return:
+        """
         args = dict(**optimizer_config.args)
         args['params'] = self._task.model.parameters()
         self._task.optimizer = optimizer_provider.get(
@@ -44,6 +73,11 @@ class PretrainingTaskBuilder(ATaskBuilder):
         )
 
     def add_scheduler(self, scheduler_config):
+        """
+
+        :param scheduler_config:
+        :return:
+        """
         args = dict(scheduler_config.args)
         args['optimizer'] = self._task.optimizer
         args['steps_per_epoch'] = len(

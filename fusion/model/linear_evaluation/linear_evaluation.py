@@ -5,11 +5,20 @@ import torch.nn as nn
 
 class LinearEvaluator(nn.Module):
     def __init__(self, **kwargs):
+        """
+
+        :param kwargs:
+        """
         super(LinearEvaluator, self).__init__()
         self.flatten = Flatten()
         self.linear = nn.Linear(kwargs['dim_rkhs'], kwargs['num_classes'])
 
     def forward(self, x):
+        """
+
+        :param x:
+        :return:
+        """
         x = self.flatten(x)
         x = self.linear(x)
         return x
@@ -17,6 +26,13 @@ class LinearEvaluator(nn.Module):
 
 class LinearEvaluatorWithEncoder(nn.Module):
     def __init__(self, encoder, num_classes, view, **kwargs):
+        """
+
+        :param encoder:
+        :param num_classes:
+        :param view:
+        :param kwargs:
+        """
         super(LinearEvaluatorWithEncoder, self).__init__()
         self.encoder = encoder
         self.encoder.eval()
@@ -25,6 +41,11 @@ class LinearEvaluatorWithEncoder(nn.Module):
         self.view = view
 
     def forward(self, x):
+        """
+
+        :param x:
+        :return:
+        """
         x = x[self.view]
         x = self.encoder(x)[0]
         x = x.detach()

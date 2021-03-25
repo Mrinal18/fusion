@@ -17,6 +17,18 @@ class ConvHead(ABaseArchitecture):
         weights_initialization_type='xavier_uniform',
         use_bias=False
     ):
+        """
+
+        :param dim_in:
+        :param dim_l:
+        :param dim_h:
+        :param num_h_layers:
+        :param conv_layer_class:
+        :param norm_layer_class:
+        :param activation_class:
+        :param weights_initialization_type:
+        :param use_bias:
+        """
         super(ConvHead, self).__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,

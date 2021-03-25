@@ -12,6 +12,14 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         activation_class=None,
         weights_initialization_type=None
     ):
+        """
+
+        :param conv_layer_class:
+        :param norm_layer_class:
+        :param dp_layer_class:
+        :param activation_class:
+        :param weights_initialization_type:
+        """
         super(ABaseArchitecture, self).__init__()
         self._layers = None
         self._conv_layer_class = conv_layer_class
@@ -27,4 +35,10 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         pass
 
     def get_layers(self):
+        """
+        Get layers
+        :return:
+        Layers
+
+        """
         return self._layers

@@ -2,13 +2,13 @@ import torch
 from torchvision import transforms
 
 
-class UnitIntervalScale(object):
+class UnitIntervalScale:
     def __call__(self, x):
         x = (x - x.min()) / (x.max() - x.min())
         return x
 
 
-class RandomRotation(object):
+class RandomRotation:
     def __init__(self, degrees=45):
         self.random_rotation = transforms.RandomRotation(degrees, fill=(0,))
 
@@ -18,7 +18,7 @@ class RandomRotation(object):
         return x
 
 
-class UniformNoise(object):
+class UniformNoise:
     def __call__(self, x):
         x = transforms.ToTensor()(x)
         x = x + torch.rand(x.size())
@@ -26,7 +26,7 @@ class UniformNoise(object):
         return x
 
 
-class TwoViewMnistTransform(object):
+class TwoViewMnistTransform:
     def __call__(self, x):
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)
@@ -37,7 +37,7 @@ class TwoViewMnistTransform(object):
         return (v1, v2)
 
 
-class RandomRotationTransform(object):
+class RandomRotationTransform:
     def __call__(self, x):
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)
@@ -47,7 +47,7 @@ class RandomRotationTransform(object):
         return (x,)
 
 
-class UniformNoiseTransform(object):
+class UniformNoiseTransform:
     def __call__(self, x):
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)

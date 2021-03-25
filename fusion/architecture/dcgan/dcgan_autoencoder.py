@@ -18,6 +18,20 @@ class DcganAutoEncoder(ABaseArchitecture):
          activation_class=nn.LeakyReLU,
          weights_initialization_type='xavier_uniform',
      ):
+        """
+
+        :param dim_in:
+        :param dim_h:
+        :param dim_l:
+        :param dim_cls:
+        :param input_size:
+        :param input_dim:
+        :param conv_layer_class:
+        :param conv_t_layer_class:
+        :param norm_layer_class:
+        :param activation_class:
+        :param weights_initialization_type:
+        """
         super(DcganAutoEncoder, self).__init__()
         self._encoder = DcganEncoder(
             dim_in, dim_h, dim_l, dim_cls=dim_cls,
