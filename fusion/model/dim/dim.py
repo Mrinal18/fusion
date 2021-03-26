@@ -15,6 +15,14 @@ class Dim(AMultiSourceModel):
         conv_head_params=None,
         latent_head_params=None,
     ):
+        """
+
+        :param sources:
+        :param architecture:
+        :param architecture_params:
+        :param conv_head_params:
+        :param latent_head_params:
+        """
         # create encoders for each view
         super(Dim, self).__init__(sources, architecture, architecture_params)
         self._input_size = architecture_params['input_size']
@@ -58,6 +66,11 @@ class Dim(AMultiSourceModel):
         return z, latents
 
     def forward(self, x):
+        """
+
+        :param x:
+        :return:
+        """
         ret = ModelOutput(z={}, attrs={})
         ret.attrs['latents'] = {}
         for source_id, _ in self._encoder.items():

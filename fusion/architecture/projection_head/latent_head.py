@@ -13,6 +13,16 @@ class LatentHead(ABaseArchitecture):
         use_bias=False,
         use_bn=True
     ):
+        """
+
+        :param dim_in:
+        :param dim_l:
+        :param dim_h:
+        :param num_h_layers:
+        :param use_linear:
+        :param use_bias:
+        :param use_bn:
+        """
         super(LatentHead, self).__init__()
         self._num_h_layers = num_h_layers
         self._use_linear = use_linear

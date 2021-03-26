@@ -37,6 +37,11 @@ class MnistSvhn(ABaseDataset):
         self._indexes = {}
 
     def load(self):
+        """
+        Method to load dataset
+        :return:
+
+        """
         self._download_dataset(self._dataset_dir)
         self._num_classes = 10
         # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry

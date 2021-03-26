@@ -22,6 +22,12 @@ class AMultiSourceModel(BaseModel):
 
     @abc.abstractmethod
     def __init__(self, sources, architecture, architecture_params):
+        """
+
+        :param sources:
+        :param architecture:
+        :param architecture_params:
+        """
         super(AMultiSourceModel, self).__init__()
         self._views = sources
         self._encoder = nn.ModuleDict({})
@@ -46,6 +52,11 @@ class AMultiSourceModel(BaseModel):
 class AUniSourceModel(BaseModel):
     @abc.abstractmethod
     def __init__(self, architecture, architecture_params):
+        """
+
+        :param architecture:
+        :param architecture_params:
+        """
         super(AUniSourceModel, self).__init__()
         architecture_params = dict(**architecture_params)
         architecture_params['dim_in'] = architecture_params['dim_in'][0]
@@ -53,9 +64,18 @@ class AUniSourceModel(BaseModel):
             architecture, **architecture_params)
 
     def get_encoder(self, source_id=0):
+        """
+
+        :param source_id:
+        :return:
+        """
         del source_id
         return self._encoder
 
     def get_encoder_list(self):
+        """
+
+        :return:
+        """
         return self._encoder
 

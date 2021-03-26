@@ -4,12 +4,29 @@ from fusion.model import ModelOutput
 
 class AE(AMultiSourceModel):
     def __init__(self, sources, architecture, architecture_params):
+        """
+
+        :param sources:
+        :param architecture:
+        :param architecture_params:
+        """
         super(AE, self).__init__(sources, architecture, architecture_params)
 
     def _source_forward(self, source_id, x):
+        """
+
+        :param source_id:
+        :param x:
+        :return:
+        """
         return self._encoder[source_id](x[int(source_id)])
 
     def forward(self, x):
+        """
+
+        :param x:
+        :return:
+        """
         ret = ModelOutput(z={}, attrs={})
         ret.attrs['x'] = {}
         ret.attrs['x_hat'] = {}

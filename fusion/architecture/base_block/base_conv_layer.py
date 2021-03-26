@@ -15,6 +15,18 @@ class BaseConvLayer(ABaseArchitecture):
         activation_args={},
         weights_initialization_type='xavier_uniform'
     ):
+        """
+
+        :param conv_layer_class:
+        :param conv_layer_args:
+        :param norm_layer_class:
+        :param norm_layer_args:
+        :param dp_layer_class:
+        :param dp_layer_args:
+        :param activation_class:
+        :param activation_args:
+        :param weights_initialization_type:
+        """
         super(BaseConvLayer, self).__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
@@ -41,13 +53,22 @@ class BaseConvLayer(ABaseArchitecture):
         self.init_weights()
 
     def forward(self, x):
+        """
+
+        :param x:
+        :return:
+        """
         x = self._layer[0](x)
         conv_latent = x
         for layer in self._layer[1:]:
             x = layer(x)
-        return (x, conv_latent)
+        return x, conv_latent
 
     def init_weights(self):
+        """
+
+        :return:
+        """
         if self._weights_initialization_type == 'xavier_uniform':
             nn.init.xavier_uniform_(
                 self._layer[0].weight, gain=nn.init.calculate_gain("relu")

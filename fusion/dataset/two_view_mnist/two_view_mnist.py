@@ -22,6 +22,18 @@ class TwoViewMnist(ABaseDataset):
             num_workers=0,
             seed=343,
     ):
+        """
+
+        :param dataset_dir:
+        :param fold:
+        :param num_folds:
+        :param views:
+        :param batch_size:
+        :param shuffle:
+        :param drop_last:
+        :param num_workers:
+        :param seed:
+        """
         super(TwoViewMnist, self).__init__(
             dataset_dir,
             fold=fold,
@@ -36,6 +48,10 @@ class TwoViewMnist(ABaseDataset):
         self._num_classes = None
 
     def load(self):
+        """
+
+        :return:
+        """
         for set_id in ['train', 'test']:
             train = True if set_id == 'train' else False
             transforms = self._prepare_transforms(set_id)
