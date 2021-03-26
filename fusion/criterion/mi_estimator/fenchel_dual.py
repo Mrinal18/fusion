@@ -4,8 +4,12 @@ import torch
 
 
 class FenchelDualEstimator(ABaseMIEstimator):
-    def __init__(self, critic, clip=None, penalty=None, measure='JSD'):
-        super(FenchelDualEstimator, self).__init__(critic, clip, penalty=penalty)
+    def __init__(self, critic_setting, clip_setting=None, penalty_setting=None, measure='JSD'):
+        super(FenchelDualEstimator, self).__init__(
+            critic_setting,
+            clip_setting,
+            penalty_setting=penalty_setting
+        )
         self._measure = measure_provider.get(measure, **{})
 
     def __call__(self, x, y):

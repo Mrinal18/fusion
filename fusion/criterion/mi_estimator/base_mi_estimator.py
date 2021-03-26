@@ -1,11 +1,24 @@
 import abc
+from fusion.criterion.mi_estimator.critic import critic_provider
+from fusion.criterion.mi_estimator.clip import clip_provider
+from fusion.criterion.mi_estimator.penalty import penalty_provider
 
 
 class ABaseMIEstimator(abc.ABC):
-    def __init__(self, critic, clip=None, penalty=None):
-        self._critic = critic
-        self._penalty = penalty
-        self._clip = clip
+    def __init__(self, critic_setting, clip_setting=None, penalty_setting=None):
+        self._critic = critic_provider.get(
+            critic_setting.class_type, **critic_setting.args
+        )
+        self._clip = None
+        self._penalty = None
+        if clip_setting is not None:
+            self._clip = clip_provider.get(
+                clip_setting.class_type, **clip_setting.args
+            )
+        if penalty_setting is not None:
+            self._penalty = penalty_provider.get(
+                penalty_setting.class_type, **penalty_setting.args
+            )
 
     @abc.abstractmethod
     def __call__(self, x, y):
@@ -36,7 +49,8 @@ class ABaseMIEstimator(abc.ABC):
         scores = scores.permute(0, 2, 3, 1)
         return scores, penalty
 
-    def _check_input(self, x, y):
+    @staticmethod
+    def _check_input(x, y):
         assert len(x.size()) == 3
         assert len(y.size()) == 3
         assert x.size(0) == y.size(0)

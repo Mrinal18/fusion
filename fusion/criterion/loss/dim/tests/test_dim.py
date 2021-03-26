@@ -3,13 +3,14 @@ from fusion.criterion.mi_estimator import InfoNceEstimator
 from fusion.criterion.mi_estimator.critic import SeparableCritic
 from fusion.criterion.mi_estimator.clip import TahnClip
 from fusion.criterion.mi_estimator.penalty import L2Penalty
+from fusion.utils import Setting
 import torch
 import unittest
 
 
 class TestDim(unittest.TestCase):
     @staticmethod
-    def _generate_reps_convs():
+    def _setup():
         torch.manual_seed(42)
         sources = [0, 1]
         conv_latent_size = [32, 1]
@@ -28,14 +29,17 @@ class TestDim(unittest.TestCase):
                 else:
                     reps[source_id][dim_conv] = torch.rand(batch_size, dim_l, 1)
                     convs[source_id][dim_conv] = data
-        return convs, reps
+
+        critic_setting = Setting(class_type='SeparableCritic', args={})
+        clip_setting = Setting(class_type='TahnClip', args={})
+        penalty_setting = Setting(class_type='L2Penalty', args={})
+        estimator = InfoNceEstimator(
+            critic_setting, clip_setting, penalty_setting=penalty_setting)
+
+        return convs, reps, estimator
 
     def test_cr_dim(self):
-        convs, reps = self._generate_reps_convs()
-        critic = SeparableCritic()
-        clip = TahnClip()
-        penalty = L2Penalty()
-        estimator = InfoNceEstimator(critic, clip, penalty=penalty)
+        convs, reps, estimator = self._setup()
         objective = CrDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
@@ -46,11 +50,7 @@ class TestDim(unittest.TestCase):
         self.assertAlmostEqual(loss.item(), 32.0676, places=3)
 
     def test_cc_dim(self):
-        convs, reps = self._generate_reps_convs()
-        critic = SeparableCritic()
-        clip = TahnClip()
-        penalty = L2Penalty()
-        estimator = InfoNceEstimator(critic, clip, penalty=penalty)
+        convs, reps, estimator = self._setup()
         objective = CcDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
@@ -61,11 +61,7 @@ class TestDim(unittest.TestCase):
         self.assertAlmostEqual(loss.item(), 31.5406, places=3)
 
     def test_xx_dim(self):
-        convs, reps = self._generate_reps_convs()
-        critic = SeparableCritic()
-        clip = TahnClip()
-        penalty = L2Penalty()
-        estimator = InfoNceEstimator(critic, clip, penalty=penalty)
+        convs, reps, estimator = self._setup()
         objective = XxDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
@@ -76,11 +72,7 @@ class TestDim(unittest.TestCase):
         self.assertAlmostEqual(loss.item(), 32.0850, places=3)
 
     def test_rr_dim(self):
-        convs, reps = self._generate_reps_convs()
-        critic = SeparableCritic()
-        clip = TahnClip()
-        penalty = L2Penalty()
-        estimator = InfoNceEstimator(critic, clip, penalty=penalty)
+        convs, reps, estimator = self._setup()
         objective = RrDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())

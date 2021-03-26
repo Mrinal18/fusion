@@ -12,7 +12,7 @@ class MultiDim(ABaseLoss):
     def __init__(
         self,
         dim_cls,
-        estimator,
+        estimator_setting,
         modes=[CR_MODE, XX_MODE, CC_MODE, RR_MODE],
         trade_offs=[1., 1., 1., 1.],
     ):
@@ -21,10 +21,11 @@ class MultiDim(ABaseLoss):
         self._dim_cls = dim_cls
         self._modes = modes
         self._masks = self._create_masks()
+        self._estimator = estimator_setting.class_type(**estimator_setting.args)
         self._objectives = {}
         for i, mode in enumerate(modes):
             dim_mode_args = {
-                'estimator': estimator,
+                'estimator': self._estimator,
                 'trade_off': trade_offs[i],
             }
             self._objectives[mode] = dim_mode_provider(
