@@ -1,8 +1,5 @@
 from fusion.criterion.loss.dim import CrDim, CcDim, RrDim, XxDim
 from fusion.criterion.mi_estimator import InfoNceEstimator
-from fusion.criterion.mi_estimator.critic import SeparableCritic
-from fusion.criterion.mi_estimator.clip import TahnClip
-from fusion.criterion.mi_estimator.penalty import L2Penalty
 from fusion.utils import Setting
 import torch
 import unittest

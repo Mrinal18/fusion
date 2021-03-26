@@ -1,9 +1,11 @@
 import abc
 from collections import namedtuple
 from fusion.criterion.loss import ABaseLoss
+from fusion.criterion.mi_estimator import mi_estimator_provider
 from fusion.criterion.loss.dim import dim_mode_provider
 from fusion.criterion.loss.dim import CR_MODE, RR_MODE, \
     CC_MODE, XX_MODE
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -14,21 +16,24 @@ class MultiDim(ABaseLoss):
         dim_cls,
         estimator_setting,
         modes=[CR_MODE, XX_MODE, CC_MODE, RR_MODE],
-        trade_offs=[1., 1., 1., 1.],
+        weights=[1., 1., 1., 1.],
     ):
         super(MultiDim, self).__init__()
-        assert len(modes) == len(trade_offs)
+        assert len(modes) == len(weights)
         self._dim_cls = dim_cls
         self._modes = modes
         self._masks = self._create_masks()
-        self._estimator = estimator_setting.class_type(**estimator_setting.args)
+        self._estimator = mi_estimator_provider.get(
+            estimator_setting.class_type,
+            **estimator_setting.args
+        )
         self._objectives = {}
         for i, mode in enumerate(modes):
             dim_mode_args = {
                 'estimator': self._estimator,
-                'trade_off': trade_offs[i],
+                'weight': weights[i],
             }
-            self._objectives[mode] = dim_mode_provider(
+            self._objectives[mode] = dim_mode_provider.get(
                 mode, **dim_mode_args
             )
 
@@ -37,7 +42,7 @@ class MultiDim(ABaseLoss):
         pass
 
     @staticmethod
-    def _reshape_target(self, target):
+    def _reshape_target(target):
         return target.reshape(target.size(0), target.size(1), -1)
 
     @staticmethod
@@ -97,13 +102,10 @@ class MultiDim(ABaseLoss):
 
 
 class SpatialMultiDim(MultiDim):
-    def __init__(self):
-        super(SpatialMultiDim, self).__init__()
-
     def _create_masks(self):
         masks = {}
         for dim_cl in self._dim_cls:
-            mask = torch.zeros((dim_cl, dim_cl, 1, dim_cl, dim_cl))
+            mask = np.zeros((dim_cl, dim_cl, 1, dim_cl, dim_cl))
             for i in range(dim_cl):
                 for j in range(dim_cl):
                     mask[i, j, 0, i, j] = 1
@@ -116,9 +118,6 @@ class SpatialMultiDim(MultiDim):
 
 
 class VolumetricMultiDim(MultiDim):
-    def __init__(self):
-        super(VolumetricMultiDim, self).__init__()
-
     def _create_masks(self):
         masks = {}
         for dim_cl in self._dim_cls:
