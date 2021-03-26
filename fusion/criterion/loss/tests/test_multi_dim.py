@@ -63,5 +63,6 @@ class TestSpatialMultiDim(unittest.TestCase):
         for i, (_, loss) in enumerate(raw_losses.items()):
             self.assertAlmostEqual(loss.item(), losses[i], places=3)
 
+
 if __name__ == '__main__':
     unittest.main()

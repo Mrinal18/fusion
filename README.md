@@ -14,12 +14,10 @@
 - model
   - MMVAE
 - criterion
-  - loss
-    - DIM
   - mi_estimator
     - critic
       - Bilinear
-    - estimator
+    - Donsker Varadhan Loss
   - misc
     - cca
     - mmvae
