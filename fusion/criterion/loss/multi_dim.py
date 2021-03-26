@@ -2,14 +2,10 @@ import abc
 from collections import namedtuple
 from fusion.criterion.loss import ABaseLoss
 from fusion.criterion.loss.dim import dim_mode_provider
+from fusion.criterion.loss.dim import CR_MODE, RR_MODE, \
+    CC_MODE, XX_MODE
 import torch
 import torch.nn as nn
-
-
-RR_MODE = 'RR'
-CR_MODE = 'CR'
-XX_MODE = 'XX'
-CC_MODE = 'CC'
 
 
 class MultiDim(ABaseLoss):
@@ -53,48 +49,47 @@ class MultiDim(ABaseLoss):
             if torch.cuda.is_available():
                 mask_idx = mask_idx.cuda(torch.device("cuda:{}".format(0)))
                 masks = masks.cuda()
-            # print (r_cnv.size(), mask_idx.size(), masks[mask_idx].size())
             conv_latents = torch.masked_select(conv_latents, masks[mask_idx])
         # flatten features for use as globals in glb->lcl nce cost
         locations = conv_latents.reshape(n_batch, n_channels, 1)
         return locations
 
-    def _prepare_sources_targets(self, latents):
-        sources, targets = {}, {}
+    def _prepare_reps_convs(self, latents):
+        reps, convs = {}, {}
         for source_id in latents.keys():
-            sources[source_id] = {}
-            targets[source_id] = {}
+            reps[source_id] = {}
+            convs[source_id] = {}
             for conv_latent_size in latents[source_id].keys():
                 if conv_latent_size == 1:
                     source = self._sample_location(
                         latents[source_id][conv_latent_size],
                         masks=None
                     )
-                    sources[source_id][conv_latent_size] = source
+                    reps[source_id][conv_latent_size] = source
                 elif conv_latent_size > 1:
                     source = self._sample_location(
                         latents[source_id][conv_latent_size],
                         masks=self._masks[conv_latent_size]
                     )
-                    sources[source_id][conv_latent_size] = source
+                    reps[source_id][conv_latent_size] = source
                     target = self._reshape_target(
                         latents[source_id][conv_latent_size]
                     )
-                    targets[source_id][conv_latent_size] = target
+                    convs[source_id][conv_latent_size] = target
                 else:
                     assert conv_latent_size < 0
-        return sources, targets
+        return reps, convs
 
     def forward(self, preds, target=None):
         del target
         # prepare sources and targets
         latents = preds.attrs['latents']
-        sources, targets = self._prepare_sources_targets(latents)
+        reps, convs = self._prepare_reps_convs(latents)
         # compute losses
         ret_loss = 0
         raw_losses = {}
         for _, objective in self._objectives.items():
-            loss, raw = objective(sources, targets)
+            loss, raw = objective(reps, convs)
             ret_loss = ret_loss + loss
             raw_losses.update(raw)
         return ret_loss, raw_losses

@@ -1,18 +1,17 @@
 import abc
-from fusion.criterion.loss import MAXIMIZE
-import torch.nn as nn
 
 
 class BaseDim(abc.ABC):
+    _name = None
+
     def __init__(
         self,
         estimator,
-        trade_off=1,
+        weight=1,
     ):
         self._estimator = estimator
-        self._trade_off = trade_off
+        self._weight = weight
 
     @abc.abstractmethod
-    def compute_scores(self, x, y, mask_mat):
+    def __call__(self, reps, convs):
         pass
-
