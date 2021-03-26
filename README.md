@@ -12,18 +12,12 @@
     - VaeEncoder
     - VaeDecoder
 - model
-  - DIM
+  - MMVAE
 - criterion
-  - loss
-    - DIM
   - mi_estimator
     - critic
-      - Separable
       - Bilinear
-      - Cosine
-    - penalty
-    - measure
-    - estimator
+    - Donsker Varadhan Loss
   - misc
     - cca
     - mmvae
