@@ -1,5 +1,6 @@
 import abc
-from fusion.criterion.loss import ABaseLoss, MAXIMIZE
+from collections import namedtuple
+from fusion.criterion.loss import ABaseLoss
 from fusion.criterion.loss.dim import dim_mode_provider
 import torch
 import torch.nn as nn
@@ -10,26 +11,29 @@ CR_MODE = 'CR'
 XX_MODE = 'XX'
 CC_MODE = 'CC'
 
-class MultiDim(ABaseLoss):
 
-    @abc.abstractmethod
+class MultiDim(ABaseLoss):
     def __init__(
         self,
         dim_cls,
         estimator,
-        estimator_args,
-        critic,
-        critic_args,
-        clip,
-        clip_args,
         modes=[CR_MODE, XX_MODE, CC_MODE, RR_MODE],
-        direction=MAXIMIZE
+        trade_offs=[1., 1., 1., 1.],
     ):
         super(MultiDim, self).__init__()
+        assert len(modes) == len(trade_offs)
         self._dim_cls = dim_cls
         self._modes = modes
         self._masks = self._create_masks()
-        self.
+        self._objectives = {}
+        for i, mode in enumerate(modes):
+            dim_mode_args = {
+                'estimator': estimator,
+                'trade_off': trade_offs[i],
+            }
+            self._objectives[mode] = dim_mode_provider(
+                mode, **dim_mode_args
+            )
 
     @abc.abstractmethod
     def _create_masks(self):
@@ -55,9 +59,45 @@ class MultiDim(ABaseLoss):
         locations = conv_latents.reshape(n_batch, n_channels, 1)
         return locations
 
-    def forward(self, input, target):
-        del target
+    def _prepare_sources_targets(self, latents):
+        sources, targets = {}, {}
+        for source_id in latents.keys():
+            sources[source_id] = {}
+            targets[source_id] = {}
+            for conv_latent_size in latents[source_id].keys():
+                if conv_latent_size == 1:
+                    source = self._sample_location(
+                        latents[source_id][conv_latent_size],
+                        masks=None
+                    )
+                    sources[source_id][conv_latent_size] = source
+                elif conv_latent_size > 1:
+                    source = self._sample_location(
+                        latents[source_id][conv_latent_size],
+                        masks=self._masks[conv_latent_size]
+                    )
+                    sources[source_id][conv_latent_size] = source
+                    target = self._reshape_target(
+                        latents[source_id][conv_latent_size]
+                    )
+                    targets[source_id][conv_latent_size] = target
+                else:
+                    assert conv_latent_size < 0
+        return sources, targets
 
+    def forward(self, preds, target=None):
+        del target
+        # prepare sources and targets
+        latents = preds.attrs['latents']
+        sources, targets = self._prepare_sources_targets(latents)
+        # compute losses
+        ret_loss = 0
+        raw_losses = {}
+        for _, objective in self._objectives.items():
+            loss, raw = objective(sources, targets)
+            ret_loss = ret_loss + loss
+            raw_losses.update(raw)
+        return ret_loss, raw_losses
 
 
 class SpatialMultiDim(MultiDim):

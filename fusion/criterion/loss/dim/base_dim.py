@@ -7,14 +7,10 @@ class BaseDim(abc.ABC):
     def __init__(
         self,
         estimator,
-        estimator_args,
-        critic,
-        critic_args,
-        clip,
-        clip_args,
-        direction=MAXIMIZE
+        trade_off=1,
     ):
-        self._estimator =
+        self._estimator = estimator
+        self._trade_off = trade_off
 
     @abc.abstractmethod
     def compute_scores(self, x, y, mask_mat):

@@ -8,8 +8,9 @@ class CrossEntropyLoss(ABaseLoss):
         super(CrossEntropyLoss, self).__init__()
         self._loss = nn.CrossEntropyLoss(**kwargs)
 
-    def forward(self, input, target):
-        return self._loss(input, target)
+    def forward(self, preds, target=None):
+        assert target is not None
+        return self._loss(preds, target)
 
 
 class MSELoss(ABaseLoss):
@@ -17,8 +18,9 @@ class MSELoss(ABaseLoss):
         super(MSELoss, self).__init__()
         self._loss = nn.MSELoss(**kwargs)
 
-    def forward(self, input, target):
-        loss = self._loss(input, target)
+    def forward(self, preds, target=None):
+        assert target is not None
+        loss = self._loss(preds, target)
         return loss
 
 
@@ -27,6 +29,7 @@ class BCEWithLogitsLoss(ABaseLoss):
         super(BCEWithLogitsLoss, self).__init__()
         self._loss = nn.BCEWithLogitsLoss(**kwargs)
 
-    def forward(self, input, target):
-        loss = self._loss(input.squeeze(1), target.float())
+    def forward(self, preds, target=None):
+        assert target is not None
+        loss = self._loss(preds.squeeze(1), target.float())
         return loss
