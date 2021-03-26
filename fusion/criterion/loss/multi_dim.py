@@ -39,7 +39,8 @@ class MultiDim(ABaseLoss):
     def _reshape_target(self, target):
         return target.reshape(target.size(0), target.size(1), -1)
 
-    def _sample_location(self, conv_latents, masks):
+    @staticmethod
+    def _sample_location(conv_latents, masks):
         n_batch = conv_latents.size(0)
         n_channels = conv_latents.size(1)
         if masks is not None:

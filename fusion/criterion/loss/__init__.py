@@ -11,5 +11,6 @@ __all__ = [
     'ABaseLoss',
     'CrossEntropyLoss',
     'BCEWithLogitsLoss',
-    'MSELoss'
+    'MSELoss',
+    'MAXIMIZE'
 ]
