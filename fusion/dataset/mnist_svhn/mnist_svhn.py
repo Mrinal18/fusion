@@ -38,7 +38,7 @@ class MnistSvhn(ABaseDataset):
 
     def load(self):
         """
-        Method for load datasets
+        Method to load dataset
         :return:
 
         """
