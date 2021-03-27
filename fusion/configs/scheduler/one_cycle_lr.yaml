@@ -1,4 +1,4 @@
-# @package _group_
+# @package scheduler
 name: "OneCycleLR"
 args:
   max_lr: 0.01

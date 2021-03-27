@@ -1,12 +1,12 @@
-# @package _group_
+# @package dataset
 name: MnistSvhn
 input_size: 32
 data_type: "2D"
 args:
-  dataset_dir: ${global.dataset_dir}
+  dataset_dir: ${global.dataset_dir}/MNIST_SVHN
   fold: ${global.fold}
   num_folds: ${global.num_folds}
-  views: ${global.views}
+  sources: ${global.sources}
   batch_size: ${global.batch_size}
   shuffle: ${task.shuffle}
   drop_last: ${task.drop_last}

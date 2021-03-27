@@ -1,4 +1,4 @@
-# @package _group_
+# @package architecture
 name: "DcganEncoder"
 args:
   dim_in: ${global.dim_in}

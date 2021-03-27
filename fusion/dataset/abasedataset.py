@@ -11,7 +11,7 @@ class ABaseDataset(abc.ABC):
         dataset_dir,
         fold=0,
         num_folds=5,
-        views=[0],
+        sources=[0],
         batch_size=2,
         shuffle=False,
         drop_last=False,
@@ -21,7 +21,7 @@ class ABaseDataset(abc.ABC):
         self._dataset_dir = dataset_dir
         self._fold = fold
         self._num_folds = num_folds
-        self._views = views
+        self._sources = sources
         self._batch_size = batch_size
         self._shuffle = shuffle
         self._drop_last = drop_last

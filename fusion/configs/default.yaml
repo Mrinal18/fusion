@@ -10,13 +10,13 @@ global:
   dim_cls: []
   dataset_dir: "../../../../data"
   batch_size: 64
-  views: [0]
+  sources: [0]
   fold: 0
   num_folds: 5
   seed: 343
   num_workers: 0
-  logdir: ./out/${global.name}/${now:%Y-%m-%d}/
-  pretrained_checkpoint: None
+  logdir: ./out/${global.name}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
+  pretrained_checkpoint: /media/hd/research/code/fusion/out/Supervised_v0/2021-03-27/11-21-09/checkpoints/best.pth
 defaults:
   - dataset: mnist_svhn
   - architecture: dcgan_encoder

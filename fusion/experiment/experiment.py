@@ -1,5 +1,6 @@
 from fusion.task import TaskDirector, task_builder_provider
-
+import hydra
+from omegaconf import DictConfig, OmegaConf
 
 class Experiment:
     # Singleton
@@ -9,8 +10,8 @@ class Experiment:
 
         :param config:
         """
+        print(OmegaConf.to_yaml(config))
         self._config = config
-        print(config)
         self._task = None
 
     def setup_new_experiment(self):
