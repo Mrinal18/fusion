@@ -22,7 +22,6 @@
     - cca
     - mmvae
 - task
-  - linear evaluation
   - logreg evaluation
   - saliency
 - configs
