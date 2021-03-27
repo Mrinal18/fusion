@@ -8,7 +8,7 @@ class CcDim(BaseDim):
     _name = CC_MODE
 
     def __call__(self, reps, convs):
-        ret_loss = 0
+        ret_loss = None
         raw_losses = {}
         for rep_source_id, rep in reps.items():
             for conv_source_id, conv in convs.items():
@@ -21,10 +21,10 @@ class CcDim(BaseDim):
                         name = self._name_it(
                             rep_source_id, conv_source_id, dim_conv)
                         raw_losses[f'{name}_loss'] = loss
-                        ret_loss += loss
+                        ret_loss = ret_loss + loss if ret_loss is not None else loss
                         if penalty is not None:
                             raw_losses[f'{name}_penalty'] = penalty
-                            ret_loss += penalty
+                            ret_loss = ret_loss + penalty if ret_loss is not None else penalty
         return ret_loss, raw_losses
 
     def _name_it(self, rep_source_id, conv_source_id, dim_conv):

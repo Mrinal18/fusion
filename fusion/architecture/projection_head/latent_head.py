@@ -11,7 +11,8 @@ class LatentHead(ABaseArchitecture):
         num_h_layers=0,
         use_linear=False,
         use_bias=False,
-        use_bn=True
+        use_bn=True,
+        weights_initialization_type='xavier_uniform',
     ):
         """
 

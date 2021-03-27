@@ -10,6 +10,7 @@ from fusion.utils import ObjectProvider
 
 model_provider = ObjectProvider()
 model_provider.register_object('Supervised', Supervised)
+model_provider.register_object('Dim', Dim)
 model_provider.register_object('LinearEvaluator', LinearEvaluator)
 
 __all__ = [

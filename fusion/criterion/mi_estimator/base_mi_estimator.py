@@ -6,18 +6,21 @@ from fusion.criterion.mi_estimator.penalty import penalty_provider
 
 class ABaseMIEstimator(abc.ABC):
     def __init__(self, critic_setting, clip_setting=None, penalty_setting=None):
+        args = {} if critic_setting.args is None else critic_setting.args
         self._critic = critic_provider.get(
-            critic_setting.class_type, **critic_setting.args
+            critic_setting.class_type, **args
         )
         self._clip = None
         self._penalty = None
         if clip_setting is not None:
+            args = {} if clip_setting.args is None else clip_setting.args
             self._clip = clip_provider.get(
-                clip_setting.class_type, **clip_setting.args
+                clip_setting.class_type, **args
             )
         if penalty_setting is not None:
+            args = {} if clip_setting.args is None else clip_setting.args
             self._penalty = penalty_provider.get(
-                penalty_setting.class_type, **penalty_setting.args
+                penalty_setting.class_type, **args
             )
 
     @abc.abstractmethod

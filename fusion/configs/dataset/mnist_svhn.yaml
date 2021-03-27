@@ -3,7 +3,7 @@ name: MnistSvhn
 input_size: 32
 data_type: "2D"
 args:
-  dataset_dir: ${global.dataset_dir}/MNIST_SVHN
+  dataset_dir: ${global.dataset_dir}
   fold: ${global.fold}
   num_folds: ${global.num_folds}
   sources: ${global.sources}

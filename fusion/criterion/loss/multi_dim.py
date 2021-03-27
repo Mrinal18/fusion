@@ -92,11 +92,11 @@ class MultiDim(ABaseLoss):
         latents = preds.attrs['latents']
         reps, convs = self._prepare_reps_convs(latents)
         # compute losses
-        ret_loss = 0
+        ret_loss = None
         raw_losses = {}
         for _, objective in self._objectives.items():
             loss, raw = objective(reps, convs)
-            ret_loss = ret_loss + loss
+            ret_loss = ret_loss + loss if ret_loss is not None else loss
             raw_losses.update(raw)
         return ret_loss, raw_losses
 

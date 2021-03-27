@@ -33,7 +33,8 @@ class PretrainingTaskBuilder(ATaskBuilder):
         :param model_config:
         :return:
         """
-        model_config.args['num_classes'] = self._task.dataset._num_classes
+        if 'num_classes' in model_config.args.keys():
+            model_config.args['num_classes'] = self._task.dataset._num_classes
         model_args = {**model_config.args}
         model_args.pop('pretrained_checkpoint')
         self._task.model = model_provider.get(

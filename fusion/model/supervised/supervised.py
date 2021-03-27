@@ -20,6 +20,7 @@ class Supervised(ABaseModel):
         """
         super(Supervised, self).__init__(sources, architecture, architecture_params)
         assert len(sources) == 1
+        self._sources = sources
         self._linear = nn.Linear(dim_l, num_classes)
 
     def forward(self, x):
@@ -30,10 +31,10 @@ class Supervised(ABaseModel):
         result of forward propagation
         """
         assert len(x) == 1
-        x = self._source_forward(0, x)
+        x = self._source_forward(self._sources[0], x)
         return x
 
     def _source_forward(self, source_id, x):
-        x, _ = self._encoder[str(source_id)](x[source_id])
+        x, _ = self._encoder[str(source_id)](x[0])
         x = self._linear(x)
         return x
