@@ -4,24 +4,24 @@ hydra:
   run:
     dir: ${global.logdir}
 global:
-  name: 'Supervised_v0'
-  dim_in: [1]
+  name: ${model.name}
+  dim_in: [1, 3]
   dim_l: 64
-  dim_cls: []
-  dataset_dir: "../../../../data"
+  dim_cls: [8]
+  dataset_dir: "../../../../data/"
   batch_size: 64
-  sources: [0]
+  sources: [0, 1]
   fold: 0
   num_folds: 5
   seed: 343
   num_workers: 0
-  logdir: ./out/${global.name}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
+  logdir: ./out/${global.name}/${global.fold}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
   pretrained_checkpoint: /media/hd/research/code/fusion/out/Supervised_v0/2021-03-27/11-21-09/checkpoints/best.pth
 defaults:
   - dataset: mnist_svhn
   - architecture: dcgan_encoder
-  - model: supervised
-  - criterion: ce
+  - model: dim
+  - criterion: spatial_multi_dim
   - task: pretraining
   - optimizer: radam
   - scheduler: one_cycle_lr

@@ -95,8 +95,8 @@ class MnistSvhn(ABaseDataset):
                     ])
                 elif self._sources[0] == 1:
                     self._indexes[set_id] = {}
-                    self._indexes[set_id]['svhn'] = indexes_svhn
                     dataset_svhn, indexes_svhn = self._load(set_id, 'svhn')
+                    self._indexes[set_id]['svhn'] = indexes_svhn
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_svhn.dataset,

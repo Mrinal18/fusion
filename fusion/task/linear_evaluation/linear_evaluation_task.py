@@ -114,7 +114,6 @@ class LinearEvalualtionTask(ATask):
 
 	def run(self):
 		for source_id, source_model in self._model.items():
-			print (source_model)
 			self._runner.train(
 				model=source_model,
 				criterion=self._criterion,

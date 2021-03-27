@@ -83,7 +83,7 @@ class Dim(ABaseModel):
             self, conv_head_params, architecture_params, conv_latent_size, source_id):
         if conv_head_params is None:
             # by design choice
-            conv_head_params = copy.deepcopy(architecture_params)
+            conv_head_params = copy.deepcopy(dict(**architecture_params))
             conv_head_params.pop('dim_cls')
             conv_head_params.pop('input_size')
             dim_in = self._find_dim_in(conv_latent_size, source_id) # find the dim_in for dim_conv
@@ -94,7 +94,7 @@ class Dim(ABaseModel):
     def _parse_latent_head_params(self, latent_head_params, architecture_params):
         if latent_head_params is None:
             # by design choice
-            latent_head_params = copy.deepcopy(architecture_params)
+            latent_head_params = copy.deepcopy(dict(**architecture_params))
             latent_head_params.pop('dim_cls')
             latent_head_params.pop('input_size')
             latent_head_params['dim_in'] = latent_head_params['dim_l']

@@ -8,7 +8,7 @@ class CrDim(BaseDim):
     _name = CR_MODE
 
     def __call__(self, reps, convs):
-        ret_loss = 0
+        ret_loss = None
         raw_losses = {}
         dim_conv_latent = 1
         for source_id, rep in reps.items():
@@ -19,10 +19,10 @@ class CrDim(BaseDim):
                 loss = self._weight * loss
                 name = self._name_it(source_id, dim_conv)
                 raw_losses[f'{name}_loss'] = loss
-                ret_loss += loss
+                ret_loss = ret_loss + loss if ret_loss is not None else loss
                 if penalty is not None:
                     raw_losses[f'{name}_penalty'] = penalty
-                    ret_loss += penalty
+                    ret_loss = ret_loss + penalty if ret_loss is not None else penalty
         return ret_loss, raw_losses
 
     def _name_it(self, source_id, dim_conv):
