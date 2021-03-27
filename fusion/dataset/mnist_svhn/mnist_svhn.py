@@ -15,7 +15,7 @@ class MnistSvhn(ABaseDataset):
             dataset_dir,
             fold=0,
             num_folds=5,
-            views=[0],
+            sources=[0],
             batch_size=2,
             shuffle=False,
             drop_last=False,
@@ -26,14 +26,14 @@ class MnistSvhn(ABaseDataset):
             dataset_dir,
             fold=fold,
             num_folds=num_folds,
-            views=views,
+            sources=sources,
             batch_size=batch_size,
             shuffle=shuffle,
             drop_last=drop_last,
             num_workers=num_workers,
             seed=seed,
         )
-        self._views = views
+        self._sources = sources
         self._indexes = {}
 
     def load(self):
@@ -62,7 +62,7 @@ class MnistSvhn(ABaseDataset):
             dataset = None
             sampler_mnist = samplers['mnist'][set_id]
             sampler_svhn = samplers['svhn'][set_id]
-            if len(self._views) == 2:
+            if len(self._sources) == 2:
                 dataset_mnist, indexes_mnist = self._load(set_id, 'mnist')
                 dataset_svhn, indexes_svhn = self._load(set_id, 'svhn')
                 self._indexes[set_id] = {}
@@ -82,7 +82,7 @@ class MnistSvhn(ABaseDataset):
                 ])
                 # collate_fn or tensor dataset with transforms
             else:
-                if self._views[0] == 0:
+                if self._sources[0] == 0:
                     dataset_mnist, indexes_mnist = self._load(set_id, 'mnist')
                     self._indexes[set_id] = {}
                     self._indexes[set_id]['mnist'] = indexes_mnist
@@ -93,7 +93,7 @@ class MnistSvhn(ABaseDataset):
                             size=len(indexes_mnist)
                         ),
                     ])
-                elif self._views[0] == 1:
+                elif self._sources[0] == 1:
                     self._indexes[set_id] = {}
                     self._indexes[set_id]['svhn'] = indexes_svhn
                     dataset_svhn, indexes_svhn = self._load(set_id, 'svhn')
@@ -220,7 +220,6 @@ class MnistSvhn(ABaseDataset):
         else:
             download = True
             os.mkdir(self._dataset_dir)
-
         # load mnist
         train_mnist = torchvision.datasets.MNIST(
             dataset_dir, train=True, download=download, transform=tx)

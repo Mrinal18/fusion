@@ -15,7 +15,7 @@ class TwoViewMnist(ABaseDataset):
             dataset_dir,
             fold=0,
             num_folds=5,
-            views=[0],
+            sources=[0],
             batch_size=2,
             shuffle=False,
             drop_last=False,
@@ -27,7 +27,7 @@ class TwoViewMnist(ABaseDataset):
         :param dataset_dir:
         :param fold:
         :param num_folds:
-        :param views:
+        :param sources:
         :param batch_size:
         :param shuffle:
         :param drop_last:
@@ -38,7 +38,7 @@ class TwoViewMnist(ABaseDataset):
             dataset_dir,
             fold=fold,
             num_folds=num_folds,
-            views=views,
+            sources=sources,
             batch_size=batch_size,
             shuffle=shuffle,
             drop_last=drop_last,
@@ -109,13 +109,13 @@ class TwoViewMnist(ABaseDataset):
         }
 
     def _prepare_transforms(self, set_id):
-        if len(self._views) == 2:
+        if len(self._sources) == 2:
             transforms = TwoViewMnistTransform()
-        elif len(self._views) == 1:
-            view = self._views[0]
-            if view == 0:
+        elif len(self._sources) == 1:
+            source = self._sources[0]
+            if source == 0:
                 transforms = RandomRotationTransform()
-            elif view == 1:
+            elif source == 1:
                 transforms = UniformNoiseTransform()
             else:
                 raise NotImplementedError

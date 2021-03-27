@@ -1,12 +1,12 @@
 import copy
 from fusion.architecture.projection_head import ConvHead, LatentHead
-from fusion.model import AMultiSourceModel
+from fusion.model import ABaseModel
 from fusion.model import ModelOutput
 import torch
 import torch.nn as nn
 
 
-class Dim(AMultiSourceModel):
+class Dim(ABaseModel):
     def __init__(
         self,
         sources,
@@ -23,7 +23,7 @@ class Dim(AMultiSourceModel):
         :param conv_head_params:
         :param latent_head_params:
         """
-        # create encoders for each view
+        # create encoders for each source
         super(Dim, self).__init__(sources, architecture, architecture_params)
         self._input_size = architecture_params['input_size']
         self._conv_layer_class = architecture_params[

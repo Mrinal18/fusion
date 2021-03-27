@@ -1,8 +1,8 @@
-from fusion.model import AMultiSourceModel
+from fusion.model import ABaseModel
 from fusion.model import ModelOutput
 
 
-class AE(AMultiSourceModel):
+class AE(ABaseModel):
     def __init__(self, sources, architecture, architecture_params):
         """
 

@@ -1,12 +1,13 @@
-from fusion.model import AUniSourceModel
+from fusion.model import ABaseModel
 import torch.nn as nn
 
 
-class Supervised(AUniSourceModel):
+class Supervised(ABaseModel):
     def __init__(
         self,
         dim_l,
         num_classes,
+        sources,
         architecture,
         architecture_params
     ):
@@ -17,7 +18,8 @@ class Supervised(AUniSourceModel):
         :param architecture: type of architecture
         :param architecture_params: parameters of architecture
         """
-        super(Supervised, self).__init__(architecture, architecture_params)
+        super(Supervised, self).__init__(sources, architecture, architecture_params)
+        assert len(sources) == 1
         self._linear = nn.Linear(dim_l, num_classes)
 
     def forward(self, x):
@@ -27,6 +29,11 @@ class Supervised(AUniSourceModel):
         :return:
         result of forward propagation
         """
-        x, _ = self._encoder(x[0])
+        assert len(x) == 1
+        x = self._source_forward(0, x)
+        return x
+
+    def _source_forward(self, source_id, x):
+        x, _ = self._encoder[str(source_id)](x[source_id])
         x = self._linear(x)
         return x
