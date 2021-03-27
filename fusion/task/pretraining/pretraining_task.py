@@ -46,8 +46,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
         :param criterion_config:
         :return:
         """
+        args = {} if criterion_config.args is None else criterion_config.args
         self._task.criterion = criterion_provider.get(
-            criterion_config.name, **criterion_config.args
+            criterion_config.name, **args
         )
 
     def add_runner(self, runner_config):

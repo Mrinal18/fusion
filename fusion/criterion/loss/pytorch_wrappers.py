@@ -15,33 +15,12 @@ class CrossEntropyLoss(ABaseLoss):
     def forward(self, preds, target=None):
         """
 
-        :param input:
+        :param preds:
         :param target:
         :return:
         """
         assert target is not None
         return self._loss(preds, target)
-
-
-class MSELoss(ABaseLoss):
-    def __init__(self, **kwargs):
-        """
-
-        :param kwargs:
-        """
-        super(MSELoss, self).__init__()
-        self._loss = nn.MSELoss(**kwargs)
-
-    def forward(self, preds, target=None):
-        """
-
-        :param input:
-        :param target:
-        :return:
-        """
-        assert target is not None
-        loss = self._loss(preds, target)
-        return loss
 
 
 class BCEWithLogitsLoss(ABaseLoss):
@@ -56,7 +35,7 @@ class BCEWithLogitsLoss(ABaseLoss):
     def forward(self, preds, target=None):
         """
 
-        :param input:
+        :param preds:
         :param target:
         :return:
         """
