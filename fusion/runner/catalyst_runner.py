@@ -41,3 +41,5 @@ class CatalystRunner(ABaseRunner, dl.Runner):
             loss.backward()
             self.optimizer.step()
             self.optimizer.zero_grad()
+            
+        # ToDo: Add self.batch for callbacks
