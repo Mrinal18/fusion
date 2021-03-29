@@ -1,6 +1,6 @@
 import copy
 
-from catalyst.utils.checkpoint import load_checkpoint, unpack_checkpoint
+from catalyst.utils.torch import load_checkpoint, unpack_checkpoint
 
 from fusion.criterion import criterion_provider
 from fusion.model import model_provider
@@ -124,7 +124,7 @@ class LinearEvalualtionTask(ATask):
 				num_epochs=self._task_args['num_epochs'],
 				verbose=self._task_args['verbose'],
 				# TODO: Resume by search in logdir or from hydra config
-				resume=self._task_args['resume'],
+				# resume=self._task_args['resume'],
 				timeit=self._task_args['timeit'],
 				callbacks=self._callbacks,
 			)

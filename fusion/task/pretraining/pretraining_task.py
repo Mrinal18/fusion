@@ -104,7 +104,7 @@ class PretrainingTask(ATask):
             logdir=self._task_args['logdir'],
             num_epochs=self._task_args['num_epochs'],
             verbose=self._task_args['verbose'],
-            resume=self._task_args['resume'],
+            # resume=self._task_args['resume'],
             timeit=self._task_args['timeit'],
             callbacks=self._callbacks,
         )

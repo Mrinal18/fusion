@@ -20,7 +20,7 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         return self.model([x_.to(self.device) for x_ in x]), y
 
     # ToDo: _handle_batch -> handle_batch Catalyst v21
-    def _handle_batch(self, batch: Mapping[str, Any]) -> None:
+    def handle_batch(self, batch: Mapping[str, Any]) -> None:
         """
 
         :param batch:
