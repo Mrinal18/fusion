@@ -6,7 +6,7 @@ args:
     class_type: InfoNceEstimator
     args:
       critic_setting:
-        class_type: SeparableCritic
+        class_type: ScaledDotProduct
         args:
       clip_setting:
         class_type: TahnClip
@@ -14,5 +14,5 @@ args:
       penalty_setting:
         class_type: L2Penalty
         args:
-  modes: [XX]
+  modes: [CR]
   weights: [1.]
