@@ -16,17 +16,23 @@ class BaseConvLayer(ABaseArchitecture):
         weights_initialization_type='xavier_uniform'
     ):
         """
+        Initialization of base class of convolution layer
 
-        :param conv_layer_class:
-        :param conv_layer_args:
-        :param norm_layer_class:
-        :param norm_layer_args:
-        :param dp_layer_class:
-        :param dp_layer_args:
-        :param activation_class:
-        :param activation_args:
-        :param weights_initialization_type:
+        Args:
+            :param conv_layer_class: class of convolution layer
+            :param conv_layer_args: parameters of convolution layer
+            :param norm_layer_class:  class of normalization layer
+            :param norm_layer_args: parameters of normalization layer
+            :param dp_layer_class: class of droupout layer
+            :param dp_layer_args: parameters of droupout layer
+            :param activation_class: class of activation function
+            :param activation_args: parameters of activation function
+            :param weights_initialization_type: type of initialization weights
+
+        :return
+            Base class of convolution layer
         """
+
         super(BaseConvLayer, self).__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
@@ -54,9 +60,13 @@ class BaseConvLayer(ABaseArchitecture):
 
     def forward(self, x):
         """
-
-        :param x:
-        :return:
+        Forward method of base class of convolution layer
+        Args:
+            :param x: tensor
+        Returns:
+            Args:
+                :param x: tensor after forward method
+                :param conv_latent: latent presentation of first convolution layer
         """
         x = self._layer[0](x)
         conv_latent = x
@@ -66,8 +76,10 @@ class BaseConvLayer(ABaseArchitecture):
 
     def init_weights(self):
         """
+        Method for initialization weights
+        Returns:
+            Layer with initialization weights
 
-        :return:
         """
         if self._weights_initialization_type == 'xavier_uniform':
             nn.init.xavier_uniform_(

@@ -19,18 +19,24 @@ class DcganAutoEncoder(ABaseArchitecture):
          weights_initialization_type='xavier_uniform',
      ):
         """
+        Class of DCGAN autoencoder
+        Args:
+            :param dim_in:
+            :param dim_h:
+            :param dim_l:
+            :param dim_cls:
+            :param input_size:
+            :param input_dim:
+            :param conv_layer_class:
+            :param conv_t_layer_class:
+            :param norm_layer_class:
+            :param activation_class:
+            :param weights_initialization_type:
 
-        :param dim_in:
-        :param dim_h:
-        :param dim_l:
-        :param dim_cls:
-        :param input_size:
-        :param input_dim:
-        :param conv_layer_class:
-        :param conv_t_layer_class:
-        :param norm_layer_class:
-        :param activation_class:
-        :param weights_initialization_type:
+        Returns:
+        Class of DCGAN autoencoder model
+
+
         """
         super(DcganAutoEncoder, self).__init__()
         self._encoder = DcganEncoder(
@@ -49,10 +55,25 @@ class DcganAutoEncoder(ABaseArchitecture):
         )
 
     def forward(self, x):
+        """
+        Forward method of DCGAN autoencoder model
+        Args:
+            :param x:  input tensor
+        Returns:
+            z:
+            x_hat:
+
+        """
         z, _ = self._encoder(x)
         x_hat, _ = self._decoder(z)
         return z, x_hat
 
     def init_weights(self):
+        """
+        Method for initialization weights
+        Return:
+            Autoencoder with initialization weights
+
+        """
         self._encoder.init_weights()
         self._decoder.init_weights()

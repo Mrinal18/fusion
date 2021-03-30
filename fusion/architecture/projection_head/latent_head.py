@@ -14,14 +14,20 @@ class LatentHead(ABaseArchitecture):
         use_bn=True
     ):
         """
+        Initialization Class of Latent Head model
 
-        :param dim_in:
-        :param dim_l:
-        :param dim_h:
-        :param num_h_layers:
-        :param use_linear:
-        :param use_bias:
-        :param use_bn:
+        Args:
+            :param dim_in:
+            :param dim_l:
+            :param dim_h:
+            :param num_h_layers:
+            :param use_linear:
+            :param use_bias:
+            :param use_bn:
+
+        Return:
+            Class of Latent Head model
+
         """
         super(LatentHead, self).__init__()
         self._num_h_layers = num_h_layers
@@ -51,11 +57,23 @@ class LatentHead(ABaseArchitecture):
         self.init_weights()
 
     def forward(self, x):
+        """
+        Forward method of Latent Head model
+        Args:
+            :param x:  input tensor
+        Returns:
+            x
+        """
         if self._use_linear:
             x = self._head(x)
         return x
 
     def init_weights(self):
+        """
+        Method for initialization weights
+        Return:
+            Latent Head model with initialization weights
+        """
         for layer in self._head:
             if isinstance(layer, nn.Linear):
                 nn.init.xavier_uniform_(
