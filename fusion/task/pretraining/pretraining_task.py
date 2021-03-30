@@ -1,3 +1,5 @@
+from omegaconf import DictConfig
+
 from fusion.dataset import dataset_provider
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
@@ -18,7 +20,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
         self._task = PretrainingTask(task_args.args)
 
-    def add_dataset(self, dataset_config):
+    def add_dataset(self, dataset_config: DictConfig):
         """
 
         :param dataset_config:
@@ -29,7 +31,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         )
         self._task.dataset.load()
 
-    def add_model(self, model_config):
+    def add_model(self, model_config: DictConfig):
         """
 
         :param model_config:
@@ -43,7 +45,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
             model_config.name, **model_args
         )
 
-    def add_criterion(self, criterion_config):
+    def add_criterion(self, criterion_config: DictConfig):
         """
         :param criterion_config:
         :return:
@@ -53,7 +55,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
             criterion_config.name, **args
         )
 
-    def add_runner(self, runner_config):
+    def add_runner(self, runner_config: DictConfig):
         """
 
         :param runner_config:
@@ -64,7 +66,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
             runner_config.name, **runner_args
         )
 
-    def add_optimizer(self, optimizer_config):
+    def add_optimizer(self, optimizer_config: DictConfig):
         """
 
         :param optimizer_config:
@@ -76,7 +78,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
             optimizer_config.name, **args
         )
 
-    def add_scheduler(self, scheduler_config):
+    def add_scheduler(self, scheduler_config: DictConfig):
         """
 
         :param scheduler_config:
