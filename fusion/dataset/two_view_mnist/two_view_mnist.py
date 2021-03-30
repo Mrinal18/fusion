@@ -1,26 +1,30 @@
 import copy
-from fusion.dataset.abasedataset import ABaseDataset
+from typing import Dict, List
+
+from sklearn.model_selection import StratifiedKFold
+import torch
+from torch.utils.data import DataLoader, Dataset
+import torchvision
+
+from fusion.dataset.abasedataset import ABaseDataset, SetId
+from fusion.dataset.abasetransform import ABaseTransform
 from fusion.dataset.two_view_mnist.transforms import TwoViewMnistTransform
 from fusion.dataset.two_view_mnist.transforms import RandomRotationTransform
 from fusion.dataset.two_view_mnist.transforms import UniformNoiseTransform
-from sklearn.model_selection import StratifiedKFold
-import torch
-from torch.utils.data import DataLoader
-import torchvision
 
 
 class TwoViewMnist(ABaseDataset):
     def __init__(
             self,
-            dataset_dir,
-            fold=0,
-            num_folds=5,
-            sources=[0],
-            batch_size=2,
-            shuffle=False,
-            drop_last=False,
-            num_workers=0,
-            seed=343,
+            dataset_dir: str,
+            fold: int = 0,
+            num_folds: int = 5,
+            sources: List[int] = [0],
+            batch_size: int = 2,
+            shuffle: bool = False,
+            drop_last: bool = False,
+            num_workers: int = 0,
+            seed: int = 343,
     ):
         """
 
@@ -34,7 +38,7 @@ class TwoViewMnist(ABaseDataset):
         :param num_workers:
         :param seed:
         """
-        super(TwoViewMnist, self).__init__(
+        super().__init__(
             dataset_dir,
             fold=fold,
             num_folds=num_folds,
@@ -52,8 +56,8 @@ class TwoViewMnist(ABaseDataset):
 
         :return:
         """
-        for set_id in ['train', 'test']:
-            train = True if set_id == 'train' else False
+        for set_id in [SetId.TRAIN, SetId.TEST]:
+            train = True if set_id == SetId.TRAIN else False
             transforms = self._prepare_transforms(set_id)
             dataset = torchvision.datasets.MNIST(
                 self._dataset_dir,
@@ -61,7 +65,7 @@ class TwoViewMnist(ABaseDataset):
                 download=True,
                 transform=transforms
             )
-            if set_id == 'train':
+            if set_id == SetId.TRAIN:
                 self._set_num_classes(dataset.targets)
                 cv_datasets = self._prepare_fold(dataset)
                 for set_id, dataset in cv_datasets.items():
@@ -69,7 +73,7 @@ class TwoViewMnist(ABaseDataset):
             else:
                 self._set_dataloader(dataset, set_id)
 
-    def _set_dataloader(self, dataset, set_id):
+    def _set_dataloader(self, dataset: Dataset, set_id: SetId):
         data_loader = DataLoader(
             dataset,
             batch_size=self._batch_size,
@@ -77,7 +81,7 @@ class TwoViewMnist(ABaseDataset):
             drop_last=self._drop_last,
             num_workers=self._num_workers
         )
-        set_id = 'infer' if set_id == 'test' else set_id
+        set_id = SetId.INFER if set_id == SetId.TEST else set_id
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets):
@@ -104,11 +108,12 @@ class TwoViewMnist(ABaseDataset):
         assert train_dataset.data.size(0) == len(train_index)
         assert train_dataset.targets.size(0) == len(train_index)
         return {
-            'train': train_dataset,
-            'valid': valid_dataset
+            SetId.TRAIN: train_dataset,
+            SetId.TEST: valid_dataset
         }
 
-    def _prepare_transforms(self, set_id):
+    def _prepare_transforms(self, set_id: SetId) -> ABaseTransform:
+        transforms: ABaseTransform
         if len(self._sources) == 2:
             transforms = TwoViewMnistTransform()
         elif len(self._sources) == 1:
@@ -123,14 +128,11 @@ class TwoViewMnist(ABaseDataset):
             raise NotImplementedError
         return transforms
 
-    def get_all_loaders(self):
+    def get_all_loaders(self) -> Dict[SetId, DataLoader]:
         return super().get_all_loaders()
 
-    def get_cv_loaders(self):
+    def get_cv_loaders(self) -> Dict[SetId, DataLoader]:
         return super().get_cv_loaders()
 
-    def get_loader(self, set_id):
+    def get_loader(self, set_id) -> DataLoader:
         return super().get_loader(set_id)
-
-    def num_classes(self):
-        return super().num_classes

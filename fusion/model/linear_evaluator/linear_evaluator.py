@@ -1,9 +1,11 @@
-from fusion.architecture.base_block import Flatten
 import torch.nn as nn
+from torch import Tensor
+
+from fusion.architecture.base_block import Flatten
 
 
 class LinearEvaluator(nn.Module):
-    def __init__(self, encoder, num_classes, dim_l, source_id):
+    def __init__(self, encoder, num_classes: int, dim_l: int, source_id: int):
         """
 
         :param encoder:
@@ -11,14 +13,14 @@ class LinearEvaluator(nn.Module):
         :param dim_l:
         :param source_id:
         """
-        super(LinearEvaluator, self).__init__()
+        super().__init__()
         self._encoder = encoder
         self._encoder.eval()
         self._flatten = Flatten()
         self._linear = nn.Linear(dim_l, num_classes)
         self._source_id = source_id
 
-    def forward(self, x):
+    def forward(self, x: Tensor):
         """
 
         :param x:

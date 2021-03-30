@@ -1,22 +1,27 @@
+from typing import Tuple
+
+import torch.nn as nn
+from torch import Tensor
+
 from .dcgan_encoder import DcganEncoder
 from .dcgan_decoder import DcganDecoder
 from fusion.architecture import ABaseArchitecture
-import torch.nn as nn
+from fusion.architecture.abasearchitecture import TActivation, TConv, TNorm
 
 
 class DcganAutoEncoder(ABaseArchitecture):
     def __init__(self,
-         dim_in,
-         dim_h,
-         dim_l,
+         dim_in: int,
+         dim_h: int,
+         dim_l: int,
          dim_cls=None,
-         input_size=32,
-         input_dim=2,
-         conv_layer_class=nn.Conv2d,
-         conv_t_layer_class=nn.ConvTranspose2d,
-         norm_layer_class=nn.BatchNorm2d,
-         activation_class=nn.LeakyReLU,
-         weights_initialization_type='xavier_uniform',
+         input_size: int = 32,
+         input_dim: int = 2,
+         conv_layer_class: TConv = nn.Conv2d,
+         conv_t_layer_class: TConv = nn.ConvTranspose2d,
+         norm_layer_class: TNorm = nn.BatchNorm2d,
+         activation_class: TActivation = nn.LeakyReLU,
+         weights_initialization_type: str = 'xavier_uniform',
      ):
         """
 
@@ -32,7 +37,7 @@ class DcganAutoEncoder(ABaseArchitecture):
         :param activation_class:
         :param weights_initialization_type:
         """
-        super(DcganAutoEncoder, self).__init__()
+        super().__init__()
         self._encoder = DcganEncoder(
             dim_in, dim_h, dim_l, dim_cls=dim_cls,
             input_size=input_size, conv_layer_class=conv_layer_class,
@@ -48,7 +53,7 @@ class DcganAutoEncoder(ABaseArchitecture):
             weights_initialization_type=weights_initialization_type
         )
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tuple[Tuple, Tuple]:
         z, _ = self._encoder(x)
         x_hat, _ = self._decoder(z)
         return z, x_hat

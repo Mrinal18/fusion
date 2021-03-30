@@ -1,19 +1,21 @@
 import abc
 import copy
-from fusion.architecture import architecture_provider
+from typing import Any, Dict, List
+
 import torch.nn as nn
 
+from fusion.architecture import architecture_provider
 
 class ABaseModel(abc.ABC, nn.Module):
     @abc.abstractmethod
-    def __init__(self, sources, architecture, architecture_params):
+    def __init__(self, sources: List[int], architecture: str, architecture_params: Dict[str, Any]):
         """
 
          :param sources:
          :param architecture:
          :param architecture_params:
          """
-        super(ABaseModel, self).__init__()
+        super().__init__()
         self._sources = sources
         self._encoder = nn.ModuleDict({})
         for i, source_id in enumerate(self._sources):
@@ -23,11 +25,11 @@ class ABaseModel(abc.ABC, nn.Module):
                 architecture, **new_architecture_params)
 
     @abc.abstractmethod
-    def _source_forward(self, source_id, x):
+    def _source_forward(self, source_id: int, x):
         pass
 
-    def get_encoder(self, source_id=0):
-        assert source_id in self._encoder.keys()
+    def get_encoder(self, source_id: int = 0):
+        assert str(source_id) in self._encoder.keys()
         return self._encoder[str(source_id)]
 
     def get_encoder_list(self):

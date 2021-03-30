@@ -1,18 +1,19 @@
 from fusion.architecture import ABaseArchitecture
 import torch.nn as nn
+from torch import Tensor
 
 
 class LatentHead(ABaseArchitecture):
     def __init__(
         self,
-        dim_in,
-        dim_l,
-        dim_h=0,
-        num_h_layers=0,
-        use_linear=False,
-        use_bias=False,
-        use_bn=True,
-        weights_initialization_type='xavier_uniform',
+        dim_in: int,
+        dim_l: int,
+        dim_h: int = 0,
+        num_h_layers: int = 0,
+        use_linear: bool = False,
+        use_bias: bool = False,
+        use_bn: bool = True,
+        weights_initialization_type: str = 'xavier_uniform',
     ):
         """
 
@@ -24,7 +25,7 @@ class LatentHead(ABaseArchitecture):
         :param use_bias:
         :param use_bn:
         """
-        super(LatentHead, self).__init__()
+        super().__init__()
         self._num_h_layers = num_h_layers
         self._use_linear = use_linear
         self._head = nn.ModuleList([])
@@ -51,7 +52,7 @@ class LatentHead(ABaseArchitecture):
         self._head = nn.Sequential(*self._head)
         self.init_weights()
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         if self._use_linear:
             x = self._head(x)
         return x

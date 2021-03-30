@@ -1,6 +1,7 @@
 import copy
 
 from catalyst.utils.checkpoint import load_checkpoint, unpack_checkpoint
+from omegaconf import DictConfig
 
 from fusion.criterion import criterion_provider
 from fusion.model import model_provider
@@ -10,16 +11,16 @@ from fusion.scheduler import scheduler_provider
 from fusion.task import ATask, PretrainingTaskBuilder
 
 
-class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
+class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 	def create_new_task(self, task_args):
 		"""
 
         :param task_args:
         :return:
         """
-		self._task = LinearEvalualtionTask(task_args.args)
+		self._task = LinearEvaluationTask(task_args.args)
 
-	def add_model(self, model_config):
+	def add_model(self, model_config: DictConfig):
 		"""
 
 		:param model_config:
@@ -52,7 +53,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 			)
 			self._task.model[source_id] = linear_evaluator
 
-	def add_criterion(self, criterion_config):
+	def add_criterion(self, criterion_config: DictConfig):
 		"""
 
 		:param criterion_config:
@@ -63,7 +64,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 			criterion_config.name, **criterion_config.args
 		)
 
-	def add_runner(self, runner_config):
+	def add_runner(self, runner_config: DictConfig):
 		"""
 
 		:param runner_config:
@@ -74,7 +75,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 			runner_config.name, **runner_args
 		)
 
-	def add_optimizer(self, optimizer_config):
+	def add_optimizer(self, optimizer_config: DictConfig):
 		"""
 
 		:param optimizer_config:
@@ -89,7 +90,7 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 			)
 			self._task.optimizer[source_id] = optimizer
 
-	def add_scheduler(self, scheduler_config):
+	def add_scheduler(self, scheduler_config: DictConfig):
 		"""
 
 		:param scheduler_config:
@@ -108,9 +109,9 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 			self._task.scheduler[source_id] = scheduler
 
 
-class LinearEvalualtionTask(ATask):
+class LinearEvaluationTask(ATask):
 	def __init__(self, task_args) -> None:
-		super(LinearEvalualtionTask, self).__init__(task_args)
+		super().__init__(task_args)
 
 	def run(self):
 		for source_id, source_model in self._model.items():

@@ -1,13 +1,13 @@
 import abc
-
+from typing import Optional
 
 class BaseDim(abc.ABC):
-    _name = None
+    _name: Optional[str] = None
 
     def __init__(
         self,
         estimator,
-        weight=1,
+        weight: float = 1.0,
     ):
         self._estimator = estimator
         self._weight = weight

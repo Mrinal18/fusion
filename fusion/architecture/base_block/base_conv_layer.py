@@ -1,19 +1,23 @@
-from fusion.architecture.abasearchitecture import ABaseArchitecture
+from typing import Any, Dict, Optional, Tuple, Type
+
 import torch.nn as nn
+from torch import Tensor
+
+from fusion.architecture.abasearchitecture import ABaseArchitecture, TActivation, TDropout, TConv, TNorm
 
 
 class BaseConvLayer(ABaseArchitecture):
     def __init__(
         self,
-        conv_layer_class,
-        conv_layer_args,
-        norm_layer_class=None,
-        norm_layer_args={},
-        dp_layer_class=None,
-        dp_layer_args={},
-        activation_class=None,
-        activation_args={},
-        weights_initialization_type='xavier_uniform'
+        conv_layer_class: TConv,
+        conv_layer_args: Dict[str, Any],
+        norm_layer_class: Optional[TNorm] = None,
+        norm_layer_args: Dict[str, Any] = {},
+        dp_layer_class: Optional[TDropout] =None,
+        dp_layer_args: Dict[str, Any] = {},
+        activation_class: Optional[TActivation] = None,
+        activation_args: Dict[str, Any] = {},
+        weights_initialization_type: str = 'xavier_uniform'
     ):
         """
 
@@ -52,7 +56,7 @@ class BaseConvLayer(ABaseArchitecture):
             )
         self.init_weights()
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
         """
 
         :param x:
@@ -71,7 +75,7 @@ class BaseConvLayer(ABaseArchitecture):
         """
         if self._weights_initialization_type == 'xavier_uniform':
             nn.init.xavier_uniform_(
-                self._layer[0].weight, gain=nn.init.calculate_gain("relu")
+                self._layer[0].weight, gain=nn.init.calculate_gain('relu')
             )
             if not isinstance(self._layer[0].bias, type(None)):
                 nn.init.constant_(self._layer[0].bias, 0)

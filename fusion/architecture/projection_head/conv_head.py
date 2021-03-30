@@ -1,21 +1,23 @@
+from typing import Optional, Type
+
+import torch.nn as nn
+from torch import Tensor
+
 from fusion.architecture import ABaseArchitecture
 from fusion.architecture.base_block import BaseConvLayer
-import torch
-import torch.nn as nn
-
 
 class ConvHead(ABaseArchitecture):
     def __init__(
         self,
-        dim_in,
-        dim_l,
-        dim_h,
-        num_h_layers=1,
-        conv_layer_class=nn.Conv2d,
-        norm_layer_class=nn.BatchNorm2d,
-        activation_class=nn.ReLU,
-        weights_initialization_type='xavier_uniform',
-        use_bias=False
+        dim_in: int,
+        dim_l: int,
+        dim_h: int,
+        num_h_layers: int = 1,
+        conv_layer_class: Type[nn.modules.conv._ConvNd] = nn.Conv2d,
+        norm_layer_class: Type[nn.modules.batchnorm._BatchNorm] = nn.BatchNorm2d,
+        activation_class: Type[nn.Module] = nn.ReLU,
+        weights_initialization_type: str = 'xavier_uniform',
+        use_bias: bool = False
     ):
         """
 
@@ -29,7 +31,7 @@ class ConvHead(ABaseArchitecture):
         :param weights_initialization_type:
         :param use_bias:
         """
-        super(ConvHead, self).__init__(
+        super().__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
@@ -115,7 +117,7 @@ class ConvHead(ABaseArchitecture):
             self._identity_shortcut._layer[0].weight.data.uniform_(-0.01, 0.01)
             self._identity_shortcut._layer[0].weight.data.masked_fill_(eye_mask, 1.0)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         identity, _ = self._identity_shortcut(x)
         for layer in self._convolutional_path:
             x, _ = layer(x)

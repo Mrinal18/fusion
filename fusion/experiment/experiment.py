@@ -5,7 +5,7 @@ from omegaconf import DictConfig, OmegaConf
 class Experiment:
     # Singleton
     # To have global within experiments arguments
-    def __init__(self, config):
+    def __init__(self, config: DictConfig):
         """
 
         :param config:

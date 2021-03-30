@@ -1,20 +1,25 @@
-from fusion.architecture import ABaseArchitecture
-from fusion.architecture.base_block import BaseConvLayer, Flatten
+from typing import Dict, Iterable, Tuple, Type
+
 import torch.nn as nn
+from torch import Tensor
+
+from fusion.architecture import ABaseArchitecture
+from fusion.architecture.abasearchitecture import TActivation, TConv, TNorm
+from fusion.architecture.base_block import BaseConvLayer, Flatten
 
 
 class DcganEncoder(ABaseArchitecture):
     def __init__(
         self,
-        dim_in,
-        dim_h,
-        dim_l,
+        dim_in: int,
+        dim_h: int,
+        dim_l: int,
         dim_cls=None,
-        input_size=32,
-        conv_layer_class=nn.Conv2d,
-        norm_layer_class=nn.BatchNorm2d,
-        activation_class=nn.LeakyReLU,
-        weights_initialization_type='xavier_uniform',
+        input_size: int = 32,
+        conv_layer_class: TConv = nn.Conv2d,
+        norm_layer_class: TNorm = nn.BatchNorm2d,
+        activation_class: TActivation = nn.LeakyReLU,
+        weights_initialization_type: str = 'xavier_uniform',
     ):
         """
 
@@ -40,7 +45,7 @@ class DcganEncoder(ABaseArchitecture):
         self._dim_cls = dim_cls
         self._input_size = input_size
         self._flatten = Flatten()
-        self._layers = None
+        self._layers: Iterable[nn.Module]
         self._construct()
         self.init_weights()
 
@@ -116,7 +121,7 @@ class DcganEncoder(ABaseArchitecture):
             raise NotImplementedError("DCGAN only supports input square images ' + \
                 'with size 32, 64 in current implementation.")
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
         latents = None
         if self._dim_cls is not None:
             latents = {}

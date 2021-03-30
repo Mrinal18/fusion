@@ -1,13 +1,17 @@
 import abc
 from collections import namedtuple
+from typing import List
+
+import numpy as np
+import torch as T
+import torch.nn as nn
+from torch import Tensor
+
 from fusion.criterion.loss import ABaseLoss
-from fusion.criterion.mi_estimator import mi_estimator_provider
 from fusion.criterion.loss.dim import dim_mode_provider
 from fusion.criterion.loss.dim import CR_MODE, RR_MODE, \
     CC_MODE, XX_MODE
-import numpy as np
-import torch
-import torch.nn as nn
+from fusion.criterion.mi_estimator import mi_estimator_provider
 
 
 class MultiDim(ABaseLoss):
@@ -15,10 +19,10 @@ class MultiDim(ABaseLoss):
         self,
         dim_cls,
         estimator_setting,
-        modes=[CR_MODE, XX_MODE, CC_MODE, RR_MODE],
-        weights=[1., 1., 1., 1.],
+        modes: List[str] = [CR_MODE, XX_MODE, CC_MODE, RR_MODE],
+        weights: List[float] = [1., 1., 1., 1.],
     ):
-        super(MultiDim, self).__init__()
+        super().__init__()
         assert len(modes) == len(weights)
         self._dim_cls = dim_cls
         self._modes = modes
@@ -42,7 +46,7 @@ class MultiDim(ABaseLoss):
         pass
 
     @staticmethod
-    def _reshape_target(target):
+    def _reshape_target(target) -> Tensor:
         return target.reshape(target.size(0), target.size(1), -1)
 
     @staticmethod

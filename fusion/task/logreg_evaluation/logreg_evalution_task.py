@@ -1,3 +1,5 @@
+from omegaconf import DictConfig
+
 from fusion.dataset import dataset_provider
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
@@ -8,39 +10,41 @@ from fusion.task import ATask, ATaskBuilder
 
 
 class LogRegTaskBuilder(ATaskBuilder):
+    _task: ATask
+
     def create_new_task(self, task_args):
         self._task = LogRegTask(task_args.args)
 
-    def add_dataset(self, dataset_config):
+    def add_dataset(self, dataset_config: DictConfig):
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
         )
         self._task.dataset.load()
 
-    def add_model(self, model_config):
+    def add_model(self, model_config: DictConfig):
         model_config.args['num_classes'] = self._task.dataset._num_classes
         self._task.model = model_provider.get(
             model_config.name, **model_config.args
         )
 
-    def add_criterion(self, criterion_config):
+    def add_criterion(self, criterion_config: DictConfig):
         self._task.criterion = criterion_provider.get(
             criterion_config.name, **criterion_config.args
         )
 
-    def add_runner(self, runner_config):
+    def add_runner(self, runner_config: DictConfig):
         self._task.runner = runner_provider.get(
-            runner_config.name, **{}
+            runner_config.name
         )
 
-    def add_optimizer(self, optimizer_config):
+    def add_optimizer(self, optimizer_config: DictConfig):
         args = dict(**optimizer_config.args)
         args['params'] = self._task.model.parameters()
         self._task.optimizer = optimizer_provider.get(
             optimizer_config.name, **args
         )
 
-    def add_scheduler(self, scheduler_config):
+    def add_scheduler(self, scheduler_config: DictConfig):
         args = dict(**scheduler_config.args)
         args['optimizer'] = self._task.optimizer
         args['steps_per_epoch'] = len(
@@ -53,7 +57,7 @@ class LogRegTaskBuilder(ATaskBuilder):
 
 class LogRegTask(ATask):
     def __init__(self, task_args) -> None:
-        super(LogRegTask, self).__init__(task_args)
+        super().__init__(task_args)
 
     def run(self):
         self._runner.train(

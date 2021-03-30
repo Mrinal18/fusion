@@ -1,8 +1,9 @@
-from fusion.architecture.projection_head import LatentHead
 import os
 import torch
 import torch.nn as nn
 import unittest
+
+from fusion.architecture.projection_head import LatentHead
 
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'

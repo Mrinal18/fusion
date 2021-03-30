@@ -8,6 +8,8 @@ from fusion.task import ATask, ATaskBuilder
 
 
 class PretrainingTaskBuilder(ATaskBuilder):
+    _task: ATask
+
     def create_new_task(self, task_args):
         """
 
@@ -92,7 +94,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
 class PretrainingTask(ATask):
     def __init__(self, task_args) -> None:
-        super(PretrainingTask, self).__init__(task_args)
+        super().__init__(task_args)
 
     def run(self):
         self._runner.train(

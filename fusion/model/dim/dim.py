@@ -1,19 +1,22 @@
 import copy
-from fusion.architecture.projection_head import ConvHead, LatentHead
-from fusion.model import ABaseModel
-from fusion.model import ModelOutput
+from typing import Any, Dict, List, Optional, Tuple
+
 import torch
 import torch.nn as nn
+from torch import Tensor
+
+from fusion.architecture.projection_head import ConvHead, LatentHead
+from fusion.model import ABaseModel, ModelOutput
 
 
 class Dim(ABaseModel):
     def __init__(
         self,
-        sources,
-        architecture,
-        architecture_params,
-        conv_head_params=None,
-        latent_head_params=None,
+        sources: List[int],
+        architecture: str,
+        architecture_params: Dict[str, Any],
+        conv_head_params: Optional[Dict[str, Any]] = None,
+        latent_head_params: Optional[Dict[str, Any]] = None,
     ):
         """
 
@@ -24,7 +27,7 @@ class Dim(ABaseModel):
         :param latent_head_params:
         """
         # create encoders for each source
-        super(Dim, self).__init__(sources, architecture, architecture_params)
+        super().__init__(sources, architecture, architecture_params)
         self._input_size = architecture_params['input_size']
         self._conv_layer_class = architecture_params[
             'conv_layer_class'] if 'conv_layer_class' in architecture_params.keys() else nn.Conv2d
@@ -32,6 +35,7 @@ class Dim(ABaseModel):
         self._conv_heads = nn.ModuleDict()
         conv_head_params = None
         for source_id in self._encoder.keys():
+            source_id = int(source_id)
             self._conv_heads[str(source_id)] = nn.ModuleDict()
             for conv_latent_size in architecture_params['dim_cls']:
                 conv_head_params = self._parse_conv_head_params(
@@ -51,21 +55,22 @@ class Dim(ABaseModel):
             latent_head.init_weights()
             self._latent_heads[str(source_id)] = latent_head
 
-    def _source_forward(self, source_id, x):
-        z, latents = self._encoder[source_id](x[int(source_id)])
+    def _source_forward(self, source_id: int, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
+        source_id_s = str(source_id)
+        z, latents = self._encoder[source_id_s](x[int(source_id)])
         # pass latents through projection heads
         for conv_latent_size, conv_latent in latents.items():
             if conv_latent_size == 1:
-                conv_latent = self._latent_heads[source_id](conv_latent)
+                conv_latent = self._latent_heads[source_id_s](conv_latent)
             elif conv_latent_size > 1:
-                conv_latent = self._conv_heads[source_id][
+                conv_latent = self._conv_heads[source_id_s][
                     str(conv_latent_size)](conv_latent)
             else:
                 assert False
             latents[conv_latent_size] = conv_latent
         return z, latents
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> ModelOutput:
         """
 
         :param x:
@@ -74,13 +79,17 @@ class Dim(ABaseModel):
         ret = ModelOutput(z={}, attrs={})
         ret.attrs['latents'] = {}
         for source_id, _ in self._encoder.items():
+            source_id = int(source_id)
             z, conv_latents = self._source_forward(source_id, x)
             ret.z[int(source_id)] = z
-            ret.attrs['latents'][int(source_id)] = conv_latents
+            ret.attrs['latents'][source_id] = conv_latents
         return ret
 
     def _parse_conv_head_params(
-            self, conv_head_params, architecture_params, conv_latent_size, source_id):
+            self, conv_head_params: Optional[Dict[str, Any]],
+            architecture_params: Dict[str, Any],
+            conv_latent_size: int, source_id: int
+    ) -> Dict[str, Any]:
         if conv_head_params is None:
             # by design choice
             conv_head_params = copy.deepcopy(dict(**architecture_params))
@@ -91,7 +100,9 @@ class Dim(ABaseModel):
             conv_head_params['dim_h'] = conv_head_params['dim_l']
         return conv_head_params
 
-    def _parse_latent_head_params(self, latent_head_params, architecture_params):
+    def _parse_latent_head_params(self, latent_head_params: Optional[Dict[str, Any]],
+        architecture_params: Dict[str, Any]
+    ) -> Dict[str, Any]:
         if latent_head_params is None:
             # by design choice
             latent_head_params = copy.deepcopy(dict(**architecture_params))
@@ -101,7 +112,7 @@ class Dim(ABaseModel):
             latent_head_params['dim_h'] = latent_head_params['dim_l']
         return latent_head_params
 
-    def _find_dim_in(self, conv_latent_size, source_id):
+    def _find_dim_in(self, conv_latent_size: int, source_id: int) -> int:
         batch_size = 2
         dim_in = 1
         dim_conv = None
@@ -116,7 +127,7 @@ class Dim(ABaseModel):
         else:
             raise NotImplementedError
         x = dummy_batch
-        for layer in self._encoder[source_id].get_layers():
+        for layer in self._encoder[str(source_id)].get_layers():
             x, conv_latent = layer(x)
             if conv_latent.size(-1) == conv_latent_size:
                 dim_conv = conv_latent.size(1)

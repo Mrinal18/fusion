@@ -1,7 +1,9 @@
-from . import ABaseLoss
+from typing import Optional
 
 import torch.nn as nn
+from tensor import Tensor
 
+from . import ABaseLoss
 
 class CrossEntropyLoss(ABaseLoss):
     def __init__(self, **kwargs):
@@ -12,7 +14,7 @@ class CrossEntropyLoss(ABaseLoss):
         super(CrossEntropyLoss, self).__init__()
         self._loss = nn.CrossEntropyLoss(**kwargs)
 
-    def forward(self, preds, target=None):
+    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
         """
 
         :param preds:
@@ -29,10 +31,10 @@ class BCEWithLogitsLoss(ABaseLoss):
 
         :param kwargs:
         """
-        super(BCEWithLogitsLoss, self).__init__()
+        super().__init__()
         self._loss = nn.BCEWithLogitsLoss(**kwargs)
 
-    def forward(self, preds, target=None):
+    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
         """
 
         :param preds:
