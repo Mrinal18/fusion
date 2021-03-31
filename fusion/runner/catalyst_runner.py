@@ -31,9 +31,6 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         outputs = self.model(x)
         loss = self.criterion(outputs, y)
 
-        if not self.is_train_loader:
-            print (loss)
-
         if isinstance(loss, tuple):
             loss, raw_losses = loss
             self.batch_metrics = {"loss": loss}

@@ -1,5 +1,5 @@
 from fusion.model import ABaseModel
-from fusion.model import ModelOutput
+from fusion.model.misc import ModelOutput
 
 
 class AE(ABaseModel):

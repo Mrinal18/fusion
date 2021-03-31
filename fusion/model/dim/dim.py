@@ -1,7 +1,7 @@
 import copy
 from fusion.architecture.projection_head import ConvHead, LatentHead
 from fusion.model import ABaseModel
-from fusion.model import ModelOutput
+from fusion.model.misc import  ModelOutput
 import torch
 import torch.nn as nn
 
@@ -52,8 +52,8 @@ class Dim(ABaseModel):
             self._latent_heads[str(source_id)] = latent_head
 
     def _source_forward(self, source_id, x):
-        input_id = int(source_id) if len(x) > 1 else 0
-        z, latents = self._encoder[source_id](x[input_id])
+        #input_id = int(source_id) if len(x) > 1 else 0
+        z, latents = self._encoder[source_id](x[int(source_id)])
         # pass latents through projection heads
         for conv_latent_size, conv_latent in latents.items():
             if conv_latent_size == 1:

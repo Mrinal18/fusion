@@ -20,7 +20,7 @@ class CrossEntropyLoss(ABaseLoss):
         :return:
         """
         assert target is not None
-        return self._loss(preds, target)
+        return self._loss(preds.z[0], target)
 
 
 class BCEWithLogitsLoss(ABaseLoss):
