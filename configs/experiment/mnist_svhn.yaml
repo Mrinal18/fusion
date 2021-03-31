@@ -1,0 +1,23 @@
+name: ${model.name}
+dim_in: [1]
+dim_l: 64
+dim_cls: [8]
+dataset_dir: ${data_dir}
+batch_size: 64
+input_dim: 2
+sources: [0]
+fold: 0
+num_folds: 5
+seed: 42
+num_workers: 63
+logdir: ${hydra.run.dir}
+pretrained_checkpoint:
+defaults:
+  - dataset: two_view_mnist
+  - architecture: dcgan_encoder
+  - model: dim
+  - criterion: spatial_multi_dim
+  - task: pretraining
+  - optimizer: radam
+  - scheduler: one_cycle_lr
+  - runner: mnist_svhn_runner
