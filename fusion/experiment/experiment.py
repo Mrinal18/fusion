@@ -16,9 +16,9 @@ class Experiment:
         :param config:
         """
         print(OmegaConf.to_yaml(config))
-        self._config = config
+        self._config = config['experiment']
         self._task = None
-        self._seed = self._config['global']['seed']
+        self._seed = self._config['seed']
 
     def setup_new_experiment(self):
         """
