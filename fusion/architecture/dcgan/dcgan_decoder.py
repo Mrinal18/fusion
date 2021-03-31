@@ -46,7 +46,7 @@ class DcganDecoder(ABaseArchitecture):
         self._dim_cls = dim_cls
         self._input_size = input_size
         self._unflatten = Unflatten(input_dim=input_dim)
-        self._layers: Iterable[nn.Module] = nn.ModuleList([])
+        self._layers: nn.ModuleList = nn.ModuleList([])
         self._construct()
 
     def _construct(self):

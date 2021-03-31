@@ -87,7 +87,7 @@ class TwoViewMnist(ABaseDataset):
     def _set_num_classes(self, targets):
         self.num_classes = len(torch.unique(targets))
 
-    def _prepare_fold(self, dataset):
+    def _prepare_fold(self, dataset: torchvision.datasets.MNIST):
         kf = StratifiedKFold(
             n_splits=self._num_folds,
             shuffle=self._shuffle,

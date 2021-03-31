@@ -1,5 +1,5 @@
 import abc
-from typing import Any, Iterable, List, Optional, Type
+from typing import Any, List, Optional, Type
 
 import torch.nn as nn
 
@@ -8,6 +8,7 @@ TActivation = Type[nn.Module]
 TDropout = Type[nn.modules.dropout._DropoutNd]
 TConv = Type[nn.modules.conv._ConvNd]
 TNorm = Type[nn.modules.batchnorm._BatchNorm]
+
 
 class ABaseArchitecture(abc.ABC, nn.Module):
     @abc.abstractmethod
@@ -28,7 +29,7 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         :param weights_initialization_type:
         """
         super().__init__()
-        self._layers: Optional[Iterable[nn.Module]] = None
+        self._layers: Optional[nn.ModuleList] = None
         self._conv_layer_class = conv_layer_class
         self._norm_layer_class = norm_layer_class
         self._dp_layer_class = dp_layer_class
@@ -41,7 +42,7 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         """
         pass
 
-    def get_layers(self) -> List[Any]:
+    def get_layers(self):
         """
         Get layers
         :return:

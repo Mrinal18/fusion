@@ -28,28 +28,30 @@ class LatentHead(ABaseArchitecture):
         super().__init__()
         self._num_h_layers = num_h_layers
         self._use_linear = use_linear
-        self._head = nn.ModuleList([])
+
+        head = nn.ModuleList([])
         if self._use_linear:
             if self._num_h_layers == 0:
-                self._head.append(
+                head.append(
                     nn.Linear(dim_in, dim_l, bias=use_bias)
                 )
             else:
                 assert dim_h != 0
                 # add first hidden layer
-                self._head.append(nn.Linear(dim_in, dim_h, bias=use_bias))
+                head.append(nn.Linear(dim_in, dim_h, bias=use_bias))
                 if use_bn:
-                    self._head.append(nn.BatchNorm1d(dim_h))
-                self._head.append(nn.ReLU(inplace=True))
+                    head.append(nn.BatchNorm1d(dim_h))
+                head.append(nn.ReLU(inplace=True))
                 # add other self._num_h_layers - 1 layers
                 for i in range(1, self._num_h_layers):
-                    self._head.append(nn.Linear(dim_h, dim_h, bias=use_bias))
+                    head.append(nn.Linear(dim_h, dim_h, bias=use_bias))
                     if use_bn:
-                        self._head.append(nn.BatchNorm1d(dim_h))
-                    self._head.append(nn.ReLU(inplace=True))
+                        head.append(nn.BatchNorm1d(dim_h))
+                    head.append(nn.ReLU(inplace=True))
                 # add final layer
-                self._head.append(nn.Linear(dim_h, dim_l, bias=use_bias))
-        self._head = nn.Sequential(*self._head)
+                head.append(nn.Linear(dim_h, dim_l, bias=use_bias))
+        self._head = nn.Sequential(*head)
+
         self.init_weights()
 
     def forward(self, x: Tensor) -> Tensor:

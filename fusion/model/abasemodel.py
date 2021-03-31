@@ -3,6 +3,7 @@ import copy
 from typing import Any, Dict, List
 
 import torch.nn as nn
+from torch import Tensor
 
 from fusion.architecture import architecture_provider
 
@@ -25,7 +26,7 @@ class ABaseModel(abc.ABC, nn.Module):
                 architecture, **new_architecture_params)
 
     @abc.abstractmethod
-    def _source_forward(self, source_id: int, x):
+    def _source_forward(self, source_id: int, x: Tensor) -> Any:
         pass
 
     def get_encoder(self, source_id: int = 0):

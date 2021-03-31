@@ -33,7 +33,7 @@ class DcganEncoder(ABaseArchitecture):
         :param activation_class:
         :param weights_initialization_type:
         """
-        super(DcganEncoder, self).__init__(
+        super().__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
@@ -45,7 +45,8 @@ class DcganEncoder(ABaseArchitecture):
         self._dim_cls = dim_cls
         self._input_size = input_size
         self._flatten = Flatten()
-        self._layers: Iterable[nn.Module]
+        self._layers: nn.ModuleList
+
         self._construct()
         self.init_weights()
 

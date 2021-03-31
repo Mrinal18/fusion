@@ -1,6 +1,6 @@
 import abc
 from collections import namedtuple
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 import torch as T
@@ -17,7 +17,7 @@ from fusion.criterion.mi_estimator import mi_estimator_provider
 class MultiDim(ABaseLoss):
     def __init__(
         self,
-        dim_cls,
+        dim_cls: List[int],
         estimator_setting,
         modes: List[str] = [CR_MODE, XX_MODE, CC_MODE, RR_MODE],
         weights: List[float] = [1., 1., 1., 1.],
@@ -46,7 +46,7 @@ class MultiDim(ABaseLoss):
         pass
 
     @staticmethod
-    def _reshape_target(target) -> Tensor:
+    def _reshape_target(target: Tensor) -> Tensor:
         return target.reshape(target.size(0), target.size(1), -1)
 
     @staticmethod
@@ -90,7 +90,7 @@ class MultiDim(ABaseLoss):
                     assert conv_latent_size < 0
         return reps, convs
 
-    def forward(self, preds, target=None):
+    def forward(self, preds: Tensor, target: Optional[Tensor] = None):
         del target
         # prepare sources and targets
         latents = preds.attrs['latents']

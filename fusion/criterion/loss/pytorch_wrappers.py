@@ -11,7 +11,7 @@ class CrossEntropyLoss(ABaseLoss):
 
         :param kwargs:
         """
-        super(CrossEntropyLoss, self).__init__()
+        super().__init__()
         self._loss = nn.CrossEntropyLoss(**kwargs)
 
     def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:

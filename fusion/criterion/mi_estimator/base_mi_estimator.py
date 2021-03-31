@@ -1,4 +1,8 @@
 import abc
+from typing import Optional, Tuple
+
+from torch import Tensor
+
 from fusion.criterion.mi_estimator.critic import critic_provider
 from fusion.criterion.mi_estimator.clip import clip_provider
 from fusion.criterion.mi_estimator.penalty import penalty_provider
@@ -24,10 +28,10 @@ class ABaseMIEstimator(abc.ABC):
             )
 
     @abc.abstractmethod
-    def __call__(self, x, y):
+    def __call__(self, x: Tensor, y: Tensor):
         pass
 
-    def _compute_scores(self, x, y):
+    def _compute_scores(self, x: Tensor, y: Tensor) -> Tuple[Tensor, Optional[Tensor]]:
         bs, dim_l, x_locs = x.size()
         _, _, y_locs = y.size()
 
@@ -53,7 +57,7 @@ class ABaseMIEstimator(abc.ABC):
         return scores, penalty
 
     @staticmethod
-    def _check_input(x, y):
+    def _check_input(x: Tensor, y: Tensor):
         assert len(x.size()) == 3
         assert len(y.size()) == 3
         assert x.size(0) == y.size(0)

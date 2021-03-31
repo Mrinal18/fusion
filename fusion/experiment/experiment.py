@@ -1,6 +1,8 @@
-from fusion.task import TaskDirector, task_builder_provider
 import hydra
 from omegaconf import DictConfig, OmegaConf
+
+from fusion.task import TaskDirector, task_builder_provider
+
 
 class Experiment:
     # Singleton

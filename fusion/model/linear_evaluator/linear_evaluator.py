@@ -20,7 +20,7 @@ class LinearEvaluator(nn.Module):
         self._linear = nn.Linear(dim_l, num_classes)
         self._source_id = source_id
 
-    def forward(self, x: Tensor):
+    def forward(self, x: Tensor) -> Tensor:
         """
 
         :param x:

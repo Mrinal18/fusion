@@ -12,7 +12,7 @@ from fusion.task import ATask, ATaskBuilder
 class PretrainingTaskBuilder(ATaskBuilder):
     _task: ATask
 
-    def create_new_task(self, task_args):
+    def create_new_task(self, task_args: DictConfig):
         """
 
         :param task_args:
@@ -95,7 +95,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
 
 class PretrainingTask(ATask):
-    def __init__(self, task_args) -> None:
+    def __init__(self, task_args: DictConfig) -> None:
         super().__init__(task_args)
 
     def run(self):

@@ -4,7 +4,9 @@ import torch.nn as nn
 from torch import Tensor
 
 from fusion.architecture import ABaseArchitecture
+from fusion.architecture.abasearchitecture import TActivation, TConv, TNorm
 from fusion.architecture.base_block import BaseConvLayer
+
 
 class ConvHead(ABaseArchitecture):
     def __init__(
@@ -13,9 +15,9 @@ class ConvHead(ABaseArchitecture):
         dim_l: int,
         dim_h: int,
         num_h_layers: int = 1,
-        conv_layer_class: Type[nn.modules.conv._ConvNd] = nn.Conv2d,
-        norm_layer_class: Type[nn.modules.batchnorm._BatchNorm] = nn.BatchNorm2d,
-        activation_class: Type[nn.Module] = nn.ReLU,
+        conv_layer_class: TConv = nn.Conv2d,
+        norm_layer_class: TNorm = nn.BatchNorm2d,
+        activation_class: TActivation = nn.ReLU,
         weights_initialization_type: str = 'xavier_uniform',
         use_bias: bool = False
     ):

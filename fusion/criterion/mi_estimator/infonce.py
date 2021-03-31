@@ -1,9 +1,13 @@
-from fusion.criterion.mi_estimator import ABaseMIEstimator
+from typing import Optional, Tuple
+
 import torch
+from torch import Tensor
+
+from fusion.criterion.mi_estimator import ABaseMIEstimator
 
 
 class InfoNceEstimator(ABaseMIEstimator):
-    def __call__(self, x, y):
+    def __call__(self, x: Tensor, y: Tensor) -> Tuple[Tensor, Optional[Tensor]]:
         assert self._clip is not None
         self._check_input(x, y)
 
@@ -46,4 +50,5 @@ class InfoNceEstimator(ABaseMIEstimator):
         pos_shiftexp = pos_scores - neg_maxes
         nce_scores = pos_shiftexp - all_logsumexp
         nce_scores = -nce_scores.mean()
+
         return nce_scores, penalty

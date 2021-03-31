@@ -68,7 +68,7 @@ class ATask(abc.ABC):
     _callbacks = None
 
     @abc.abstractmethod
-    def __init__(self, task_args):
+    def __init__(self, task_args: DictConfig):
         self._task_args = task_args
 
     @abc.abstractmethod
