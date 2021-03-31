@@ -52,7 +52,8 @@ class Dim(ABaseModel):
             self._latent_heads[str(source_id)] = latent_head
 
     def _source_forward(self, source_id, x):
-        z, latents = self._encoder[source_id](x[int(source_id)])
+        input_id = int(source_id) if len(x) > 1 else 0
+        z, latents = self._encoder[source_id](x[input_id])
         # pass latents through projection heads
         for conv_latent_size, conv_latent in latents.items():
             if conv_latent_size == 1:

@@ -4,8 +4,7 @@ shuffle: True
 drop_last: False
 args:
   logdir: './'
-  num_epochs: 1
+  num_epochs: 50
   verbose: true
   resume: false
   timeit: true
-  

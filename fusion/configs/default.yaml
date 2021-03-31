@@ -17,7 +17,7 @@ global:
   seed: 343
   num_workers: 0
   logdir: ./out/${global.name}/${global.fold}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
-  pretrained_checkpoint: /media/hd/research/code/fusion/out/Supervised_v0/2021-03-27/11-21-09/checkpoints/best.pth
+  pretrained_checkpoint:
 defaults:
   - dataset: two_view_mnist
   - architecture: dcgan_encoder

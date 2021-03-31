@@ -1,5 +1,6 @@
 import copy
 from fusion.dataset.abasedataset import ABaseDataset
+from fusion.dataset.utils import seed_worker
 from fusion.dataset.two_view_mnist.transforms import TwoViewMnistTransform
 from fusion.dataset.two_view_mnist.transforms import RandomRotationTransform
 from fusion.dataset.two_view_mnist.transforms import UniformNoiseTransform
@@ -75,13 +76,14 @@ class TwoViewMnist(ABaseDataset):
             batch_size=self._batch_size,
             shuffle=self._shuffle,
             drop_last=self._drop_last,
-            num_workers=self._num_workers
+            num_workers=self._num_workers,
+            worker_init_fn=seed_worker
         )
         set_id = 'infer' if set_id == 'test' else set_id
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets):
-        self.num_classes = len(torch.unique(targets))
+        self._num_classes = len(torch.unique(targets))
 
     def _prepare_fold(self, dataset):
         kf = StratifiedKFold(
