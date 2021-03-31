@@ -53,9 +53,11 @@ class AUniSourceModel(BaseModel):
     @abc.abstractmethod
     def __init__(self, architecture, architecture_params):
         """
+        Args:
+            :param architecture:
+            :param architecture_params:
+        Return
 
-        :param architecture:
-        :param architecture_params:
         """
         super(AUniSourceModel, self).__init__()
         architecture_params = dict(**architecture_params)
@@ -65,9 +67,11 @@ class AUniSourceModel(BaseModel):
 
     def get_encoder(self, source_id=0):
         """
+        Args:
 
-        :param source_id:
-        :return:
+            :param source_id:
+        Return:
+
         """
         del source_id
         return self._encoder
@@ -75,7 +79,7 @@ class AUniSourceModel(BaseModel):
     def get_encoder_list(self):
         """
 
-        :return:
+        Return
         """
         return self._encoder
 

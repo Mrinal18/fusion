@@ -12,19 +12,17 @@ class CatalystRunner(ABaseRunner, dl.Runner):
     ) -> Mapping[str, Any]:
         """
 
-        :param batch:
-        :param kwargs:
-        :return:
+        Args:
+
+            :param batch:
+            :param kwargs:
+        Return
+
         """
         x, y = batch
         return self.model([x_.to(self.device) for x_ in x]), y
 
     def _handle_batch(self, batch: Mapping[str, Any]) -> None:
-        """
-
-        :param batch:
-        :return:
-        """
         x, y = self._unpack_batch(batch)
         outputs = self.model(x)
         loss = self.criterion(outputs, y)

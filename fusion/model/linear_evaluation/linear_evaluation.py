@@ -6,8 +6,11 @@ import torch.nn as nn
 class LinearEvaluator(nn.Module):
     def __init__(self, **kwargs):
         """
+        Args:
+            :param kwargs:
 
-        :param kwargs:
+        Return:
+
         """
         super(LinearEvaluator, self).__init__()
         self.flatten = Flatten()
@@ -16,8 +19,11 @@ class LinearEvaluator(nn.Module):
     def forward(self, x):
         """
 
-        :param x:
-        :return:
+        Args:
+
+            :param x:
+        Return:
+
         """
         x = self.flatten(x)
         x = self.linear(x)
@@ -28,10 +34,14 @@ class LinearEvaluatorWithEncoder(nn.Module):
     def __init__(self, encoder, num_classes, view, **kwargs):
         """
 
-        :param encoder:
-        :param num_classes:
-        :param view:
-        :param kwargs:
+        Args:
+            :param encoder:
+            :param num_classes:
+            :param view:
+            :param kwargs:
+
+        Return:
+
         """
         super(LinearEvaluatorWithEncoder, self).__init__()
         self.encoder = encoder
@@ -42,9 +52,10 @@ class LinearEvaluatorWithEncoder(nn.Module):
 
     def forward(self, x):
         """
+        Args:
+            :param x: input tensor
+        Return
 
-        :param x:
-        :return:
         """
         x = x[self.view]
         x = self.encoder(x)[0]
@@ -58,6 +69,15 @@ class LinearEvaluatorWithEncoder(nn.Module):
 
 class FusedLinearEvaluator(nn.Module):
     def __init__(self, encoder_list, num_classes, num_views, **kwargs):
+        """
+        Args:
+            :param encoder_list:
+            :param num_classes:
+            :param num_views:
+            :param kwargs:
+        Return:
+
+        """
         super(FusedLinearEvaluator, self).__init__()
         self.encoder_list = nn.ModuleList(encoder_list)
         for encoder in self.encoder_list:
@@ -68,6 +88,12 @@ class FusedLinearEvaluator(nn.Module):
         self.num_views = num_views
 
     def forward(self, x):
+        """
+        Args:
+            :param x: input tensor
+        Return:
+
+        """
         z = None
         for view, encoder in enumerate(self.encoder_list):
             z_temp = encoder(x[view])[0].detach()
@@ -82,12 +108,25 @@ class FusedLinearEvaluator(nn.Module):
 
 class EvalEncoder(nn.Module):
     def __init__(self, encoder, view):
+        """
+        Args:
+            :param encoder:
+            :param view:
+        Return:
+
+        """
         super(EvalEncoder, self).__init__()
         self.encoder = encoder
         self.encoder.eval()
         self.view = view
 
     def forward(self, x):
+        """
+        Args:
+            :param x: input tensor
+        Return:
+
+        """
         x = x[self.view]
         x = self.encoder(x)
         if isinstance(x, tuple):

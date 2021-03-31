@@ -15,8 +15,9 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 	def add_model(self, model_config):
 		"""
 
-		:param model_config:
-		:return:
+		Args:
+			:param model_config:
+
 		"""
 		self._task.model = {}
 		# get number of classes
@@ -49,8 +50,9 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 	def add_criterion(self, criterion_config):
 		"""
 
-		:param criterion_config:
-		:return:
+		Args:
+			:param criterion_config:
+
 		"""
 		# TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
 		self._task.criterion = criterion_provider.get(
@@ -59,9 +61,9 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 
 	def add_runner(self, runner_config):
 		"""
+		Args:
+			:param runner_config:
 
-		:param runner_config:
-		:return:
 		"""
 		runner_args = {} if runner_config.args is None else runner_config.args
 		self._task.runner = runner_provider.get(
@@ -71,8 +73,8 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 	def add_optimizer(self, optimizer_config):
 		"""
 
-		:param optimizer_config:
-		:return:
+		Args:
+			:param optimizer_config:
 		"""
 		self._task.optimizer = {}
 		for id_view, view_model in self._task.model.items():
@@ -86,8 +88,9 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 	def add_scheduler(self, scheduler_config):
 		"""
 
-		:param scheduler_config:
-		:return:
+		Args:
+			:param scheduler_config:
+
 		"""
 		self._task.scheduler = {}
 		for id_view, view_model in self._task.model.items():
@@ -104,9 +107,18 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 
 class LinearEvalualtionTask(ATask):
 	def __init__(self, task_args) -> None:
+		"""
+		Initilization of class Linear Evaluation Task
+			:param task_args: task parameters
+		Return:
+			class Linear Evaluation Task
+		"""
 		super(LinearEvalualtionTask, self).__init__(task_args)
 
 	def run(self):
+		"""
+		Method launch training of Linear Evaluation Task
+		"""
 		for id_view, _ in self._model.keys():
 			self._runner.train(
 				model=self._model[id_view],

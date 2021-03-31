@@ -9,31 +9,61 @@ from fusion.task import ATask, ATaskBuilder
 
 class LogRegTaskBuilder(ATaskBuilder):
     def create_new_task(self, task_args):
+        """
+
+        Args:
+            :param task_args:
+        """
         self._task = LogRegTask(task_args.args)
 
     def add_dataset(self, dataset_config):
+        """
+
+        Args:
+            :param dataset_config:
+        """
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
         )
         self._task.dataset.load()
 
     def add_model(self, model_config):
+        """
+
+        Args:
+            :param model_config:
+        """
         model_config.args['num_classes'] = self._task.dataset._num_classes
         self._task.model = model_provider.get(
             model_config.name, **model_config.args
         )
 
     def add_criterion(self, criterion_config):
+        """
+
+        Args:
+            :param criterion_config:
+        """
         self._task.criterion = criterion_provider.get(
             criterion_config.name, **criterion_config.args
         )
 
     def add_runner(self, runner_config):
+        """
+
+        Args:
+            :param runner_config:
+        """
         self._task.runner = runner_provider.get(
             runner_config.name, **{}
         )
 
     def add_optimizer(self, optimizer_config):
+        """
+
+        Args:
+            :param optimizer_config:
+        """
         args = dict(**optimizer_config.args)
         args['params'] = self._task.model.parameters()
         self._task.optimizer = optimizer_provider.get(
@@ -41,6 +71,11 @@ class LogRegTaskBuilder(ATaskBuilder):
         )
 
     def add_scheduler(self, scheduler_config):
+        """
+
+        Args:
+            :param scheduler_config:
+        """
         args = dict(**scheduler_config.args)
         args['optimizer'] = self._task.optimizer
         args['steps_per_epoch'] = len(
@@ -53,9 +88,18 @@ class LogRegTaskBuilder(ATaskBuilder):
 
 class LogRegTask(ATask):
     def __init__(self, task_args) -> None:
+        """
+        Initilization of class Logical Regression Task
+        	:param task_args: task parameters
+        Return:
+        	class Logical Regression Task
+        """
         super(LogRegTask, self).__init__(task_args)
 
     def run(self):
+        """
+        Method launch training of Logical Regression Task
+        """
         self._runner.train(
             model=self._model,
             criterion=self._criterion,
