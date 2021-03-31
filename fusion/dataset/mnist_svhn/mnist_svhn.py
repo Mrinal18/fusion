@@ -22,6 +22,22 @@ class MnistSvhn(ABaseDataset):
             num_workers=0,
             seed=343,
     ):
+        """
+        Initialization of Class MnistSvhn dataset
+        Args:
+            :param dataset_dir: path to dataset
+            :param fold: number of fold for validation
+            :param num_folds: counts of folds
+            :param views: number of views
+            :param batch_size: how many samples per batch to load
+            :param shuffle: set to True to have the data reshuffled at every epoch
+            :param drop_last: set to True to drop the last incomplete batch
+            :param num_workers: how many subprocesses to use for data loading
+            :param seed: number of seed
+        Return:
+            Dataset MnistSvhn
+
+        """
         super(MnistSvhn, self).__init__(
             dataset_dir,
             fold=fold,
@@ -39,7 +55,6 @@ class MnistSvhn(ABaseDataset):
     def load(self):
         """
         Method for load datasets
-        :return:
 
         """
         self._download_dataset(self._dataset_dir)
@@ -182,12 +197,25 @@ class MnistSvhn(ABaseDataset):
         return train_index, valid_index
 
     def get_all_loaders(self):
+        """
+        Return all loaders
+        """
         return super().get_all_loaders()
 
     def get_cv_loaders(self):
+        """
+        Return all cross-validation loaders
+        """
         return super().get_cv_loaders()
 
     def get_loader(self, set_id):
+        """
+        Get loader by set_id
+        Args:
+            :param set_id:
+        Return:
+            Loader by set_id
+        """
         return super().get_loader(set_id)
 
     def num_classes(self):
@@ -195,10 +223,6 @@ class MnistSvhn(ABaseDataset):
 
     @staticmethod
     def _rand_match_on_idx(l1, idx1, l2, idx2, max_d=10000, dm=10):
-        """
-        l*: sorted labels
-        idx*: indices of sorted labels in original list
-        """
         _idx1, _idx2 = [], []
         for l in l1.unique():  # assuming both have same idxs
             l_idx1, l_idx2 = idx1[l1 == l], idx2[l2 == l]
