@@ -100,7 +100,7 @@ class PretrainingTask(ATask):
         logging.info(f"logdir: {self._task_args['logdir']}")
         self._callbacks = [
             dl.CheckpointCallback(
-                logdir=self._task_args['logdir'], loader_key="infer", metric_key="loss", minimize=True, save_n_best=3
+                logdir=self._task_args['logdir'], loader_key="valid", metric_key="loss", minimize=True, save_n_best=3
             ),
         ]
         self._runner.train(

@@ -46,7 +46,6 @@ class TwoViewMnist(ABaseDataset):
             num_workers=num_workers,
             seed=seed,
         )
-        print (drop_last)
         self._num_classes = None
 
     def load(self):
