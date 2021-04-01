@@ -33,13 +33,13 @@ class CatalystRunner(ABaseRunner, dl.Runner):
 
         if isinstance(loss, tuple):
             loss, raw_losses = loss
-            self.batch_metrics = {"loss": loss}
+            self.batch_metrics = {"loss": loss.item()}
             self.batch_metrics.update(raw_losses)
         else:
-            self.batch_metrics = {"loss": loss}
+            self.batch_metrics = {"loss": loss.item()}
 
         for key in ["loss"]:
-            self.meters[key].update(self.batch_metrics[key].item(), self.batch_size)
+            self.meters[key].update(self.batch_metrics[key], self.batch_size)
 
         if self.is_train_loader:
             loss.backward()

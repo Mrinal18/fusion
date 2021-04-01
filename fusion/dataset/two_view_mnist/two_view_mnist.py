@@ -62,6 +62,7 @@ class TwoViewMnist(ABaseDataset):
                 download=True,
                 transform=transforms
             )
+            print (self._dataset_dir)
             if set_id == 'train':
                 self._set_num_classes(dataset.targets)
                 cv_datasets = self._prepare_fold(dataset)
@@ -88,7 +89,7 @@ class TwoViewMnist(ABaseDataset):
     def _prepare_fold(self, dataset):
         kf = StratifiedKFold(
             n_splits=self._num_folds,
-            shuffle=self._shuffle,
+            shuffle=True,
             random_state=self._seed
         )
         X, y = dataset.data, dataset.targets

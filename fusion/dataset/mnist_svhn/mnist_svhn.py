@@ -127,7 +127,7 @@ class MnistSvhn(ABaseDataset):
             split = 'train' if set_id != 'test' else 'test'
             tx = SVHNTransform()
             dataset = torchvision.datasets.SVHN(
-                self._dataset_dir + '/SVHN/', split=split, download=False, transform=tx)
+                self._dataset_dir, split=split, download=False, transform=tx)
         else:
             raise NotImplementedError
         # select fold

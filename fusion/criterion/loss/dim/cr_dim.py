@@ -18,10 +18,10 @@ class CrDim(BaseDim):
                     conv, rep[dim_conv_latent])
                 loss = self._weight * loss
                 name = self._name_it(source_id, dim_conv)
-                raw_losses[f'{name}_loss'] = loss
+                raw_losses[f'{name}_loss'] = loss.item()
                 ret_loss = ret_loss + loss if ret_loss is not None else loss
                 if penalty is not None:
-                    raw_losses[f'{name}_penalty'] = penalty
+                    raw_losses[f'{name}_penalty'] = penalty.item()
                     ret_loss = ret_loss + penalty if ret_loss is not None else penalty
         return ret_loss, raw_losses
 
