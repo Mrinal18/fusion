@@ -135,4 +135,4 @@ class DcganEncoder(ABaseArchitecture):
 
     def init_weights(self):
         for layer in self._layers:
-            layer.init_weights()
+            layer.init_weights(gain_type='leaky_relu')

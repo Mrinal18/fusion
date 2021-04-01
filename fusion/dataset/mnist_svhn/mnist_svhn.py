@@ -1,4 +1,4 @@
-import copy
+from fusion.dataset.utils import seed_worker
 from fusion.dataset.abasedataset import ABaseDataset
 from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
 from sklearn.model_selection import StratifiedKFold
@@ -158,6 +158,7 @@ class MnistSvhn(ABaseDataset):
             shuffle=self._shuffle,
             drop_last=self._drop_last,
             num_workers=self._num_workers,
+            worker_init_fn=seed_worker,
             pin_memory=True
         )
         set_id = 'infer' if set_id == 'test' else set_id

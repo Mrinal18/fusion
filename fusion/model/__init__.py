@@ -1,6 +1,5 @@
 from .abasemodel import ABaseModel
 from .supervised import Supervised
-from .misc import ModelOutput
 from .ae import AE
 from .dim import Dim
 from .linear_evaluator import LinearEvaluator
@@ -19,6 +18,5 @@ __all__ = [
     'Supervised',
     'AE',
     'Dim',
-    'ModelOutput',
     'model_provider',
 ]

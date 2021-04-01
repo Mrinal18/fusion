@@ -1,4 +1,5 @@
 import abc
+import torch
 
 
 class ABaseDataset(abc.ABC):
@@ -27,6 +28,7 @@ class ABaseDataset(abc.ABC):
         self._drop_last = drop_last
         self._num_workers = num_workers
         self._seed = seed
+        torch.manual_seed(self._seed)
 
     @abc.abstractmethod
     def load(self):

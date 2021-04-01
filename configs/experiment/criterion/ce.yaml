@@ -1,4 +1,3 @@
-# @package criterion
 name: CE
 args:
   ignore_index: -1

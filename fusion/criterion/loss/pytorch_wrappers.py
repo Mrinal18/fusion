@@ -3,13 +3,13 @@ from . import ABaseLoss
 import torch.nn as nn
 
 
-class CrossEntropyLoss(ABaseLoss):
+class CustomCrossEntropyLoss(ABaseLoss):
     def __init__(self, **kwargs):
         """
 
         :param kwargs:
         """
-        super(CrossEntropyLoss, self).__init__()
+        super(CustomCrossEntropyLoss, self).__init__()
         self._loss = nn.CrossEntropyLoss(**kwargs)
 
     def forward(self, preds, target=None):
@@ -20,7 +20,7 @@ class CrossEntropyLoss(ABaseLoss):
         :return:
         """
         assert target is not None
-        return self._loss(preds, target)
+        return self._loss(preds.z[0], target)
 
 
 class BCEWithLogitsLoss(ABaseLoss):

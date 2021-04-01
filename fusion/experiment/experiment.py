@@ -1,6 +1,11 @@
+from catalyst.utils.misc import set_global_seed
 from fusion.task import TaskDirector, task_builder_provider
 import hydra
 from omegaconf import DictConfig, OmegaConf
+import torch
+import numpy as np
+import random
+
 
 class Experiment:
     # Singleton
@@ -11,14 +16,21 @@ class Experiment:
         :param config:
         """
         print(OmegaConf.to_yaml(config))
-        self._config = config
+        self._config = config['experiment']
         self._task = None
+        self._seed = self._config['seed']
 
     def setup_new_experiment(self):
         """
 
         :return:
         """
+        np.random.seed(self._seed)
+        random.seed(self._seed)
+        torch.manual_seed(self._seed)
+        set_global_seed(self._seed)
+        torch.backends.cudnn.deterministic = True
+        #torch.use_deterministic_algorithms(True)
         task_builder = task_builder_provider.get(self._config.task.name)
         task_director = TaskDirector(task_builder, self._config)
         task_director.construct_task()

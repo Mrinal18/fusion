@@ -64,14 +64,14 @@ class BaseConvLayer(ABaseArchitecture):
             x = layer(x)
         return x, conv_latent
 
-    def init_weights(self):
+    def init_weights(self, gain_type='relu'):
         """
 
         :return:
         """
         if self._weights_initialization_type == 'xavier_uniform':
             nn.init.xavier_uniform_(
-                self._layer[0].weight, gain=nn.init.calculate_gain("relu")
+                self._layer[0].weight, gain=nn.init.calculate_gain(gain_type)
             )
             if not isinstance(self._layer[0].bias, type(None)):
                 nn.init.constant_(self._layer[0].bias, 0)

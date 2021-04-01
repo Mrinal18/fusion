@@ -1,4 +1,5 @@
 from fusion.model import ABaseModel
+from fusion.model.misc import ModelOutput
 import torch.nn as nn
 
 
@@ -32,7 +33,7 @@ class Supervised(ABaseModel):
         """
         assert len(x) == 1
         x = self._source_forward(self._sources[0], x)
-        return x
+        return ModelOutput(z={0: x}, attrs={})
 
     def _source_forward(self, source_id, x):
         x, _ = self._encoder[str(source_id)](x[0])

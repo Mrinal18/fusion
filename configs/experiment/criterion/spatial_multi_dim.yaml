@@ -1,7 +1,6 @@
-# @package criterion
 name: SpatialMultiDim
 args:
-  dim_cls: ${global.dim_cls}
+  dim_cls: ${experiment.dim_cls}
   estimator_setting:
     class_type: InfoNceEstimator
     args:
@@ -11,8 +10,9 @@ args:
       clip_setting:
         class_type: TahnClip
         args:
+          clip_value: 20.
       penalty_setting:
         class_type: L2Penalty
         args:
-  modes: [CR]
+  modes: [XX]
   weights: [1.]
