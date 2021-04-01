@@ -1,3 +1,4 @@
+import os
 import copy
 from fusion.dataset.abasedataset import ABaseDataset
 from fusion.dataset.utils import seed_worker
@@ -56,10 +57,13 @@ class TwoViewMnist(ABaseDataset):
         for set_id in ['train', 'test']:
             train = True if set_id == 'train' else False
             transforms = self._prepare_transforms(set_id)
+            download=True
+            if os.path.exists(self._dataset_dir):
+                download = False
             dataset = torchvision.datasets.MNIST(
                 self._dataset_dir,
                 train=train,
-                download=True,
+                download=download,
                 transform=transforms
             )
             print (self._dataset_dir)

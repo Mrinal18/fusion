@@ -9,7 +9,7 @@ sources: [0, 1]
 fold: 0
 num_folds: 5
 seed: 343
-num_workers: 32
+num_workers: 8
 logdir: ${hydra.run.dir}
 pretrained_checkpoint:
 defaults:
