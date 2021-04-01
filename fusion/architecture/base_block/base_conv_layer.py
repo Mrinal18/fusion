@@ -16,7 +16,7 @@ class BaseConvLayer(ABaseArchitecture):
         weights_initialization_type='xavier_uniform'
     ):
         """
-        Initialization of base class of convolution layer
+        Base class of convolution layer with output after and before nonlinearity.
 
         Args:
             :param conv_layer_class: class of convolution layer
