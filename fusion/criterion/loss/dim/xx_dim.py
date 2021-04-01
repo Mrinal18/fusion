@@ -17,7 +17,7 @@ class XxDim(BaseDim):
                     for dim_conv, conv_latent in conv.items():
                         assert dim_conv_latent in rep.keys()
                         loss, penalty = self._estimator(
-                            conv_latent, rep[dim_conv_latent])
+                           rep[dim_conv_latent],  conv_latent)
                         loss = self._weight * loss
                         name = self._name_it(
                             rep_source_id, conv_source_id, dim_conv)

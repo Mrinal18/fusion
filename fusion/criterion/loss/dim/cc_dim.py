@@ -16,7 +16,7 @@ class CcDim(BaseDim):
                     for dim_conv in conv.keys():
                         assert dim_conv in rep.keys()
                         loss, penalty = self._estimator(
-                            conv[dim_conv], rep[dim_conv])
+                            rep[dim_conv], conv[dim_conv])
                         loss = self._weight * loss
                         name = self._name_it(
                             rep_source_id, conv_source_id, dim_conv)
