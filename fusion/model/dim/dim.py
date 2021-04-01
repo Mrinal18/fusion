@@ -103,28 +103,28 @@ class Dim(ABaseModel):
         return latent_head_params
 
     def _find_dim_in(self, conv_latent_size, source_id):
-        batch_size = 2
-        dim_in = 1
         dim_conv = None
-        dummy_encoder = self._encoder[source_id].eval()
-        if self._conv_layer_class is nn.Conv2d:
-            dummy_batch = torch.FloatTensor(
-                batch_size, dim_in, self._input_size, self._input_size)
-        elif self._conv_layer_class is nn.Conv3d:
-            dummy_batch = torch.FloatTensor(
-                batch_size, dim_in,
-                self._input_size, self._input_size, self._input_size
-            )
-        else:
-            raise NotImplementedError
-        x = dummy_batch
-        for layer in dummy_encoder.get_layers():
-            x, conv_latent = layer(x)
-            if conv_latent.size(-1) == conv_latent_size:
-                dim_conv = conv_latent.size(1)
-        if dim_conv is None:
-            assert False, \
-                f'There is no features with ' \
-                f'convolutional latent size {conv_latent_size} '
-        dummy_encoder.train()
+        with torch.no_grad():
+            batch_size = 2
+            dim_in = 1
+            dummy_encoder = self._encoder[source_id].eval()
+            if self._conv_layer_class is nn.Conv2d:
+                dummy_batch = torch.FloatTensor(
+                    batch_size, dim_in, self._input_size, self._input_size)
+            elif self._conv_layer_class is nn.Conv3d:
+                dummy_batch = torch.FloatTensor(
+                    batch_size, dim_in,
+                    self._input_size, self._input_size, self._input_size
+                )
+            else:
+                raise NotImplementedError
+            x = dummy_batch
+            for layer in dummy_encoder.get_layers():
+                x, conv_latent = layer(x)
+                if conv_latent.size(-1) == conv_latent_size:
+                    dim_conv = conv_latent.size(1)
+            if dim_conv is None:
+                assert False, \
+                    f'There is no features with ' \
+                    f'convolutional latent size {conv_latent_size} '
         return dim_conv
