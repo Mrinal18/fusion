@@ -17,7 +17,10 @@ class SeparableCritic(ABaseCritic):
 
 class ScaledDotProduct(SeparableCritic):
     def __call__(self, x, y):
+        print (x.max())
+        print (y.max())
         s = super().__call__(x, y)
+        print (s.max())
         dim_l = x.size(1)
         s = s / dim_l ** 0.5
         return s

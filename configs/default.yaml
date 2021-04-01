@@ -7,6 +7,6 @@ hydra:
 work_dir: ${hydra:runtime.cwd}
 data_dir: ${work_dir}/data/
 defaults:
-  - experiment: mnist_svhn
+  - experiment: two_view_mnist_pretraining
 
 
