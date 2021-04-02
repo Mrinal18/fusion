@@ -16,18 +16,23 @@ class BaseConvLayer(ABaseArchitecture):
         weights_initialization_type='xavier_uniform'
     ):
         """
-        Base class of convolution layer with output after and before nonlinearity.
+        Base class of the convolution layer, this class allows the specification of the following sub-layers in order of appearing in the forward function:
+            1) A convolutional layer
+            2) A normalization method
+            3) A dropout layer
+            4) The non-linear activation that should be used
+        The forward function in the class returns a tuple: (output after all specified sub-layers, output after convolutional sub-layer only)
 
         Args:
-            :param conv_layer_class: class of convolution layer
-            :param conv_layer_args: parameters of convolution layer
-            :param norm_layer_class:  class of normalization layer
-            :param norm_layer_args: parameters of normalization layer
-            :param dp_layer_class: class of droupout layer
-            :param dp_layer_args: parameters of droupout layer
-            :param activation_class: class of activation function
-            :param activation_args: parameters of activation function
-            :param weights_initialization_type: type of initialization weights
+            :param conv_layer_class: Convolutional layer class
+            :param conv_layer_args: Parameters for the convolution layer
+            :param norm_layer_class:  Normalization layer class
+            :param norm_layer_args: Parameters for the normalization layer
+            :param dp_layer_class: Dropout layer class
+            :param dp_layer_args: Parameters for the droupout layer
+            :param activation_class: Activation function class
+            :param activation_args: Parameters for the activation function
+            :param weights_initialization_type: Type of initialization weights
 
         :return
             Base class of convolution layer
@@ -60,13 +65,13 @@ class BaseConvLayer(ABaseArchitecture):
 
     def forward(self, x):
         """
-        Forward method of base class of convolution layer
+        Forward method for the base class of this custom convolutional layer
         Args:
-            :param x: tensor
+            :param x: Input tensor
         Returns:
             Args:
-                :param x: tensor after forward method
-                :param conv_latent: latent presentation of first convolution layer
+                :param x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
+                :param conv_latent: The tensor after only passing through the convolutional sub-layer
         """
         x = self._layer[0](x)
         conv_latent = x
