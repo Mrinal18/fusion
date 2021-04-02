@@ -15,16 +15,15 @@ class CcDim(BaseDim):
                 if rep_source_id != conv_source_id:
                     for dim_conv in conv.keys():
                         assert dim_conv in rep.keys()
-                        loss, penalty = self._estimator(
-                            rep[dim_conv], conv[dim_conv])
-                        loss = self._weight * loss
                         name = self._name_it(
-                            rep_source_id, conv_source_id, dim_conv)
-                        raw_losses[f'{name}_loss'] = loss.item()
-                        ret_loss = ret_loss + loss if ret_loss is not None else loss
-                        if penalty is not None:
-                            raw_losses[f'{name}_penalty'] = penalty.item()
-                            ret_loss = ret_loss + penalty if ret_loss is not None else penalty
+                            rep_source_id, conv_source_id, dim_conv
+                        )
+                        loss, penalty = self._estimator(
+                            conv[dim_conv], rep[dim_conv]
+                        )
+                        ret_loss, raw_losses = self._update_loss(
+                            name, ret_loss, raw_losses, loss, penalty
+                        )
         return ret_loss, raw_losses
 
     def _name_it(self, rep_source_id, conv_source_id, dim_conv):

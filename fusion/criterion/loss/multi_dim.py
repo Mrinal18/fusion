@@ -12,6 +12,7 @@ from fusion.criterion.loss.dim import dim_mode_provider
 from fusion.criterion.loss.dim import CR_MODE, RR_MODE, \
     CC_MODE, XX_MODE
 from fusion.criterion.mi_estimator import mi_estimator_provider
+from fusion.model.misc import ModelOutput
 
 
 class MultiDim(ABaseLoss):
@@ -90,7 +91,7 @@ class MultiDim(ABaseLoss):
                     assert conv_latent_size < 0
         return reps, convs
 
-    def forward(self, preds: Tensor, target: Optional[Tensor] = None):
+    def forward(self, preds: ModelOutput, target: Optional[Tensor] = None):
         del target
         # prepare sources and targets
         latents = preds.attrs['latents']

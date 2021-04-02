@@ -40,10 +40,10 @@ class TestDim(unittest.TestCase):
         objective = CrDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
-        self.assertAlmostEqual(raw_losses[raw_keys[0]].item(), 5.4389, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[1]].item(), 10.7434, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[2]].item(), 5.4361, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[3]].item(), 10.4492, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[0]], 5.4389, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[1]], 10.7434, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[2]], 5.4361, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[3]], 10.4492, places=3)
         self.assertAlmostEqual(loss.item(), 32.0676, places=3)
 
     def test_cc_dim(self):
@@ -51,10 +51,10 @@ class TestDim(unittest.TestCase):
         objective = CcDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
-        self.assertAlmostEqual(raw_losses[raw_keys[0]].item(), 5.4396, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[1]].item(), 10.2893, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[2]].item(), 5.4479, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[3]].item(), 10.3638, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[0]], 5.4396, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[1]], 10.2893, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[2]], 5.4479, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[3]], 10.3638, places=3)
         self.assertAlmostEqual(loss.item(), 31.5406, places=3)
 
     def test_xx_dim(self):
@@ -62,10 +62,10 @@ class TestDim(unittest.TestCase):
         objective = XxDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
-        self.assertAlmostEqual(raw_losses[raw_keys[0]].item(), 5.4481, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[1]].item(), 10.7993, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[2]].item(), 5.4465, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[3]].item(), 10.3911, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[0]], 5.4481, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[1]], 10.7993, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[2]], 5.4465, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[3]], 10.3911, places=3)
         self.assertAlmostEqual(loss.item(), 32.0850, places=3)
 
     def test_rr_dim(self):
@@ -73,10 +73,10 @@ class TestDim(unittest.TestCase):
         objective = RrDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
-        self.assertAlmostEqual(raw_losses[raw_keys[0]].item(), 1.7178, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[1]].item(), 12.3758, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[2]].item(), 1.6673, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[3]].item(), 11.3357, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[0]], 1.7178, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[1]], 12.3758, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[2]], 1.6673, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[3]], 11.3357, places=3)
         self.assertAlmostEqual(loss.item(), 27.0966, places=3)
 
 
