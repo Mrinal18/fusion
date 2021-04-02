@@ -3,6 +3,8 @@ import copy
 from catalyst import dl
 from catalyst.utils.torch import load_checkpoint, unpack_checkpoint
 
+from omegaconf import DictConfig
+
 from fusion.criterion import criterion_provider
 from fusion.model import model_provider
 from fusion.optimizer import optimizer_provider
@@ -11,20 +13,21 @@ from fusion.scheduler import scheduler_provider
 from fusion.task import ATask, PretrainingTaskBuilder
 
 
-class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
-	def create_new_task(self, task_args):
+class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
+	def create_new_task(self, task_args: DictConfig):
 		"""
 
         :param task_args:
         :return:
         """
-		self._task = LinearEvalualtionTask(task_args.args)
+		self._task = LinearEvaluationTask(task_args.args)
 
-	def add_model(self, model_config):
+	def add_model(self, model_config: DictConfig):
 		"""
 
-		:param model_config:
-		:return:
+		Args:
+			:param model_config:
+
 		"""
 		self._task.model = {}
 		# get number of classes
@@ -56,31 +59,32 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 			)
 			self._task.model[source_id] = linear_evaluator
 
-	def add_criterion(self, criterion_config):
+	def add_criterion(self, criterion_config: DictConfig):
 		"""
 
-		:param criterion_config:
-		:return:
+		Args:
+			:param criterion_config:
+
 		"""
 		# TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
 		self._task.criterion = criterion_provider.get(
 			criterion_config.name, **criterion_config.args
 		)
 
-	def add_runner(self, runner_config):
+	def add_runner(self, runner_config: DictConfig):
 		"""
+		Args:
+			:param runner_config:
 
-		:param runner_config:
-		:return:
 		"""
 		runner_args = {} if runner_config.args is None else runner_config.args
 		self._task.runner = dl.SupervisedRunner(**runner_args)
 
-	def add_optimizer(self, optimizer_config):
+	def add_optimizer(self, optimizer_config: DictConfig):
 		"""
 
-		:param optimizer_config:
-		:return:
+		Args:
+			:param optimizer_config:
 		"""
 		self._task.optimizer = {}
 		for source_id, source_model in self._task.model.items():
@@ -91,11 +95,12 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 			)
 			self._task.optimizer[source_id] = optimizer
 
-	def add_scheduler(self, scheduler_config):
+	def add_scheduler(self, scheduler_config: DictConfig):
 		"""
 
-		:param scheduler_config:
-		:return:
+		Args:
+			:param scheduler_config:
+
 		"""
 		self._task.scheduler = {}
 		for source_id, _ in self._task.model.items():
@@ -110,11 +115,20 @@ class LinearEvalualtionTaskBuilder(PretrainingTaskBuilder):
 			self._task.scheduler[source_id] = scheduler
 
 
-class LinearEvalualtionTask(ATask):
-	def __init__(self, task_args) -> None:
-		super(LinearEvalualtionTask, self).__init__(task_args)
+class LinearEvaluationTask(ATask):
+	def __init__(self, task_args: DictConfig) -> None:
+		"""
+		Initilization of class Linear Evaluation Task
+			:param task_args: task parameters
+		Return:
+			class Linear Evaluation Task
+		"""
+		super().__init__(task_args)
 
 	def run(self):
+		"""
+		Method launch training of Linear Evaluation Task
+		"""
 		for source_id, source_model in self._model.items():
 			logdir = self._task_args['logdir'] + f'/linear_{source_id}/'
 			self._callbacks = [

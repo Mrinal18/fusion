@@ -1,8 +1,10 @@
+from typing import Any
+
 class Factory:
 	def __init__(self):
 		self._objects = {}
 
-	def register_object(self, key, model):
+	def register_object(self, key: str, model: Any):
 		"""
 
 		:param key:
@@ -11,7 +13,7 @@ class Factory:
 		"""
 		self._objects[key] = model
 
-	def create(self, key, **kwargs):
+	def create(self, key: str, **kwargs):
 		"""
 
 		:param key:
@@ -25,5 +27,5 @@ class Factory:
 
 
 class ObjectProvider(Factory):
-	def get(self, idx, **kwargs):
+	def get(self, idx: str, **kwargs):
 		return self.create(idx, **kwargs)

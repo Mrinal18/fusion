@@ -1,7 +1,7 @@
-from .linear_evaluation_task import LinearEvalualtionTask
-from .linear_evaluation_task import LinearEvalualtionTaskBuilder
+from .linear_evaluation_task import LinearEvaluationTask
+from .linear_evaluation_task import LinearEvaluationTaskBuilder
 
 __all__ = [
-    'LinearEvalualtionTask',
-    'LinearEvalualtionTaskBuilder'
+    'LinearEvaluationTask',
+    'LinearEvaluationTaskBuilder'
 ]

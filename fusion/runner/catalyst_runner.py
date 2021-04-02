@@ -13,9 +13,12 @@ class CatalystRunner(ABaseRunner, dl.Runner):
     ) -> Mapping[str, Any]:
         """
 
-        :param batch:
-        :param kwargs:
-        :return:
+        Args:
+
+            :param batch:
+            :param kwargs:
+        Return
+
         """
         x, y = batch
         return self.model([x_.to(self.device) for x_ in x]), y

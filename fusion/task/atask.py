@@ -1,8 +1,11 @@
 import abc
+from typing import Optional
+
+from omegaconf import DictConfig
 
 
 class TaskDirector:
-    def __init__(self, task_builder, config):
+    def __init__(self, task_builder: ATaskBuilder, config: DictConfig):
         self._builder = task_builder
         self._config = config
 
@@ -20,7 +23,7 @@ class TaskDirector:
 
 
 class ATaskBuilder(abc.ABC):
-    _task = None
+    _task: Optional[ATask] = None
 
     @abc.abstractmethod
     def create_new_task(self, args):
@@ -65,7 +68,7 @@ class ATask(abc.ABC):
     _callbacks = None
 
     @abc.abstractmethod
-    def __init__(self, task_args):
+    def __init__(self, task_args: DictConfig):
         self._task_args = task_args
 
     @abc.abstractmethod

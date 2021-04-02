@@ -1,9 +1,10 @@
+import torch
+import unittest
+
 from fusion.model import Dim
 from fusion.utils import Setting
 from fusion.criterion.loss import SpatialMultiDim
 from fusion.criterion.loss.dim import CR_MODE, XX_MODE, RR_MODE, CC_MODE
-import torch
-import unittest
 
 
 class TestSpatialMultiDim(unittest.TestCase):

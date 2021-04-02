@@ -1,36 +1,48 @@
+from typing import Dict, Tuple, Type
+
+from torch import Tensor
+import torch.nn as nn
+
 from fusion.architecture import ABaseArchitecture
 from fusion.architecture.base_block import BaseConvLayer, Unflatten
-import torch.nn as nn
+
+
 
 
 class DcganDecoder(ABaseArchitecture):
     def __init__(
         self,
-        dim_in,
-        dim_h,
-        dim_l,
+        dim_in: int,
+        dim_h: int,
+        dim_l: int,
         dim_cls=None,
-        input_size=32,
-        input_dim=2,
-        conv_layer_class=nn.ConvTranspose2d,
-        norm_layer_class=nn.BatchNorm2d,
-        activation_class=nn.ReLU,
-        weights_initialization_type='xavier_uniform',
+        input_size: int = 32,
+        input_dim: int = 2,
+        conv_layer_class: Type[nn.modules.conv._ConvNd] = nn.ConvTranspose2d,
+        norm_layer_class: Type[nn.modules.batchnorm._BatchNorm] = nn.BatchNorm2d,
+        activation_class: Type[nn.Module] = nn.ReLU,
+        weights_initialization_type: str = 'xavier_uniform',
     ):
         """
-
-        :param dim_in:
-        :param dim_h:
-        :param dim_l:
-        :param dim_cls:
-        :param input_size:
-        :param input_dim:
-        :param conv_layer_class:
-        :param norm_layer_class:
-        :param activation_class:
-        :param weights_initialization_type:
-        """
-        super(DcganDecoder, self).__init__(
+        Class of DCGAN Decoder
+        Args:
+            :param dim_in: The number of input channels
+            :param dim_h: The number of feature channels for the last transposed convolutional layer, 
+                          the number of feature channels are halved after for each consecutive transposed convolutional layer after the first
+            :param dim_l: The number of latent dimensions
+            :param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers. 
+                             The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+                             If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+            :param input_size: The input width and height of the image, default=32
+            :param input_dim: The number of input dimensions, e.g. an image is 2-dimensional (input_dim=2) and a volume is 3-dimensional (input_dim=3), default=2
+            :param conv_layer_class: The type of transposed convolutional layer to use, default=nn.ConvTranspose2d
+            :param norm_layer_class: The type of normalization layer to use, default=nn.BatchNorm2d
+            :param activation_class: The type of non-linear activation function to use, default=nn.ReLU
+            :param weights_initialization_type: The weight initialization type to use, default='xavier_uniform'
+        Return:
+            Class of DCGAN decoder model
+            """
+        super().__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
@@ -42,7 +54,7 @@ class DcganDecoder(ABaseArchitecture):
         self._dim_cls = dim_cls
         self._input_size = input_size
         self._unflatten = Unflatten(input_dim=input_dim)
-        self._layers = nn.ModuleList([])
+        self._layers: nn.ModuleList = nn.ModuleList([])
         self._construct()
 
     def _construct(self):
@@ -132,7 +144,15 @@ class DcganDecoder(ABaseArchitecture):
             )
         )
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
+        """
+        The forward method for the DCGAN autoencoder model
+        Args:
+            :param x: The input tensor
+        Returns:
+            x_hat: A reconstruction of the original input tensor
+            latents: The convolutional feature maps, with widths specified by self._dim_cls
+        """
         x_hat = self._unflatten(x)
         latents = None
         # Adds latent
@@ -148,5 +168,11 @@ class DcganDecoder(ABaseArchitecture):
         return x_hat, latents
 
     def init_weights(self):
+        """
+        Weight initialization method
+        Return:
+            DcganDecoder with initialized weights
+
+        """
         for layer in self._layers:
             layer.init_weights()

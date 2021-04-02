@@ -1,10 +1,12 @@
-from fusion.architecture.base_block import BaseConvLayer
 import torch
 import torch.nn as nn
 import unittest
 
+from fusion.architecture.base_block import BaseConvLayer
+
 
 class TestBaseConvLayer(unittest.TestCase):
+
 
     def test_forward(self):
         base_layer = BaseConvLayer(

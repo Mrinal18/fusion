@@ -1,18 +1,21 @@
+import torch
+
+from torch import Tensor
+
 from fusion.criterion.mi_estimator import ABaseMIEstimator
 from fusion.criterion.mi_estimator.measure import measure_provider
-import torch
 
 
 class FenchelDualEstimator(ABaseMIEstimator):
     def __init__(self, critic_setting, clip_setting=None, penalty_setting=None, measure='JSD'):
-        super(FenchelDualEstimator, self).__init__(
+        super().__init__(
             critic_setting,
             clip_setting,
             penalty_setting=penalty_setting
         )
         self._measure = measure_provider.get(measure, **{})
 
-    def __call__(self, x, y):
+    def __call__(self, x: Tensor, y: Tensor):
         self._check_input(x, y)
 
         bs, dim_l, x_locs = x.size()

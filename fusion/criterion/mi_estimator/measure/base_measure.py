@@ -2,9 +2,10 @@ import abc
 import math
 import torch
 import torch.nn.functional as F
+from torch import Tensor
 
 
-def log_sum_exp(x, axis=None):
+def log_sum_exp(x: Tensor, axis=None):
     """Log sum exp function
     Args:
         x: Input.

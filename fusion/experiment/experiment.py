@@ -1,5 +1,5 @@
 from catalyst.utils.misc import set_global_seed
-from fusion.task import TaskDirector, task_builder_provider
+
 import hydra
 from omegaconf import DictConfig, OmegaConf
 import torch
@@ -7,10 +7,13 @@ import numpy as np
 import random
 
 
+from fusion.task import TaskDirector, task_builder_provider
+
+
 class Experiment:
     # Singleton
     # To have global within experiments arguments
-    def __init__(self, config):
+    def __init__(self, config: DictConfig):
         """
 
         :param config:
