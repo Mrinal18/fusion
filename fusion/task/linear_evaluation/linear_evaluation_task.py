@@ -1,6 +1,8 @@
 import copy
 
-from catalyst.utils.checkpoint import load_checkpoint, unpack_checkpoint
+from catalyst import dl
+from catalyst.utils.torch import load_checkpoint, unpack_checkpoint
+
 from omegaconf import DictConfig
 
 from fusion.criterion import criterion_provider
@@ -30,7 +32,8 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 		self._task.model = {}
 		# get number of classes
 		num_classes = self._task.dataset._num_classes
-		model_config.args['num_classes'] = num_classes
+		if 'num_classes' in model_config.args.keys():
+			model_config.args['num_classes'] = num_classes
 		pretrained_checkpoint = model_config.args.pretrained_checkpoint
 		# create model
 		model_args = copy.deepcopy({**model_config.args})
@@ -42,13 +45,15 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 		checkpoint = load_checkpoint(pretrained_checkpoint)
 		unpack_checkpoint(checkpoint, pretrained_model)
 		# create linear evaluators
+		dim_l = model_args['architecture_params']['dim_l']
 		for source_id, encoder in pretrained_model.get_encoder_list().items():
 			linear_evaluator_args = {
 				'encoder': encoder,
 				'num_classes': num_classes,
-				'dim_l': model_args['dim_l'],
+				'dim_l': dim_l,
 				'source_id': int(source_id)
 			}
+			print (linear_evaluator_args)
 			linear_evaluator = model_provider.get(
 				'LinearEvaluator', **linear_evaluator_args
 			)
@@ -73,9 +78,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 
 		"""
 		runner_args = {} if runner_config.args is None else runner_config.args
-		self._task.runner = runner_provider.get(
-			runner_config.name, **runner_args
-		)
+		self._task.runner = dl.SupervisedRunner(**runner_args)
 
 	def add_optimizer(self, optimizer_config: DictConfig):
 		"""
@@ -127,17 +130,31 @@ class LinearEvaluationTask(ATask):
 		Method launch training of Linear Evaluation Task
 		"""
 		for source_id, source_model in self._model.items():
+			logdir = self._task_args['logdir'] + f'/linear_{source_id}/'
+			self._callbacks = [
+				dl.AccuracyCallback(
+					input_key=f"logits",
+					target_key="targets",
+				),
+				dl.CheckpointCallback(
+                	logdir=logdir,
+					loader_key="valid",
+					metric_key="loss",
+					minimize=True,
+					save_n_best=3
+            	),
+			]
 			self._runner.train(
 				model=source_model,
 				criterion=self._criterion,
 				optimizer=self._optimizer[source_id],
 				scheduler=self._scheduler[source_id],
 				loaders=self._dataset.get_cv_loaders(),
-				logdir=self._task_args['logdir'] + f'/linear_{source_id}/',
+				#logdir=self._task_args['logdir'] + f'/linear_{source_id}/',
 				num_epochs=self._task_args['num_epochs'],
 				verbose=self._task_args['verbose'],
 				# TODO: Resume by search in logdir or from hydra config
-				resume=self._task_args['resume'],
+				# resume=self._task_args['resume'],
 				timeit=self._task_args['timeit'],
 				callbacks=self._callbacks,
 			)

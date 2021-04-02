@@ -1,8 +1,12 @@
 import abc
+
+
+
 from enum import Enum
 from typing import Dict, List, Optional
 
-from tensor.utils.data import DataLoader
+import torch
+from torch.utils.data import DataLoader
 
 
 class SetId(Enum):
@@ -10,6 +14,7 @@ class SetId(Enum):
     TEST = 2
     VALID = 3
     INFER = 4
+
 
 
 class ABaseDataset(abc.ABC):
@@ -38,6 +43,7 @@ class ABaseDataset(abc.ABC):
         self._drop_last = drop_last
         self._num_workers = num_workers
         self._seed = seed
+        torch.manual_seed(self._seed)
 
     @abc.abstractmethod
     def load(self):

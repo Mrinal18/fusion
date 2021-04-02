@@ -1,5 +1,7 @@
+import os
 import copy
 from typing import Dict, List
+
 
 from sklearn.model_selection import StratifiedKFold
 import torch
@@ -11,6 +13,7 @@ from fusion.dataset.abasetransform import ABaseTransform
 from fusion.dataset.two_view_mnist.transforms import TwoViewMnistTransform
 from fusion.dataset.two_view_mnist.transforms import RandomRotationTransform
 from fusion.dataset.two_view_mnist.transforms import UniformNoiseTransform
+from fusion.dataset.utils import seed_worker
 
 
 class TwoViewMnist(ABaseDataset):
@@ -59,13 +62,17 @@ class TwoViewMnist(ABaseDataset):
         for set_id in [SetId.TRAIN, SetId.TEST]:
             train = True if set_id == SetId.TRAIN else False
             transforms = self._prepare_transforms(set_id)
+            download=True
+            if os.path.exists(self._dataset_dir):
+                download = False
             dataset = torchvision.datasets.MNIST(
                 self._dataset_dir,
                 train=train,
-                download=True,
+                download=download,
                 transform=transforms
             )
             if set_id == SetId.TRAIN:
+
                 self._set_num_classes(dataset.targets)
                 cv_datasets = self._prepare_fold(dataset)
                 for set_id, dataset in cv_datasets.items():
@@ -79,18 +86,19 @@ class TwoViewMnist(ABaseDataset):
             batch_size=self._batch_size,
             shuffle=self._shuffle,
             drop_last=self._drop_last,
-            num_workers=self._num_workers
+            num_workers=self._num_workers,
+            worker_init_fn=seed_worker
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets):
-        self.num_classes = len(torch.unique(targets))
+        self._num_classes = len(torch.unique(targets))
 
     def _prepare_fold(self, dataset: torchvision.datasets.MNIST):
         kf = StratifiedKFold(
             n_splits=self._num_folds,
-            shuffle=self._shuffle,
+            shuffle=True,
             random_state=self._seed
         )
         X, y = dataset.data, dataset.targets

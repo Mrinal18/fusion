@@ -5,7 +5,7 @@ from torch import Tensor
 
 from . import ABaseLoss
 
-class CrossEntropyLoss(ABaseLoss):
+class CustomCrossEntropyLoss(ABaseLoss):
     def __init__(self, **kwargs):
         """
         Initilization of pytorch wrapper of class Cross Entropy Loss
@@ -54,7 +54,7 @@ class MSELoss(ABaseLoss):
             MSE Loss between input and target tensor
         """
         assert target is not None
-        return self._loss(preds, target)
+        return self._loss(preds.z[0], target)
 
 
 class BCEWithLogitsLoss(ABaseLoss):

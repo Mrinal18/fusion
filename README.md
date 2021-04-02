@@ -13,7 +13,11 @@
     - VaeDecoder
 - model
   - MMVAE
+  - S-AE
 - criterion
+  - loss
+    - S-AE
+    - L-CCA
   - mi_estimator
     - critic
       - Bilinear

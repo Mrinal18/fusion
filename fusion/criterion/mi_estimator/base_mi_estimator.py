@@ -16,13 +16,13 @@ class ABaseMIEstimator(abc.ABC):
         )
         self._clip = None
         self._penalty = None
-        if clip_setting is not None:
+        if clip_setting.class_type is not None:
             args = {} if clip_setting.args is None else clip_setting.args
             self._clip = clip_provider.get(
                 clip_setting.class_type, **args
             )
-        if penalty_setting is not None:
-            args = {} if clip_setting.args is None else clip_setting.args
+        if penalty_setting.class_type is not None:
+            args = {} if penalty_setting.args is None else penalty_setting.args
             self._penalty = penalty_provider.get(
                 penalty_setting.class_type, **args
             )

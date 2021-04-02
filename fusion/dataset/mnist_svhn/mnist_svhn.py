@@ -9,6 +9,7 @@ from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
 from torchnet.dataset import TensorDataset, ResampleDataset
 
+from fusion.dataset.utils import seed_worker
 from fusion.dataset.abasedataset import ABaseDataset, SetId
 from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
 
@@ -176,6 +177,7 @@ class MnistSvhn(ABaseDataset):
             shuffle=self._shuffle,
             drop_last=self._drop_last,
             num_workers=self._num_workers,
+            worker_init_fn=seed_worker,
             pin_memory=True
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id

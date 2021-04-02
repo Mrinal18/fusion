@@ -1,5 +1,7 @@
-from omegaconf import DictConfig
 
+from catalyst import dl
+
+from omegaconf import DictConfig
 from fusion.dataset import dataset_provider
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
@@ -7,6 +9,7 @@ from fusion.optimizer import optimizer_provider
 from fusion.runner import runner_provider
 from fusion.scheduler import scheduler_provider
 from fusion.task import ATask, ATaskBuilder
+import logging
 
 
 class PretrainingTaskBuilder(ATaskBuilder):
@@ -107,18 +110,24 @@ class PretrainingTask(ATask):
 
     def run(self):
         """
-         Method launch training of Pretraining Task
+        Method launch training of Pretraining Task
         """
+        logging.info(f"logdir: {self._task_args['logdir']}")
+        self._callbacks = [
+            dl.CheckpointCallback(
+                logdir=self._task_args['logdir'], loader_key="valid", metric_key="loss", minimize=True, save_n_best=3
+            ),
+        ]
         self._runner.train(
             model=self._model,
             criterion=self._criterion,
             optimizer=self._optimizer,
             scheduler=self._scheduler,
             loaders=self._dataset.get_cv_loaders(),
-            logdir=self._task_args['logdir'],
+            #logdir=self._task_args['logdir'],
             num_epochs=self._task_args['num_epochs'],
             verbose=self._task_args['verbose'],
-            resume=self._task_args['resume'],
+            # resume=self._task_args['resume'],
             timeit=self._task_args['timeit'],
             callbacks=self._callbacks,
         )
