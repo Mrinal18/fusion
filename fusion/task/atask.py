@@ -4,59 +4,6 @@ from typing import Optional
 from omegaconf import DictConfig
 
 
-class TaskDirector:
-    def __init__(self, task_builder: ATaskBuilder, config: DictConfig):
-        self._builder = task_builder
-        self._config = config
-
-    def construct_task(self):
-        self._builder.create_new_task(self._config.task)
-        self._builder.add_dataset(self._config.dataset)
-        self._builder.add_model(self._config.model)
-        self._builder.add_criterion(self._config.criterion)
-        self._builder.add_runner(self._config.runner)
-        self._builder.add_optimizer(self._config.optimizer)
-        self._builder.add_scheduler(self._config.scheduler)
-
-    def get_task(self):
-        return self._builder.task
-
-
-class ATaskBuilder(abc.ABC):
-    _task: Optional[ATask] = None
-
-    @abc.abstractmethod
-    def create_new_task(self, args):
-        pass
-
-    @abc.abstractmethod
-    def add_dataset(self, dataset_config):
-        pass
-
-    @abc.abstractmethod
-    def add_model(self, model_config):
-        pass
-
-    @abc.abstractmethod
-    def add_criterion(self, criterion_config):
-        pass
-
-    @abc.abstractmethod
-    def add_runner(self, runner_config):
-        pass
-
-    @abc.abstractmethod
-    def add_optimizer(self, optimizer_config):
-        pass
-
-    @abc.abstractmethod
-    def add_scheduler(self, scheduler_config):
-        pass
-
-    @property
-    def task(self):
-        return self._task
-
 
 class ATask(abc.ABC):
     _dataset = None
@@ -126,3 +73,57 @@ class ATask(abc.ABC):
     @property
     def task_args(self):
         return self._task_args
+
+
+class ATaskBuilder(abc.ABC):
+    _task: Optional[ATask] = None
+
+    @abc.abstractmethod
+    def create_new_task(self, args):
+        pass
+
+    @abc.abstractmethod
+    def add_dataset(self, dataset_config):
+        pass
+
+    @abc.abstractmethod
+    def add_model(self, model_config):
+        pass
+
+    @abc.abstractmethod
+    def add_criterion(self, criterion_config):
+        pass
+
+    @abc.abstractmethod
+    def add_runner(self, runner_config):
+        pass
+
+    @abc.abstractmethod
+    def add_optimizer(self, optimizer_config):
+        pass
+
+    @abc.abstractmethod
+    def add_scheduler(self, scheduler_config):
+        pass
+
+    @property
+    def task(self):
+        return self._task
+
+
+class TaskDirector:
+    def __init__(self, task_builder: ATaskBuilder, config: DictConfig):
+        self._builder = task_builder
+        self._config = config
+
+    def construct_task(self):
+        self._builder.create_new_task(self._config.task)
+        self._builder.add_dataset(self._config.dataset)
+        self._builder.add_model(self._config.model)
+        self._builder.add_criterion(self._config.criterion)
+        self._builder.add_runner(self._config.runner)
+        self._builder.add_optimizer(self._config.optimizer)
+        self._builder.add_scheduler(self._config.scheduler)
+
+    def get_task(self):
+        return self._builder.task

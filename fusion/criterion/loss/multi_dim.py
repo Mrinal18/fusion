@@ -3,7 +3,7 @@ from collections import namedtuple
 from typing import List, Optional
 
 import numpy as np
-import torch as T
+import torch
 import torch.nn as nn
 from torch import Tensor
 
