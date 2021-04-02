@@ -1,6 +1,7 @@
-from fusion.architecture.dcgan import DcganAutoEncoder
 import torch
 import unittest
+
+from fusion.architecture.dcgan import DcganAutoEncoder
 
 
 class TestDcganAutoEncoder(unittest.TestCase):

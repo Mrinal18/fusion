@@ -1,21 +1,42 @@
-from fusion.model import AMultiSourceModel
+from typing import Any, Dict, List, Tuple
+
+from torch import Tensor
+
+from fusion.model import ABaseModel
 from fusion.model import ModelOutput
 
 
-class AE(AMultiSourceModel):
-    def __init__(self, sources, architecture, architecture_params):
-        super(AE, self).__init__(sources, architecture, architecture_params)
+class AE(ABaseModel):
+    def __init__(self, sources: List[int], architecture: str, architecture_params: Dict[str, Any]):
+        """
 
-    def _source_forward(self, source_id, x):
-        return self._model[source_id](x[int(source_id)])
+        :param sources:
+        :param architecture:
+        :param architecture_params:
+        """
+        super().__init__(sources, architecture, architecture_params)
 
-    def forward(self, x):
-        ret = ModelOutput(latents={}, attrs={})
+    def _source_forward(self, source_id: int, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
+        """
+
+        :param source_id:
+        :param x:
+        :return:
+        """
+        return self._encoder[source_id](x[int(source_id)])
+
+    def forward(self, x: Tensor) -> ModelOutput:
+        """
+
+        :param x:
+        :return:
+        """
+        ret = ModelOutput(z={}, attrs={})
         ret.attrs['x'] = {}
         ret.attrs['x_hat'] = {}
-        for source_id, encoder in self._model.items():
+        for source_id, _ in self._encoder.items():
             ret.attrs['x'] = x[int(source_id)]
-            latent, x_hat = self._source_forward(source_id, x)
-            ret.latents[source_id] = latent
+            z, x_hat = self._source_forward(source_id, x)
+            ret.z[source_id] = z
             ret.attrs['x_hat'] = x_hat
         return ret

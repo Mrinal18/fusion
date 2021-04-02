@@ -1,7 +1,7 @@
-from fusion.model import AE
 import torch
 import unittest
 
+from fusion.model import AE
 
 class TestAE(unittest.TestCase):
 

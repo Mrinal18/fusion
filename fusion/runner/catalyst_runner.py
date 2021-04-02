@@ -10,10 +10,22 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         batch: Mapping[str, Any],
         **kwargs
     ) -> Mapping[str, Any]:
+        """
+
+        :param batch:
+        :param kwargs:
+        :return:
+        """
         x, y = batch
         return self.model([x_.to(self.device) for x_ in x]), y
 
+    # ToDo: _handle_batch -> handle_batch Catalyst v21
     def _handle_batch(self, batch: Mapping[str, Any]) -> None:
+        """
+
+        :param batch:
+        :return:
+        """
         x, y = self._unpack_batch(batch)
         outputs = self.model(x)
         loss = self.criterion(outputs, y)
@@ -29,3 +41,5 @@ class CatalystRunner(ABaseRunner, dl.Runner):
             loss.backward()
             self.optimizer.step()
             self.optimizer.zero_grad()
+            
+        # ToDo: Add self.batch for callbacks

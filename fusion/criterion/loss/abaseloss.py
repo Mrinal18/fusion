@@ -1,13 +1,15 @@
 import abc
+
+from typing import Optional
+
 import torch.nn as nn
+from tensor import Tensor
 
 
 class ABaseLoss(abc.ABC, nn.Module):
-    _loss = None
-
     @abc.abstractmethod
     def __init__(self):
-        super(ABaseLoss, self).__init__()
+        super().__init__()
 
-    def forward(self, input, target):
+    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
         pass

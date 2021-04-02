@@ -1,22 +1,39 @@
-from fusion.architecture import ABaseArchitecture
-from fusion.architecture.base_block import BaseConvLayer, Flatten
+from typing import Dict, Iterable, Tuple, Type
+
 import torch.nn as nn
+from torch import Tensor
+
+from fusion.architecture import ABaseArchitecture
+from fusion.architecture.abasearchitecture import TActivation, TConv, TNorm
+from fusion.architecture.base_block import BaseConvLayer, Flatten
 
 
 class DcganEncoder(ABaseArchitecture):
     def __init__(
         self,
-        dim_in,
-        dim_h,
-        dim_l,
+        dim_in: int,
+        dim_h: int,
+        dim_l: int,
         dim_cls=None,
-        input_size=32,
-        conv_layer_class=nn.Conv2d,
-        norm_layer_class=nn.BatchNorm2d,
-        activation_class=nn.LeakyReLU,
-        weights_initialization_type='xavier_uniform',
+        input_size: int = 32,
+        conv_layer_class: TConv = nn.Conv2d,
+        norm_layer_class: TNorm = nn.BatchNorm2d,
+        activation_class: TActivation = nn.LeakyReLU,
+        weights_initialization_type: str = 'xavier_uniform',
     ):
-        super(DcganEncoder, self).__init__(
+        """
+
+        :param dim_in:
+        :param dim_h:
+        :param dim_l:
+        :param dim_cls:
+        :param input_size:
+        :param conv_layer_class:
+        :param norm_layer_class:
+        :param activation_class:
+        :param weights_initialization_type:
+        """
+        super().__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
@@ -28,7 +45,8 @@ class DcganEncoder(ABaseArchitecture):
         self._dim_cls = dim_cls
         self._input_size = input_size
         self._flatten = Flatten()
-        self._layers = None
+        self._layers: nn.ModuleList
+
         self._construct()
         self.init_weights()
 
@@ -104,7 +122,7 @@ class DcganEncoder(ABaseArchitecture):
             raise NotImplementedError("DCGAN only supports input square images ' + \
                 'with size 32, 64 in current implementation.")
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
         latents = None
         if self._dim_cls is not None:
             latents = {}
@@ -118,8 +136,8 @@ class DcganEncoder(ABaseArchitecture):
         if self._dim_cls is not None:
             latents[1] = x
         # Flatten to get representation
-        latent = self._flatten(x)
-        return latent, latents
+        z = self._flatten(x)
+        return z, latents
 
     def init_weights(self):
         for layer in self._layers:

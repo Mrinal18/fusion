@@ -1,3 +1,5 @@
+from omegaconf import DictConfig
+
 from fusion.dataset import dataset_provider
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
@@ -8,42 +10,80 @@ from fusion.task import ATask, ATaskBuilder
 
 
 class PretrainingTaskBuilder(ATaskBuilder):
-    def create_new_task(self, task_args):
+    _task: ATask
+
+    def create_new_task(self, task_args: DictConfig):
+        """
+
+        :param task_args:
+        :return:
+        """
         self._task = PretrainingTask(task_args.args)
 
-    def add_dataset(self, dataset_config):
+    def add_dataset(self, dataset_config: DictConfig):
+        """
+
+        :param dataset_config:
+        :return:
+        """
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
         )
         self._task.dataset.load()
 
-    def add_model(self, model_config):
-        model_config.args['num_classes'] = self._task.dataset._num_classes
+    def add_model(self, model_config: DictConfig):
+        """
+
+        :param model_config:
+        :return:
+        """
+        if 'num_classes' in model_config.args.keys():
+            model_config.args['num_classes'] = self._task.dataset._num_classes
         model_args = {**model_config.args}
         model_args.pop('pretrained_checkpoint')
         self._task.model = model_provider.get(
             model_config.name, **model_args
         )
 
-    def add_criterion(self, criterion_config):
+    def add_criterion(self, criterion_config: DictConfig):
+        """
+        :param criterion_config:
+        :return:
+        """
+        args = {} if criterion_config.args is None else criterion_config.args
         self._task.criterion = criterion_provider.get(
-            criterion_config.name, **criterion_config.args
+            criterion_config.name, **args
         )
 
-    def add_runner(self, runner_config):
+    def add_runner(self, runner_config: DictConfig):
+        """
+
+        :param runner_config:
+        :return:
+        """
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
             runner_config.name, **runner_args
         )
 
-    def add_optimizer(self, optimizer_config):
+    def add_optimizer(self, optimizer_config: DictConfig):
+        """
+
+        :param optimizer_config:
+        :return:
+        """
         args = dict(**optimizer_config.args)
         args['params'] = self._task.model.parameters()
         self._task.optimizer = optimizer_provider.get(
             optimizer_config.name, **args
         )
 
-    def add_scheduler(self, scheduler_config):
+    def add_scheduler(self, scheduler_config: DictConfig):
+        """
+
+        :param scheduler_config:
+        :return:
+        """
         args = dict(scheduler_config.args)
         args['optimizer'] = self._task.optimizer
         args['steps_per_epoch'] = len(
@@ -55,8 +95,8 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
 
 class PretrainingTask(ATask):
-    def __init__(self, task_args) -> None:
-        super(PretrainingTask, self).__init__(task_args)
+    def __init__(self, task_args: DictConfig) -> None:
+        super().__init__(task_args)
 
     def run(self):
         self._runner.train(

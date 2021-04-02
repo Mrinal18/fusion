@@ -12,26 +12,17 @@
     - VaeEncoder
     - VaeDecoder
 - model
-  - DIM
-  - AE
+  - MMVAE
 - criterion
-  - loss
-    - DIM
   - mi_estimator
     - critic
-      - Separable
       - Bilinear
-      - Cosine
-    - penalty
-    - measure
-    - estimator
+    - Donsker Varadhan Loss
   - misc
     - cca
     - mmvae
 - task
-  - linear evaluation
   - logreg evaluation
   - saliency
 - configs
   - needed yaml with hydra for all models
-  

@@ -1,42 +1,51 @@
 import copy
-from fusion.dataset.abasedataset import ABaseDataset
-from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
-from sklearn.model_selection import StratifiedKFold
-from torchnet.dataset import TensorDataset, ResampleDataset
-import torch
-from torch.utils.data import DataLoader
-import torchvision
 import os
+from typing import Any, Dict, List, Union
+
+from sklearn.model_selection import StratifiedKFold
+import torch
+import torchvision
+from torch import Tensor
+from torch.utils.data import DataLoader, Dataset
+from torchnet.dataset import TensorDataset, ResampleDataset
+
+from fusion.dataset.abasedataset import ABaseDataset, SetId
+from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
 
 
 class MnistSvhn(ABaseDataset):
     def __init__(
             self,
-            dataset_dir,
-            fold=0,
-            num_folds=5,
-            views=[0],
-            batch_size=2,
-            shuffle=False,
-            drop_last=False,
-            num_workers=0,
-            seed=343,
+            dataset_dir: str,
+            fold: int = 0,
+            num_folds: int = 5,
+            sources: List[int] = [0],
+            batch_size: int = 2,
+            shuffle: bool = False,
+            drop_last: bool = False,
+            num_workers: int = 0,
+            seed: int = 343,
     ):
-        super(MnistSvhn, self).__init__(
+        super().__init__(
             dataset_dir,
             fold=fold,
             num_folds=num_folds,
-            views=views,
+            sources=sources,
             batch_size=batch_size,
             shuffle=shuffle,
             drop_last=drop_last,
             num_workers=num_workers,
             seed=seed,
         )
-        self._views = views
-        self._indexes = {}
+        self._sources = sources
+        self._indexes: Dict[str, Dict[str, Any]] = {}
 
     def load(self):
+        """
+        Method to load dataset
+        :return:
+
+        """
         self._download_dataset(self._dataset_dir)
         self._num_classes = 10
         # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry
@@ -53,11 +62,11 @@ class MnistSvhn(ABaseDataset):
             }
         }
 
-        for set_id in ['train', 'valid', 'test']:
+        for set_id in [SetId.TRAIN, SetId.VALID. SetId.TEST]:
             dataset = None
             sampler_mnist = samplers['mnist'][set_id]
             sampler_svhn = samplers['svhn'][set_id]
-            if len(self._views) == 2:
+            if len(self._sources) == 2:
                 dataset_mnist, indexes_mnist = self._load(set_id, 'mnist')
                 dataset_svhn, indexes_svhn = self._load(set_id, 'svhn')
                 self._indexes[set_id] = {}
@@ -77,7 +86,7 @@ class MnistSvhn(ABaseDataset):
                 ])
                 # collate_fn or tensor dataset with transforms
             else:
-                if self._views[0] == 0:
+                if self._sources[0] == 0:
                     dataset_mnist, indexes_mnist = self._load(set_id, 'mnist')
                     self._indexes[set_id] = {}
                     self._indexes[set_id]['mnist'] = indexes_mnist
@@ -88,10 +97,10 @@ class MnistSvhn(ABaseDataset):
                             size=len(indexes_mnist)
                         ),
                     ])
-                elif self._views[0] == 1:
+                elif self._sources[0] == 1:
                     self._indexes[set_id] = {}
-                    self._indexes[set_id]['svhn'] = indexes_svhn
                     dataset_svhn, indexes_svhn = self._load(set_id, 'svhn')
+                    self._indexes[set_id]['svhn'] = indexes_svhn
                     dataset = TensorDataset([
                         ResampleDataset(
                             dataset_svhn.dataset,
@@ -102,35 +111,35 @@ class MnistSvhn(ABaseDataset):
             self._set_dataloader(dataset, set_id)
 
 
-    def _load(self, set_id, dataset_name):
+    def _load(self, set_id: SetId, dataset_name: str):
         # define filename for pair indexes
-        if set_id != 'test':
-            filename = f"{set_id}-ms-{dataset_name}-idx-{self._fold}.pt"
+        if set_id != SetId.TEST:
+            filename = f"{set_id.name.lower()}-ms-{dataset_name}-idx-{self._fold}.pt"
         else:
-            filename = f"{set_id}-ms-{dataset_name}-idx.pt"
+            filename = f"{set_id.name.lower()}-ms-{dataset_name}-idx.pt"
         # load paired indexes
         indexes = torch.load(os.path.join(self._dataset_dir, filename))
         # load dataset
         if dataset_name == 'mnist':
             # validation uses training set
-            train = True if set_id != 'test' else False
+            train = True if set_id != SetId.TEST else False
             tx = MNISTTransform()
             dataset = torchvision.datasets.MNIST(
                 self._dataset_dir, train=train, download=False, transform=tx)
         elif dataset_name == 'svhn':
             # validation uses training set
-            split = 'train' if set_id != 'test' else 'test'
+            split = SetId.TRAIN if set_id != SetId.TEST else SetId.TEST
             tx = SVHNTransform()
             dataset = torchvision.datasets.SVHN(
                 self._dataset_dir, split=split, download=False, transform=tx)
         else:
             raise NotImplementedError
         # select fold
-        if set_id != 'test':
+        if set_id != SetId.TEST:
             cv_indexes = torch.load(
                 os.path.join(
                     self._dataset_dir,
-                    f"{set_id}-ms-{dataset_name}-cv-idx-{self._fold}.pt"
+                    f"{set_id.name.lower()}-ms-{dataset_name}-cv-idx-{self._fold}.pt"
                 )
             )
             dataset.data = dataset.data[cv_indexes]
@@ -146,7 +155,7 @@ class MnistSvhn(ABaseDataset):
         )
         return dataset, indexes
 
-    def _set_dataloader(self, dataset, set_id):
+    def _set_dataloader(self, dataset: Dataset, set_id: SetId):
         data_loader = DataLoader(
             dataset,
             batch_size=self._batch_size,
@@ -155,13 +164,14 @@ class MnistSvhn(ABaseDataset):
             num_workers=self._num_workers,
             pin_memory=True
         )
-        set_id = 'infer' if set_id == 'test' else set_id
+        set_id = SetId.INFER if set_id == SetId.TEST else set_id
         self._data_loaders[set_id] = data_loader
 
-    def _set_num_classes(self, targets):
+    def _set_num_classes(self, targets: Tensor):
         self._num_classes = len(torch.unique(targets))
 
-    def _prepare_fold(self, dataset, dataset_name):
+    def _prepare_fold(self, dataset: Union[torchvision.datasets.MNIST, torchvision.datasets.SVHN],
+            dataset_name: str):
         kf = StratifiedKFold(
             n_splits=self._num_folds,
             shuffle=self._shuffle,
@@ -182,14 +192,14 @@ class MnistSvhn(ABaseDataset):
     def get_cv_loaders(self):
         return super().get_cv_loaders()
 
-    def get_loader(self, set_id):
+    def get_loader(self, set_id: SetId):
         return super().get_loader(set_id)
 
     def num_classes(self):
         return super().num_classes
 
     @staticmethod
-    def _rand_match_on_idx(l1, idx1, l2, idx2, max_d=10000, dm=10):
+    def _rand_match_on_idx(l1, idx1, l2, idx2, max_d: int = 10000, dm: int = 10):
         """
         l*: sorted labels
         idx*: indices of sorted labels in original list
@@ -204,7 +214,7 @@ class MnistSvhn(ABaseDataset):
                 _idx2.append(l_idx2[torch.randperm(n)])
         return torch.cat(_idx1), torch.cat(_idx2)
 
-    def _download_dataset(self, dataset_dir):
+    def _download_dataset(self, dataset_dir: str):
         max_d = 10000  # maximum number of datapoints per class
         dm = 30  # data multiplier: random permutations to match
 
@@ -215,7 +225,6 @@ class MnistSvhn(ABaseDataset):
         else:
             download = True
             os.mkdir(self._dataset_dir)
-
         # load mnist
         train_mnist = torchvision.datasets.MNIST(
             dataset_dir, train=True, download=download, transform=tx)

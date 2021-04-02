@@ -8,7 +8,7 @@ class TestMnistSvhn(unittest.TestCase):
             # TODO: Here hard coded path for the dataset
             dataset_dir='../../../../data/MNIST_SVHN',
             batch_size=BATCH_SIZE,
-            views = [0, 1],
+            sources = [0, 1],
             shuffle=True,
             num_workers=0,
             drop_last=False
@@ -18,8 +18,6 @@ class TestMnistSvhn(unittest.TestCase):
             d = dataset.get_loader(set_id)
             for i, sample in enumerate(d):
                 break
-            print(sample[0][1])
-            print(sample[1][1])
             self.assertEqual((sample[0][1] == sample[1][1]).all(), True)
 
         self.assertEqual(dataset._num_classes, 10)

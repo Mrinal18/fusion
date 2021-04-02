@@ -1,15 +1,18 @@
 import torch
+from torch import Tensor
 from torchvision import transforms
 
+from fusion.dataset.abasetransform import ABaseTransform
 
-class UnitIntervalScale(object):
+
+class UnitIntervalScale(ABaseTransform):
     def __call__(self, x):
         x = (x - x.min()) / (x.max() - x.min())
         return x
 
 
-class RandomRotation(object):
-    def __init__(self, degrees=45):
+class RandomRotation(ABaseTransform):
+    def __init__(self, degrees : int = 45):
         self.random_rotation = transforms.RandomRotation(degrees, fill=(0,))
 
     def __call__(self, x):
@@ -18,15 +21,15 @@ class RandomRotation(object):
         return x
 
 
-class UniformNoise(object):
-    def __call__(self, x):
+class UniformNoise(ABaseTransform):
+    def __call__(self, x) -> Tensor:
         x = transforms.ToTensor()(x)
         x = x + torch.rand(x.size())
         x = torch.clamp(x, min=0., max=1.)
         return x
 
 
-class TwoViewMnistTransform(object):
+class TwoViewMnistTransform(ABaseTransform):
     def __call__(self, x):
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)
@@ -37,7 +40,7 @@ class TwoViewMnistTransform(object):
         return (v1, v2)
 
 
-class RandomRotationTransform(object):
+class RandomRotationTransform(ABaseTransform):
     def __call__(self, x):
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)
@@ -47,7 +50,7 @@ class RandomRotationTransform(object):
         return (x,)
 
 
-class UniformNoiseTransform(object):
+class UniformNoiseTransform(ABaseTransform):
     def __call__(self, x):
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)

@@ -1,32 +1,46 @@
-from . import ABaseLoss
+from typing import Optional
 
 import torch.nn as nn
+from tensor import Tensor
 
+from . import ABaseLoss
 
 class CrossEntropyLoss(ABaseLoss):
     def __init__(self, **kwargs):
-        super(CrossEntropyLoss, self).__init__()
-        self.loss = nn.CrossEntropyLoss(**kwargs)
+        """
 
-    def forward(self, input, target):
-        return self.loss(input, target)
+        :param kwargs:
+        """
+        super().__init__()
+        self._loss = nn.CrossEntropyLoss(**kwargs)
 
+    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
+        """
 
-class MSELoss(ABaseLoss):
-    def __init__(self, **kwargs):
-        super(MSELoss, self).__init__()
-        self.loss = nn.MSELoss(**kwargs)
-
-    def forward(self, input, target):
-        loss = self.loss(input, target)
-        return loss
+        :param preds:
+        :param target:
+        :return:
+        """
+        assert target is not None
+        return self._loss(preds, target)
 
 
 class BCEWithLogitsLoss(ABaseLoss):
     def __init__(self, **kwargs):
-        super(BCEWithLogitsLoss, self).__init__()
-        self.loss = nn.BCEWithLogitsLoss(**kwargs)
+        """
 
-    def forward(self, input, target):
-        loss = self.loss(input.squeeze(1), target.float())
+        :param kwargs:
+        """
+        super().__init__()
+        self._loss = nn.BCEWithLogitsLoss(**kwargs)
+
+    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
+        """
+
+        :param preds:
+        :param target:
+        :return:
+        """
+        assert target is not None
+        loss = self._loss(preds.squeeze(1), target.float())
         return loss

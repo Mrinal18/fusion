@@ -1,23 +1,40 @@
+from typing import Dict, Iterable, Tuple, Type
+
+import torch.nn as nn
+from torch import Tensor
+
 from fusion.architecture import ABaseArchitecture
 from fusion.architecture.base_block import BaseConvLayer, Unflatten
-import torch.nn as nn
 
 
 class DcganDecoder(ABaseArchitecture):
     def __init__(
         self,
-        dim_in,
-        dim_h,
-        dim_l,
+        dim_in: int,
+        dim_h: int,
+        dim_l: int,
         dim_cls=None,
-        input_size=32,
-        input_dim=2,
-        conv_layer_class=nn.ConvTranspose2d,
-        norm_layer_class=nn.BatchNorm2d,
-        activation_class=nn.ReLU,
-        weights_initialization_type='xavier_uniform',
+        input_size: int = 32,
+        input_dim: int = 2,
+        conv_layer_class: Type[nn.modules.conv._ConvNd] = nn.ConvTranspose2d,
+        norm_layer_class: Type[nn.modules.batchnorm._BatchNorm] = nn.BatchNorm2d,
+        activation_class: Type[nn.Module] = nn.ReLU,
+        weights_initialization_type: str = 'xavier_uniform',
     ):
-        super(DcganDecoder, self).__init__(
+        """
+
+        :param dim_in:
+        :param dim_h:
+        :param dim_l:
+        :param dim_cls:
+        :param input_size:
+        :param input_dim:
+        :param conv_layer_class:
+        :param norm_layer_class:
+        :param activation_class:
+        :param weights_initialization_type:
+        """
+        super().__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
@@ -29,7 +46,7 @@ class DcganDecoder(ABaseArchitecture):
         self._dim_cls = dim_cls
         self._input_size = input_size
         self._unflatten = Unflatten(input_dim=input_dim)
-        self._layers = nn.ModuleList([])
+        self._layers: nn.ModuleList = nn.ModuleList([])
         self._construct()
 
     def _construct(self):
@@ -119,7 +136,7 @@ class DcganDecoder(ABaseArchitecture):
             )
         )
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
         x_hat = self._unflatten(x)
         latents = None
         # Adds latent

@@ -1,0 +1,10 @@
+# @package architecture
+name: "DcganAutoEncoder"
+args:
+  dim_in: ${global.dim_in}
+  dim_h: 32
+  dim_l: ${global.dim_l}
+  dim_cls: ${global.dim_cls}
+  input_dim: ${global.input_dim}
+  input_size: ${dataset.input_size}
+  weights_initialization_type: "xavier_uniform"

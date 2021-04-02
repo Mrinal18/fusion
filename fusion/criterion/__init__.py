@@ -1,6 +1,7 @@
 from .loss import CrossEntropyLoss
 from .loss import BCEWithLogitsLoss
-from .loss import MSELoss
+from .loss import AE
+from .loss import SpatialMultiDim, VolumetricMultiDim
 
 from fusion.utils import ObjectProvider
 
@@ -8,12 +9,16 @@ from fusion.utils import ObjectProvider
 criterion_provider = ObjectProvider()
 criterion_provider.register_object('CE', CrossEntropyLoss)
 criterion_provider.register_object('BCE', BCEWithLogitsLoss)
-criterion_provider.register_object('MSELoss', MSELoss)
+criterion_provider.register_object('AE', AE)
+criterion_provider.register_object('SpatialMultiDim', SpatialMultiDim)
+criterion_provider.register_object('VolumetricMultiDim', VolumetricMultiDim)
 
 
 __all__ = [
     'CrossEntropyLoss',
     'BCEWithLogitsLoss',
-    'MSELoss',
+    'AE',
     'criterion_provider',
+    'SpatialMultiDim',
+    'VolumetricMultiDim'
 ]

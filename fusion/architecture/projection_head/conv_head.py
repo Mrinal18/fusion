@@ -1,23 +1,39 @@
-from fusion.architecture import ABaseArchitecture
-from fusion.architecture.base_block import BaseConvLayer
-import torch
+from typing import Optional, Type
+
 import torch.nn as nn
+from torch import Tensor
+
+from fusion.architecture import ABaseArchitecture
+from fusion.architecture.abasearchitecture import TActivation, TConv, TNorm
+from fusion.architecture.base_block import BaseConvLayer
 
 
 class ConvHead(ABaseArchitecture):
     def __init__(
         self,
-        dim_in,
-        dim_l,
-        dim_h,
-        num_h_layers=1,
-        conv_layer_class=nn.Conv2d,
-        norm_layer_class=nn.BatchNorm2d,
-        activation_class=nn.ReLU,
-        weights_initialization_type='xavier_uniform',
-        use_bias=False
+        dim_in: int,
+        dim_l: int,
+        dim_h: int,
+        num_h_layers: int = 1,
+        conv_layer_class: TConv = nn.Conv2d,
+        norm_layer_class: TNorm = nn.BatchNorm2d,
+        activation_class: TActivation = nn.ReLU,
+        weights_initialization_type: str = 'xavier_uniform',
+        use_bias: bool = False
     ):
-        super(ConvHead, self).__init__(
+        """
+
+        :param dim_in:
+        :param dim_l:
+        :param dim_h:
+        :param num_h_layers:
+        :param conv_layer_class:
+        :param norm_layer_class:
+        :param activation_class:
+        :param weights_initialization_type:
+        :param use_bias:
+        """
+        super().__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
@@ -87,20 +103,23 @@ class ConvHead(ABaseArchitecture):
         # https://github.com/Philip-Bachman/amdim-public/blob/8754ae149ed28da8066f696f95ba4ca0e3ffebd8/model.py#L392
         # initialize shortcut to be like identity (if possible)
         if self._dim_l >= self._dim_in:
-            if isinstance(self._conv_layer_class, nn.Conv3d):
+            eye_mask = None
+            if self._conv_layer_class is nn.Conv3d:
                 eye_mask = torch.zeros(
                     self._dim_l, self._dim_in, 1, 1, 1, dtype=bool)
                 for i in range(self._dim_in):
                     eye_mask[i, i, 0, 0, 0] = 1
-            elif isinstance(self._conv_layer_class, nn.Conv2d):
+            elif self._conv_layer_class is nn.Conv2d:
                 eye_mask = torch.zeros(
                     self._dim_l, self._dim_in, 1, 1, dtype=bool)
                 for i in range(self._dim_in):
                     eye_mask[i, i, 0, 0] = 1
-            self._identity_shortcut.weight.data.uniform_(-0.01, 0.01)
-            self._identity_shortcut.weight.data.masked_fill_(eye_mask, 1.0)
+            else:
+                raise NotImplementedError
+            self._identity_shortcut._layer[0].weight.data.uniform_(-0.01, 0.01)
+            self._identity_shortcut._layer[0].weight.data.masked_fill_(eye_mask, 1.0)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         identity, _ = self._identity_shortcut(x)
         for layer in self._convolutional_path:
             x, _ = layer(x)
