@@ -23,7 +23,8 @@ class DcganAutoEncoder(ABaseArchitecture):
         The DCGAN Autoencoder class
         Args:
             :param dim_in: The number of input channels
-            :param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
+            :param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer in the encoder
+                          The number of feature channels are consecutively halved in the decoder starting with the first and the last layer has dim_h number of feature channels
             :param dim_l: The number of latent dimensions
             :param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers. 
                             The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
