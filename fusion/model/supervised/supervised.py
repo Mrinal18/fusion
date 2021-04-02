@@ -16,11 +16,16 @@ class Supervised(ABaseModel):
         architecture_params: Dict[str, Any]
     ):
         """
+
         Initialization of supervise model
-        :param dim_l: output dimension of encoder
-        :param num_classes: number of classes
-        :param architecture: type of architecture
-        :param architecture_params: parameters of architecture
+        Args:
+            :param dim_l: output dimension of encoder
+            :param num_classes: number of classes
+            :param architecture: type of architecture
+            :param architecture_params: parameters of architecture
+        Return:
+            Supervise model
+
         """
         super().__init__(sources, architecture, architecture_params)
         assert len(sources) == 1
@@ -30,9 +35,10 @@ class Supervised(ABaseModel):
     def forward(self, x: Tensor) -> Tensor:
         """
         Forward method of supervised models
-        :param x: input tensor
-        :return:
-        result of forward propagation
+        Args:
+            :param x: input tensor
+        Return:
+            result of forward propagation
         """
         assert len(x) == 1
         x = self._source_forward(self._sources[0], x)

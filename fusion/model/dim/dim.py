@@ -19,12 +19,14 @@ class Dim(ABaseModel):
         latent_head_params: Optional[Dict[str, Any]] = None,
     ):
         """
+        Args:
+            :param sources:
+            :param architecture:
+            :param architecture_params:
+            :param conv_head_params:
+            :param latent_head_params:
+        Return:
 
-        :param sources:
-        :param architecture:
-        :param architecture_params:
-        :param conv_head_params:
-        :param latent_head_params:
         """
         # create encoders for each source
         super().__init__(sources, architecture, architecture_params)
@@ -73,8 +75,11 @@ class Dim(ABaseModel):
     def forward(self, x: Tensor) -> ModelOutput:
         """
 
-        :param x:
-        :return:
+        Args:
+            :param x: input tensor
+
+        Return
+
         """
         ret = ModelOutput(z={}, attrs={})
         ret.attrs['latents'] = {}

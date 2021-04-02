@@ -1,10 +1,12 @@
-from typing import Dict, Iterable, Tuple, Type
+from typing import Dict, Tuple, Type
 
-import torch.nn as nn
 from torch import Tensor
+import torch.nn as nn
 
 from fusion.architecture import ABaseArchitecture
 from fusion.architecture.base_block import BaseConvLayer, Unflatten
+
+
 
 
 class DcganDecoder(ABaseArchitecture):
@@ -22,18 +24,21 @@ class DcganDecoder(ABaseArchitecture):
         weights_initialization_type: str = 'xavier_uniform',
     ):
         """
-
-        :param dim_in:
-        :param dim_h:
-        :param dim_l:
-        :param dim_cls:
-        :param input_size:
-        :param input_dim:
-        :param conv_layer_class:
-        :param norm_layer_class:
-        :param activation_class:
-        :param weights_initialization_type:
-        """
+        Class of DCGAN Decoder
+        Args:
+            :param dim_in:
+            :param dim_h:
+            :param dim_l:
+            :param dim_cls:
+            :param input_size:
+            :param input_dim:
+            :param conv_layer_class:
+            :param norm_layer_class:
+            :param activation_class:
+            :param weights_initialization_type:
+        Return:
+            Class of DCGAN decoder model
+            """
         super().__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
@@ -137,6 +142,14 @@ class DcganDecoder(ABaseArchitecture):
         )
 
     def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
+        """
+        Forward method of DCGAN autoencoder model
+        Args:
+            :param x:  input tensor
+        Returns:
+            x_hat:
+            latents:
+        """
         x_hat = self._unflatten(x)
         latents = None
         # Adds latent
@@ -152,5 +165,11 @@ class DcganDecoder(ABaseArchitecture):
         return x_hat, latents
 
     def init_weights(self):
+        """
+        Method for initialization weights
+        Return:
+            DcganDecoder with initialization weights
+
+        """
         for layer in self._layers:
             layer.init_weights()

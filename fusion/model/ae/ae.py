@@ -9,10 +9,15 @@ from fusion.model import ModelOutput
 class AE(ABaseModel):
     def __init__(self, sources: List[int], architecture: str, architecture_params: Dict[str, Any]):
         """
+        Initialization class of autoencoder model
 
-        :param sources:
-        :param architecture:
-        :param architecture_params:
+        Args:
+            :param sources:
+            :param architecture: type of architecture
+            :param architecture_params: parameters of architecture
+
+        Return:
+            Autoencoder model
         """
         super().__init__(sources, architecture, architecture_params)
 
@@ -27,9 +32,14 @@ class AE(ABaseModel):
 
     def forward(self, x: Tensor) -> ModelOutput:
         """
+        Forward method of autoencoder model
 
-        :param x:
-        :return:
+        Args:
+
+            :param x: input tensor
+        Return:
+            Result of forward method of autoencoder model
+
         """
         ret = ModelOutput(z={}, attrs={})
         ret.attrs['x'] = {}

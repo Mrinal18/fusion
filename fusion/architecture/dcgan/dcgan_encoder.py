@@ -1,4 +1,4 @@
-from typing import Dict, Iterable, Tuple, Type
+from typing import Dict, Tuple
 
 import torch.nn as nn
 from torch import Tensor
@@ -22,16 +22,17 @@ class DcganEncoder(ABaseArchitecture):
         weights_initialization_type: str = 'xavier_uniform',
     ):
         """
-
-        :param dim_in:
-        :param dim_h:
-        :param dim_l:
-        :param dim_cls:
-        :param input_size:
-        :param conv_layer_class:
-        :param norm_layer_class:
-        :param activation_class:
-        :param weights_initialization_type:
+        Class of DCGAN Decoder
+        Args:
+            :param dim_in:
+            :param dim_h:
+            :param dim_l:
+            :param dim_cls:
+            :param input_size:
+            :param conv_layer_class:
+            :param norm_layer_class:
+            :param activation_class:
+            :param weights_initialization_type:
         """
         super().__init__(
             conv_layer_class=conv_layer_class,
@@ -122,7 +123,16 @@ class DcganEncoder(ABaseArchitecture):
             raise NotImplementedError("DCGAN only supports input square images ' + \
                 'with size 32, 64 in current implementation.")
 
+
     def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
+        """
+        Forward method of DCGAN autoencoder model
+        Args:
+            :param x:  input tensor
+        Returns:
+            z:
+            latents:
+        """
         latents = None
         if self._dim_cls is not None:
             latents = {}
@@ -140,5 +150,11 @@ class DcganEncoder(ABaseArchitecture):
         return z, latents
 
     def init_weights(self):
+        """
+        Method for initialization weights
+        Return:
+            DcganEncoder with initialization weights
+
+        """
         for layer in self._layers:
             layer.init_weights()

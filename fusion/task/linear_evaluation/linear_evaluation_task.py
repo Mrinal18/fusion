@@ -23,8 +23,9 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 	def add_model(self, model_config: DictConfig):
 		"""
 
-		:param model_config:
-		:return:
+		Args:
+			:param model_config:
+
 		"""
 		self._task.model = {}
 		# get number of classes
@@ -56,8 +57,9 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 	def add_criterion(self, criterion_config: DictConfig):
 		"""
 
-		:param criterion_config:
-		:return:
+		Args:
+			:param criterion_config:
+
 		"""
 		# TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
 		self._task.criterion = criterion_provider.get(
@@ -66,9 +68,9 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 
 	def add_runner(self, runner_config: DictConfig):
 		"""
+		Args:
+			:param runner_config:
 
-		:param runner_config:
-		:return:
 		"""
 		runner_args = {} if runner_config.args is None else runner_config.args
 		self._task.runner = runner_provider.get(
@@ -78,8 +80,8 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 	def add_optimizer(self, optimizer_config: DictConfig):
 		"""
 
-		:param optimizer_config:
-		:return:
+		Args:
+			:param optimizer_config:
 		"""
 		self._task.optimizer = {}
 		for source_id, source_model in self._task.model.items():
@@ -93,8 +95,9 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 	def add_scheduler(self, scheduler_config: DictConfig):
 		"""
 
-		:param scheduler_config:
-		:return:
+		Args:
+			:param scheduler_config:
+
 		"""
 		self._task.scheduler = {}
 		for source_id, _ in self._task.model.items():
@@ -111,9 +114,18 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 
 class LinearEvaluationTask(ATask):
 	def __init__(self, task_args: DictConfig) -> None:
+		"""
+		Initilization of class Linear Evaluation Task
+			:param task_args: task parameters
+		Return:
+			class Linear Evaluation Task
+		"""
 		super().__init__(task_args)
 
 	def run(self):
+		"""
+		Method launch training of Linear Evaluation Task
+		"""
 		for source_id, source_model in self._model.items():
 			self._runner.train(
 				model=source_model,

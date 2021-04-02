@@ -1,5 +1,6 @@
 from typing import Optional, Type
 
+import torch
 import torch.nn as nn
 from torch import Tensor
 
@@ -22,16 +23,20 @@ class ConvHead(ABaseArchitecture):
         use_bias: bool = False
     ):
         """
+        Initialization of Convolution head model
+            Args:
+            :param dim_in:
+            :param dim_l:
+            :param dim_h:
+            :param num_h_layers:
+            :param conv_layer_class:
+            :param norm_layer_class:
+            :param activation_class:
+            :param weights_initialization_type:
+            :param use_bias:
 
-        :param dim_in:
-        :param dim_l:
-        :param dim_h:
-        :param num_h_layers:
-        :param conv_layer_class:
-        :param norm_layer_class:
-        :param activation_class:
-        :param weights_initialization_type:
-        :param use_bias:
+        Returns:
+            Convolution head model
         """
         super().__init__(
             conv_layer_class=conv_layer_class,
@@ -95,6 +100,11 @@ class ConvHead(ABaseArchitecture):
         )
 
     def init_weights(self):
+        """
+        Method for initialization weights
+        Return:
+            Convolution head model with initialization weights
+        """
         # initialization of the convolutional path
         for layer in self._convolutional_path:
             layer.init_weights()
@@ -120,6 +130,13 @@ class ConvHead(ABaseArchitecture):
             self._identity_shortcut._layer[0].weight.data.masked_fill_(eye_mask, 1.0)
 
     def forward(self, x: Tensor) -> Tensor:
+        """
+            Forward method of Convolution head model
+        Args:
+            :param x:  input tensor
+        Returns:
+            x
+        """
         identity, _ = self._identity_shortcut(x)
         for layer in self._convolutional_path:
             x, _ = layer(x)
