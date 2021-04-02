@@ -3,6 +3,7 @@ from catalyst import dl
 
 from omegaconf import DictConfig
 from fusion.dataset import dataset_provider
+from fusion.dataset.abasedataset import SetId
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
 from fusion.optimizer import optimizer_provider
@@ -91,7 +92,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         args = dict(scheduler_config.args)
         args['optimizer'] = self._task.optimizer
         args['steps_per_epoch'] = len(
-            self._task.dataset.get_loader('train'))
+            self._task.dataset.get_loader(SetId.TRAIN))
         args['epochs'] = self._task.task_args['num_epochs']
         self._task.scheduler = scheduler_provider.get(
             scheduler_config.name, **args

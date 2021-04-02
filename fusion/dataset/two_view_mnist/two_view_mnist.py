@@ -52,7 +52,7 @@ class TwoViewMnist(ABaseDataset):
             num_workers=num_workers,
             seed=seed,
         )
-        self._num_classes = None
+        self._num_classes = 10
 
     def load(self):
         """
@@ -117,7 +117,7 @@ class TwoViewMnist(ABaseDataset):
         assert train_dataset.targets.size(0) == len(train_index)
         return {
             SetId.TRAIN: train_dataset,
-            SetId.TEST: valid_dataset
+            SetId.VALID: valid_dataset
         }
 
     def _prepare_transforms(self, set_id: SetId) -> ABaseTransform:

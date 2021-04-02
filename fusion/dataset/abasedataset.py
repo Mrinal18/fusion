@@ -1,19 +1,16 @@
 import abc
 
-
-
-from enum import Enum
 from typing import Dict, List, Optional
 
 import torch
 from torch.utils.data import DataLoader
 
 
-class SetId(Enum):
-    TRAIN = 1
-    TEST = 2
-    VALID = 3
-    INFER = 4
+class SetId():
+    TRAIN = 'train'
+    TEST = 'test'
+    VALID = 'valid'
+    INFER = 'infer'
 
 
 
@@ -61,6 +58,7 @@ class ABaseDataset(abc.ABC):
     def get_cv_loaders(self) -> Dict[SetId, DataLoader]:
         """Returns dictionary with cross-validation loaders
         """
+        print (self._data_loaders)
         return {set_id: self._data_loaders[set_id] for set_id in [SetId.TRAIN, SetId.VALID]}
 
     @abc.abstractmethod
@@ -73,7 +71,6 @@ class ABaseDataset(abc.ABC):
         return self._data_loaders[set_id]
 
     @property
-    @abc.abstractmethod
     def num_classes(self) -> Optional[int]:
         """Number of classes
         """
