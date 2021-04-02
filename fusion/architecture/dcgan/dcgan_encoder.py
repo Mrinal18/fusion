@@ -17,17 +17,19 @@ class DcganEncoder(ABaseArchitecture):
         weights_initialization_type='xavier_uniform',
     ):
         """
-        Class of DCGAN Decoder
+        The DCGAN Encoder class
         Args:
-            :param dim_in:
-            :param dim_h:
-            :param dim_l:
-            :param dim_cls:
-            :param input_size:
-            :param conv_layer_class:
-            :param norm_layer_class:
-            :param activation_class:
-            :param weights_initialization_type:
+            :param dim_in: The number of input channels
+            :param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
+            :param dim_l: The number of latent dimensions
+            :param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers. 
+                             The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+                             If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+            :param input_size: The input width and height of the image, default=32
+            :param conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+            :param norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
+            :param activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+            :param weights_initialization_type: The weight initialization type to use, default='xavier_uniform'
         """
         super(DcganEncoder, self).__init__(
             conv_layer_class=conv_layer_class,
@@ -119,12 +121,12 @@ class DcganEncoder(ABaseArchitecture):
 
     def forward(self, x):
         """
-        Forward method of DCGAN autoencoder model
+        The DCGAN encoder forward method
         Args:
-            :param x:  input tensor
+            :param x: The input tensor
         Returns:
-            z:
-            latents:
+            z: The latent variable
+            latents: The convolutional feature maps, with widths specified by self._dim_cls
         """
         latents = None
         if self._dim_cls is not None:
@@ -144,9 +146,9 @@ class DcganEncoder(ABaseArchitecture):
 
     def init_weights(self):
         """
-        Method for initialization weights
-        Return:
-            DcganEncoder with initialization weights
+        Weight initialization method
+        Returns:
+            DcganEncoder with initialized weights
 
         """
         for layer in self._layers:
