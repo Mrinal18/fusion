@@ -61,7 +61,8 @@ class MnistSvhn(ABaseDataset):
         """
         Method to load dataset
         """
-        self._download_dataset(self._dataset_dir)
+        if os.path.exists(self._dataset_dir):
+            self._download_dataset(self._dataset_dir)
         self._num_classes = 10
         # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry
         samplers = {
