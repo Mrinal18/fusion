@@ -18,18 +18,18 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def create_new_task(self, task_args: DictConfig):
         """
-
-        Args:
-            task_args:
+		Method for create new pretraining task
+		Args:
+        	task_args: dictionary with task's parameters from config
         """
         self._task = PretrainingTask(task_args.args)
 
     def add_dataset(self, dataset_config: DictConfig):
         """
-
-        Args:
-            dataset_config:
-        """
+		Method for add dataset to pretraining task
+		Args:
+			dataset_config: dictionary with dataset's parameters from config
+		"""
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
         )
@@ -37,9 +37,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_model(self, model_config: DictConfig):
         """
-
+        Method for add model to pretraining task
         Args:
-            model_config:
+            model_config: dictionary with model's parameters from config
         """
         if 'num_classes' in model_config.args.keys():
             model_config.args['num_classes'] = self._task.dataset._num_classes
@@ -51,9 +51,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_criterion(self, criterion_config: DictConfig):
         """
-
+        Method for add criterion to pretraining task
         Args:
-            criterion_config:
+            criterion_config: dictionary with criterion's parameters from config
         """
         args = {} if criterion_config.args is None else criterion_config.args
         self._task.criterion = criterion_provider.get(
@@ -62,9 +62,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_runner(self, runner_config: DictConfig):
         """
-
+        Method for add runner to pretraining task
         Args:
-            runner_config:
+            runner_config: dictionary with runner's parameters from config
         """
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
@@ -73,9 +73,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_optimizer(self, optimizer_config: DictConfig):
         """
-
+        Method for add optimizer to pretraining task
         Args:
-            optimizer_config:
+            optimizer_config: dictionary with optimizer's parameters from config
         """
         args = dict(**optimizer_config.args)
         args['params'] = self._task.model.parameters()
@@ -85,9 +85,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_scheduler(self, scheduler_config: DictConfig):
         """
-
+        Method for add scheduler to pretraining task
         Args:
-            scheduler_config:
+            scheduler_config: dictionary with scheduler's parameters from config
         """
         args = dict(scheduler_config.args)
         args['optimizer'] = self._task.optimizer

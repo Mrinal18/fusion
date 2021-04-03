@@ -16,18 +16,17 @@ from fusion.task import ATask, PretrainingTaskBuilder
 class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 	def create_new_task(self, task_args: DictConfig):
 		"""
-
-        task_args:
-        :return:
+		Method for create new linear evaluation task
+		Args:
+        	task_args: dictionary with task's parameters from config
         """
 		self._task = LinearEvaluationTask(task_args.args)
 
 	def add_model(self, model_config: DictConfig):
 		"""
-
+		Method for add model to linear evaluation task
 		Args:
-			model_config:
-
+			model_config: dictionary with model's parameters from config
 		"""
 		self._task.model = {}
 		# get number of classes
@@ -61,10 +60,9 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 
 	def add_criterion(self, criterion_config: DictConfig):
 		"""
-
+		Method for add criterion to linear evaluation task
 		Args:
-			criterion_config:
-
+			criterion_config: dictionary with criterion's parameters from config
 		"""
 		# TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
 		self._task.criterion = criterion_provider.get(
@@ -73,18 +71,18 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 
 	def add_runner(self, runner_config: DictConfig):
 		"""
+		Method for add runner to linear evaluation task
 		Args:
-			runner_config:
-
+			runner_config: dictionary with runner's parameters from config
 		"""
 		runner_args = {} if runner_config.args is None else runner_config.args
 		self._task.runner = dl.SupervisedRunner(**runner_args)
 
 	def add_optimizer(self, optimizer_config: DictConfig):
 		"""
-
+		Method for add optimizer to linear evaluation task
 		Args:
-			optimizer_config:
+			optimizer_config: dictionary with optimizer's parameters from config
 		"""
 		self._task.optimizer = {}
 		for source_id, source_model in self._task.model.items():
@@ -97,9 +95,9 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 
 	def add_scheduler(self, scheduler_config: DictConfig):
 		"""
-
+		Method for add scheduler to linear evaluation task
 		Args:
-			scheduler_config:
+			scheduler_config: dictionary with scheduler's parameters from config
 
 		"""
 		self._task.scheduler = {}
