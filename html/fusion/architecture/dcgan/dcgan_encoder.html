@@ -52,17 +52,17 @@ class DcganEncoder(ABaseArchitecture):
         &#34;&#34;&#34;
         The DCGAN Encoder class
         Args:
-            :param dim_in: The number of input channels
-            :param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
-            :param dim_l: The number of latent dimensions
-            :param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers. 
+            dim_in: The number of input channels
+            dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
+            dim_l: The number of latent dimensions
+            dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
                              The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
                              If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
-            :param input_size: The input width and height of the image, default=32
-            :param conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
-            :param norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
-            :param activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
-            :param weights_initialization_type: The weight initialization type to use, default=&#39;xavier_uniform&#39;
+            input_size: The input width and height of the image, default=32
+            conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+            norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
+            activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+            weights_initialization_type: The weight initialization type to use, default=&#39;xavier_uniform&#39;
         &#34;&#34;&#34;
         super().__init__(
             conv_layer_class=conv_layer_class,
@@ -158,7 +158,7 @@ class DcganEncoder(ABaseArchitecture):
         &#34;&#34;&#34;
         The DCGAN encoder forward method
         Args:
-            :param x: The input tensor
+            x: The input tensor
         Returns:
             z: The latent variable
             latents: The convolutional feature maps, with widths specified by self._dim_cls
@@ -208,17 +208,28 @@ class DcganEncoder(ABaseArchitecture):
 inheritance.</p>
 <p>The DCGAN Encoder class</p>
 <h2 id="args">Args</h2>
-<p>:param dim_in: The number of input channels
-:param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
-:param dim_l: The number of latent dimensions
-:param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
+<dl>
+<dt><strong><code>dim_in</code></strong></dt>
+<dd>The number of input channels</dd>
+<dt><strong><code>dim_h</code></strong></dt>
+<dd>The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer</dd>
+<dt><strong><code>dim_l</code></strong></dt>
+<dd>The number of latent dimensions</dd>
+<dt><strong><code>dim_cls</code></strong></dt>
+<dd>A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
 The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
-If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
-:param input_size: The input width and height of the image, default=32
-:param conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
-:param norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
-:param activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
-:param weights_initialization_type: The weight initialization type to use, default='xavier_uniform'</p></div>
+If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None</dd>
+<dt><strong><code>input_size</code></strong></dt>
+<dd>The input width and height of the image, default=32</dd>
+<dt><strong><code>conv_layer_class</code></strong></dt>
+<dd>The type of convolutional layer to use, default=nn.Conv2d</dd>
+<dt><strong><code>norm_layer_class</code></strong></dt>
+<dd>he type of normalization layer to use, default=nn.BatchNorm2d</dd>
+<dt><strong><code>activation_class</code></strong></dt>
+<dd>The type of non-linear activation function to use, default=nn.LeakyReLU</dd>
+<dt><strong><code>weights_initialization_type</code></strong></dt>
+<dd>The weight initialization type to use, default='xavier_uniform'</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -239,17 +250,17 @@ If dim_cls=None, the information between z and none of the convolutional feature
         &#34;&#34;&#34;
         The DCGAN Encoder class
         Args:
-            :param dim_in: The number of input channels
-            :param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
-            :param dim_l: The number of latent dimensions
-            :param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers. 
+            dim_in: The number of input channels
+            dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
+            dim_l: The number of latent dimensions
+            dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
                              The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
                              If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
-            :param input_size: The input width and height of the image, default=32
-            :param conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
-            :param norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
-            :param activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
-            :param weights_initialization_type: The weight initialization type to use, default=&#39;xavier_uniform&#39;
+            input_size: The input width and height of the image, default=32
+            conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+            norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
+            activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+            weights_initialization_type: The weight initialization type to use, default=&#39;xavier_uniform&#39;
         &#34;&#34;&#34;
         super().__init__(
             conv_layer_class=conv_layer_class,
@@ -345,7 +356,7 @@ If dim_cls=None, the information between z and none of the convolutional feature
         &#34;&#34;&#34;
         The DCGAN encoder forward method
         Args:
-            :param x: The input tensor
+            x: The input tensor
         Returns:
             z: The latent variable
             latents: The convolutional feature maps, with widths specified by self._dim_cls
@@ -401,7 +412,10 @@ If dim_cls=None, the information between z and none of the convolutional feature
 <dd>
 <div class="desc"><p>The DCGAN encoder forward method</p>
 <h2 id="args">Args</h2>
-<p>:param x: The input tensor</p>
+<dl>
+<dt><strong><code>x</code></strong></dt>
+<dd>The input tensor</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>z</code></dt>
@@ -417,7 +431,7 @@ If dim_cls=None, the information between z and none of the convolutional feature
     &#34;&#34;&#34;
     The DCGAN encoder forward method
     Args:
-        :param x: The input tensor
+        x: The input tensor
     Returns:
         z: The latent variable
         latents: The convolutional feature maps, with widths specified by self._dim_cls

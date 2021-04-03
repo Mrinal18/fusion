@@ -75,17 +75,27 @@ inheritance.</p>
 4) The non-linear activation that should be used
 The forward function in the class returns a tuple: (output after all specified sub-layers, output after convolutional sub-layer only)</p>
 <h2 id="args">Args</h2>
-<p>:param conv_layer_class: Convolutional layer class
-:param conv_layer_args: Parameters for the convolution layer
-:param norm_layer_class:
-Normalization layer class
-:param norm_layer_args: Parameters for the normalization layer
-:param dp_layer_class: Dropout layer class
-:param dp_layer_args: Parameters for the droupout layer
-:param activation_class: Activation function class
-:param activation_args: Parameters for the activation function
-:param weights_initialization_type: Type of initialization weights
-:return
+<dl>
+<dt><strong><code>conv_layer_class</code></strong></dt>
+<dd>Convolutional layer class</dd>
+<dt><strong><code>conv_layer_args</code></strong></dt>
+<dd>Parameters for the convolution layer</dd>
+<dt><strong><code>norm_layer_class</code></strong></dt>
+<dd>Normalization layer class</dd>
+<dt><strong><code>norm_layer_args</code></strong></dt>
+<dd>Parameters for the normalization layer</dd>
+<dt><strong><code>dp_layer_class</code></strong></dt>
+<dd>Dropout layer class</dd>
+<dt><strong><code>dp_layer_args</code></strong></dt>
+<dd>Parameters for the droupout layer</dd>
+<dt><strong><code>activation_class</code></strong></dt>
+<dd>Activation function class</dd>
+<dt><strong><code>activation_args</code></strong></dt>
+<dd>Parameters for the activation function</dd>
+<dt><strong><code>weights_initialization_type</code></strong></dt>
+<dd>Type of initialization weights</dd>
+</dl>
+<p>:return
 Base class of convolution layer</p></div>
 <details class="source">
 <summary>
@@ -113,15 +123,15 @@ Base class of convolution layer</p></div>
         The forward function in the class returns a tuple: (output after all specified sub-layers, output after convolutional sub-layer only)
 
         Args:
-            :param conv_layer_class: Convolutional layer class
-            :param conv_layer_args: Parameters for the convolution layer
-            :param norm_layer_class:  Normalization layer class
-            :param norm_layer_args: Parameters for the normalization layer
-            :param dp_layer_class: Dropout layer class
-            :param dp_layer_args: Parameters for the droupout layer
-            :param activation_class: Activation function class
-            :param activation_args: Parameters for the activation function
-            :param weights_initialization_type: Type of initialization weights
+            conv_layer_class: Convolutional layer class
+            conv_layer_args: Parameters for the convolution layer
+            norm_layer_class:  Normalization layer class
+            norm_layer_args: Parameters for the normalization layer
+            dp_layer_class: Dropout layer class
+            dp_layer_args: Parameters for the droupout layer
+            activation_class: Activation function class
+            activation_args: Parameters for the activation function
+            weights_initialization_type: Type of initialization weights
 
         :return
             Base class of convolution layer
@@ -156,11 +166,11 @@ Base class of convolution layer</p></div>
         &#34;&#34;&#34;
         Forward method for the base class of this custom convolutional layer
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Returns:
             Args:
-                :param x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
-                :param conv_latent: The tensor after only passing through the convolutional sub-layer
+                x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
+                conv_latent: The tensor after only passing through the convolutional sub-layer
         &#34;&#34;&#34;
         x = self._layer[0](x)
         conv_latent = x
@@ -212,11 +222,18 @@ Base class of convolution layer</p></div>
 <dd>
 <div class="desc"><p>Forward method for the base class of this custom convolutional layer</p>
 <h2 id="args">Args</h2>
-<p>:param x: Input tensor</p>
+<dl>
+<dt><strong><code>x</code></strong></dt>
+<dd>Input tensor</dd>
+</dl>
 <h2 id="returns">Returns</h2>
-<p>Args:
-:param x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
-:param conv_latent: The tensor after only passing through the convolutional sub-layer</p></div>
+<dl>
+<dt>Args:</dt>
+<dt><code>
+x</code></dt>
+<dd>The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
+conv_latent: The tensor after only passing through the convolutional sub-layer</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -225,11 +242,11 @@ Base class of convolution layer</p></div>
     &#34;&#34;&#34;
     Forward method for the base class of this custom convolutional layer
     Args:
-        :param x: Input tensor
+        x: Input tensor
     Returns:
         Args:
-            :param x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
-            :param conv_latent: The tensor after only passing through the convolutional sub-layer
+            x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
+            conv_latent: The tensor after only passing through the convolutional sub-layer
     &#34;&#34;&#34;
     x = self._layer[0](x)
     conv_latent = x
@@ -328,7 +345,7 @@ evaluation mode.
         The forward function that receives an input tensor and flattens it
         
         Args:
-            :param input_tensor: Input tensor to flatten
+            input_tensor: Input tensor to flatten
         Return:
             Flattened tensor
         &#34;&#34;&#34;
@@ -358,7 +375,10 @@ evaluation mode.
 <dd>
 <div class="desc"><p>The forward function that receives an input tensor and flattens it</p>
 <h2 id="args">Args</h2>
-<p>:param input_tensor: Input tensor to flatten</p>
+<dl>
+<dt><strong><code>input_tensor</code></strong></dt>
+<dd>Input tensor to flatten</dd>
+</dl>
 <h2 id="return">Return</h2>
 <p>Flattened tensor</p></div>
 <details class="source">
@@ -370,7 +390,7 @@ evaluation mode.
     The forward function that receives an input tensor and flattens it
     
     Args:
-        :param input_tensor: Input tensor to flatten
+        input_tensor: Input tensor to flatten
     Return:
         Flattened tensor
     &#34;&#34;&#34;
@@ -409,7 +429,10 @@ evaluation mode.
 :vartype training: bool</p>
 <p>Custom Pytorch module that unflattens the tensor for a set number of dimensions</p>
 <h2 id="args">Args</h2>
-<p>:param input_dim: Input dimension, the input tensor is unsqueezed input_dim times</p>
+<dl>
+<dt><strong><code>input_dim</code></strong></dt>
+<dd>Input dimension, the input tensor is unsqueezed input_dim times</dd>
+</dl>
 <h2 id="return">Return</h2>
 <p>Unflattened tensor</p></div>
 <details class="source">
@@ -422,7 +445,7 @@ evaluation mode.
         Custom Pytorch module that unflattens the tensor for a set number of dimensions
         
         Args:
-            :param input_dim: Input dimension, the input tensor is unsqueezed input_dim times
+            input_dim: Input dimension, the input tensor is unsqueezed input_dim times
 
         Return:
             Unflattened tensor
@@ -435,7 +458,7 @@ evaluation mode.
         The forward function that receives a tensor and unflattens it self.input_dim times
         
         Args:
-            :param input_tensor: Input tensor to unflatten
+            input_tensor: Input tensor to unflatten
         Return:
             Unflattened tensor
         &#34;&#34;&#34;
@@ -467,7 +490,10 @@ evaluation mode.
 <dd>
 <div class="desc"><p>The forward function that receives a tensor and unflattens it self.input_dim times</p>
 <h2 id="args">Args</h2>
-<p>:param input_tensor: Input tensor to unflatten</p>
+<dl>
+<dt><strong><code>input_tensor</code></strong></dt>
+<dd>Input tensor to unflatten</dd>
+</dl>
 <h2 id="return">Return</h2>
 <p>Unflattened tensor</p></div>
 <details class="source">
@@ -479,7 +505,7 @@ evaluation mode.
     The forward function that receives a tensor and unflattens it self.input_dim times
     
     Args:
-        :param input_tensor: Input tensor to unflatten
+        input_tensor: Input tensor to unflatten
     Return:
         Unflattened tensor
     &#34;&#34;&#34;

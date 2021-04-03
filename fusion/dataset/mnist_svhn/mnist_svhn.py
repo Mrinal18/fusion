@@ -30,15 +30,15 @@ class MnistSvhn(ABaseDataset):
         """
         Initialization of Class MnistSvhn dataset
         Args:
-            :param dataset_dir: path to dataset
-            :param fold: number of fold for validation
-            :param num_folds: counts of folds
-            :param views: number of views
-            :param batch_size: how many samples per batch to load
-            :param shuffle: set to True to have the data reshuffled at every epoch
-            :param drop_last: set to True to drop the last incomplete batch
-            :param num_workers: how many subprocesses to use for data loading
-            :param seed: number of seed
+            dataset_dir: path to dataset
+            fold: number of fold for validation
+            num_folds: counts of folds
+            views: number of views
+            batch_size: how many samples per batch to load
+            shuffle: set to True to have the data reshuffled at every epoch
+            drop_last: set to True to drop the last incomplete batch
+            num_workers: how many subprocesses to use for data loading
+            seed: number of seed
         Return:
             Dataset MnistSvhn
 
@@ -221,7 +221,7 @@ class MnistSvhn(ABaseDataset):
         """
         Get loader by set_id
         Args:
-            :param set_id:
+            set_id:
         Return:
             Loader by set_id
         """

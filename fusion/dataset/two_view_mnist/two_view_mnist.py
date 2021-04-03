@@ -31,15 +31,15 @@ class TwoViewMnist(ABaseDataset):
     ):
         """
 
-        :param dataset_dir:
-        :param fold:
-        :param num_folds:
-        :param sources:
-        :param batch_size:
-        :param shuffle:
-        :param drop_last:
-        :param num_workers:
-        :param seed:
+        dataset_dir:
+        fold:
+        num_folds:
+        sources:
+        batch_size:
+        shuffle:
+        drop_last:
+        num_workers:
+        seed:
         """
         super().__init__(
             dataset_dir,

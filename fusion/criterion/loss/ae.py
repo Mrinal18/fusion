@@ -12,7 +12,7 @@ class AE(ABaseLoss):
     def __init__(self, **kwargs):
         """
 
-        :param kwargs:
+        kwargs:
         """
         super().__init__()
         self._loss = nn.MSELoss(**kwargs)
@@ -20,8 +20,8 @@ class AE(ABaseLoss):
     def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -> Tensor:
         """
 
-        :param preds:
-        :param target:
+        preds:
+        target:
         :return:
         """
         assert target is not None

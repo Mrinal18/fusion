@@ -77,10 +77,10 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 <p>:ivar training: Boolean represents whether this module is in training or
 evaluation mode.
 :vartype training: bool</p>
-<p>:param encoder:
-:param num_classes:
-:param dim_l:
-:param source_id:</p></div>
+<p>encoder:
+num_classes:
+dim_l:
+source_id:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -89,10 +89,10 @@ evaluation mode.
     def __init__(self, encoder, num_classes: int, dim_l: int, source_id: int):
         &#34;&#34;&#34;
 
-        :param encoder:
-        :param num_classes:
-        :param dim_l:
-        :param source_id:
+        encoder:
+        num_classes:
+        dim_l:
+        source_id:
         &#34;&#34;&#34;
         super().__init__()
         self._encoder = encoder
@@ -104,7 +104,7 @@ evaluation mode.
     def forward(self, x: Tensor) -&gt; Tensor:
         &#34;&#34;&#34;
 
-        :param x:
+        x:
         :return:
         &#34;&#34;&#34;
         x = x[self._source_id]
@@ -137,7 +137,7 @@ evaluation mode.
 <span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> torch.Tensor</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:param x:
+<div class="desc"><p>x:
 :return:</p></div>
 <details class="source">
 <summary>
@@ -146,7 +146,7 @@ evaluation mode.
 <pre><code class="python">def forward(self, x: Tensor) -&gt; Tensor:
     &#34;&#34;&#34;
 
-    :param x:
+    x:
     :return:
     &#34;&#34;&#34;
     x = x[self._source_id]

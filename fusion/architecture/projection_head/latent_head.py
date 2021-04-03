@@ -20,13 +20,13 @@ class LatentHead(ABaseArchitecture):
         Initialization Class of Latent Head model
 
         Args:
-            :param dim_in:
-            :param dim_l:
-            :param dim_h:
-            :param num_h_layers:
-            :param use_linear:
-            :param use_bias:
-            :param use_bn:
+            dim_in:
+            dim_l:
+            dim_h:
+            num_h_layers:
+            use_linear:
+            use_bias:
+            use_bn:
 
         Return:
             Class of Latent Head model
@@ -65,7 +65,7 @@ class LatentHead(ABaseArchitecture):
         """
         Forward method of Latent Head model
         Args:
-            :param x:  input tensor
+            x:  input tensor
         Returns:
             x
         """

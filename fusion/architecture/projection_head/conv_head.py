@@ -25,15 +25,15 @@ class ConvHead(ABaseArchitecture):
         """
         Initialization of Convolution head model
             Args:
-            :param dim_in:
-            :param dim_l:
-            :param dim_h:
-            :param num_h_layers:
-            :param conv_layer_class:
-            :param norm_layer_class:
-            :param activation_class:
-            :param weights_initialization_type:
-            :param use_bias:
+            dim_in:
+            dim_l:
+            dim_h:
+            num_h_layers:
+            conv_layer_class:
+            norm_layer_class:
+            activation_class:
+            weights_initialization_type:
+            use_bias:
 
         Returns:
             Convolution head model
@@ -133,7 +133,7 @@ class ConvHead(ABaseArchitecture):
         """
             Forward method of Convolution head model
         Args:
-            :param x:  input tensor
+            x:  input tensor
         Returns:
             x
         """

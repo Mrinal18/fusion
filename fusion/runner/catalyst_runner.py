@@ -16,8 +16,8 @@ class CatalystRunner(ABaseRunner, dl.Runner):
 
         Args:
 
-            :param batch:
-            :param kwargs:
+            batch:
+            kwargs:
         Return
 
         """
@@ -28,7 +28,7 @@ class CatalystRunner(ABaseRunner, dl.Runner):
     def handle_batch(self, batch: Mapping[str, Any]) -> None:
         """
 
-        :param batch:
+        batch:
         :return:
         """
         x, y = self._unpack_batch(batch)

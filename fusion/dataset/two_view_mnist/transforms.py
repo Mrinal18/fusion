@@ -10,7 +10,7 @@ class UnitIntervalScale(ABaseTransform):
         """
         Make  Unit Interval Scale transform
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Return:
             Transform tensor
         """
@@ -24,7 +24,7 @@ class RandomRotation(ABaseTransform):
         """
         Initialization  Class Random Rotation transform
         Args:
-            :param degrees: Max angle
+            degrees: Max angle
         Return:
             Class Random Rotation transform
         """
@@ -34,7 +34,7 @@ class RandomRotation(ABaseTransform):
         """
         Make  Random Rotation transform
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Return:
             Transform tensor
         """
@@ -48,7 +48,7 @@ class UniformNoise(ABaseTransform):
         """
         Make  Uniform Noise transform
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Return:
             Transform tensor
         """
@@ -63,7 +63,7 @@ class TwoViewMnistTransform(ABaseTransform):
         """
         Make  Two View Mnist transform
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Return:
             Transform tensor
         """
@@ -81,7 +81,7 @@ class RandomRotationTransform(ABaseTransform):
         """
         Make  Random Rotation transform
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Return:
              Transform tensor
         """
@@ -98,7 +98,7 @@ class UniformNoiseTransform(ABaseTransform):
         """
         Make  Uniform Noise transform
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Return:
              Transform tensor
         """

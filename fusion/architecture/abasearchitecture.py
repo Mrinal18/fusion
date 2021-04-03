@@ -22,11 +22,11 @@ class ABaseArchitecture(abc.ABC, nn.Module):
     ):
         """
 
-        :param conv_layer_class:
-        :param norm_layer_class:
-        :param dp_layer_class:
-        :param activation_class:
-        :param weights_initialization_type:
+        conv_layer_class:
+        norm_layer_class:
+        dp_layer_class:
+        activation_class:
+        weights_initialization_type:
         """
         super().__init__()
         self._layers: Optional[nn.ModuleList] = None

@@ -45,7 +45,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
         def create_new_task(self, task_args: DictConfig):
                 &#34;&#34;&#34;
 
-        :param task_args:
+        task_args:
         :return:
         &#34;&#34;&#34;
                 self._task = LinearEvaluationTask(task_args.args)
@@ -54,7 +54,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
                 &#34;&#34;&#34;
 
                 Args:
-                        :param model_config:
+                        model_config:
 
                 &#34;&#34;&#34;
                 self._task.model = {}
@@ -91,7 +91,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
                 &#34;&#34;&#34;
 
                 Args:
-                        :param criterion_config:
+                        criterion_config:
 
                 &#34;&#34;&#34;
                 # TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
@@ -102,7 +102,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
         def add_runner(self, runner_config: DictConfig):
                 &#34;&#34;&#34;
                 Args:
-                        :param runner_config:
+                        runner_config:
 
                 &#34;&#34;&#34;
                 runner_args = {} if runner_config.args is None else runner_config.args
@@ -112,7 +112,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
                 &#34;&#34;&#34;
 
                 Args:
-                        :param optimizer_config:
+                        optimizer_config:
                 &#34;&#34;&#34;
                 self._task.optimizer = {}
                 for source_id, source_model in self._task.model.items():
@@ -127,7 +127,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
                 &#34;&#34;&#34;
 
                 Args:
-                        :param scheduler_config:
+                        scheduler_config:
 
                 &#34;&#34;&#34;
                 self._task.scheduler = {}
@@ -147,7 +147,7 @@ class LinearEvaluationTask(ATask):
         def __init__(self, task_args: DictConfig) -&gt; None:
                 &#34;&#34;&#34;
                 Initilization of class Linear Evaluation Task
-                        :param task_args: task parameters
+                        task_args: task parameters
                 Return:
                         class Linear Evaluation Task
                 &#34;&#34;&#34;
@@ -205,7 +205,7 @@ class LinearEvaluationTask(ATask):
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
 <p>Initilization of class Linear Evaluation Task
-:param task_args: task parameters</p>
+task_args: task parameters</p>
 <h2 id="return">Return</h2>
 <p>class Linear Evaluation Task</p></div>
 <details class="source">
@@ -216,7 +216,7 @@ inheritance.</p>
         def __init__(self, task_args: DictConfig) -&gt; None:
                 &#34;&#34;&#34;
                 Initilization of class Linear Evaluation Task
-                        :param task_args: task parameters
+                        task_args: task parameters
                 Return:
                         class Linear Evaluation Task
                 &#34;&#34;&#34;
@@ -323,7 +323,7 @@ inheritance.</p></div>
         def create_new_task(self, task_args: DictConfig):
                 &#34;&#34;&#34;
 
-        :param task_args:
+        task_args:
         :return:
         &#34;&#34;&#34;
                 self._task = LinearEvaluationTask(task_args.args)
@@ -332,7 +332,7 @@ inheritance.</p></div>
                 &#34;&#34;&#34;
 
                 Args:
-                        :param model_config:
+                        model_config:
 
                 &#34;&#34;&#34;
                 self._task.model = {}
@@ -369,7 +369,7 @@ inheritance.</p></div>
                 &#34;&#34;&#34;
 
                 Args:
-                        :param criterion_config:
+                        criterion_config:
 
                 &#34;&#34;&#34;
                 # TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
@@ -380,7 +380,7 @@ inheritance.</p></div>
         def add_runner(self, runner_config: DictConfig):
                 &#34;&#34;&#34;
                 Args:
-                        :param runner_config:
+                        runner_config:
 
                 &#34;&#34;&#34;
                 runner_args = {} if runner_config.args is None else runner_config.args
@@ -390,7 +390,7 @@ inheritance.</p></div>
                 &#34;&#34;&#34;
 
                 Args:
-                        :param optimizer_config:
+                        optimizer_config:
                 &#34;&#34;&#34;
                 self._task.optimizer = {}
                 for source_id, source_model in self._task.model.items():
@@ -405,7 +405,7 @@ inheritance.</p></div>
                 &#34;&#34;&#34;
 
                 Args:
-                        :param scheduler_config:
+                        scheduler_config:
 
                 &#34;&#34;&#34;
                 self._task.scheduler = {}
@@ -433,7 +433,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param criterion_config:</p></div>
+<p>criterion_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -442,7 +442,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-                :param criterion_config:
+                criterion_config:
 
         &#34;&#34;&#34;
         # TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
@@ -456,7 +456,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param model_config:</p></div>
+<p>model_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -465,7 +465,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-                :param model_config:
+                model_config:
 
         &#34;&#34;&#34;
         self._task.model = {}
@@ -504,7 +504,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param optimizer_config:</p></div>
+<p>optimizer_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -513,7 +513,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-                :param optimizer_config:
+                optimizer_config:
         &#34;&#34;&#34;
         self._task.optimizer = {}
         for source_id, source_model in self._task.model.items():
@@ -530,7 +530,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param runner_config:</p></div>
+<p>runner_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -538,7 +538,7 @@ inheritance.</p></div>
 <pre><code class="python">def add_runner(self, runner_config: DictConfig):
         &#34;&#34;&#34;
         Args:
-                :param runner_config:
+                runner_config:
 
         &#34;&#34;&#34;
         runner_args = {} if runner_config.args is None else runner_config.args
@@ -550,7 +550,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param scheduler_config:</p></div>
+<p>scheduler_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -559,7 +559,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-                :param scheduler_config:
+                scheduler_config:
 
         &#34;&#34;&#34;
         self._task.scheduler = {}
@@ -579,7 +579,7 @@ inheritance.</p></div>
 <span>def <span class="ident">create_new_task</span></span>(<span>self, task_args: omegaconf.dictconfig.DictConfig)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:param task_args:
+<div class="desc"><p>task_args:
 :return:</p></div>
 <details class="source">
 <summary>
@@ -588,7 +588,7 @@ inheritance.</p></div>
 <pre><code class="python">def create_new_task(self, task_args: DictConfig):
         &#34;&#34;&#34;
 
-:param task_args:
+task_args:
 :return:
 &#34;&#34;&#34;
         self._task = LinearEvaluationTask(task_args.args)</code></pre>

@@ -20,7 +20,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
 
         Args:
-            :param task_args:
+            task_args:
         """
         self._task = PretrainingTask(task_args.args)
 
@@ -28,7 +28,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
 
         Args:
-            :param dataset_config:
+            dataset_config:
         """
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
@@ -39,7 +39,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
 
         Args:
-            :param model_config:
+            model_config:
         """
         if 'num_classes' in model_config.args.keys():
             model_config.args['num_classes'] = self._task.dataset._num_classes
@@ -53,7 +53,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
 
         Args:
-            :param criterion_config:
+            criterion_config:
         """
         args = {} if criterion_config.args is None else criterion_config.args
         self._task.criterion = criterion_provider.get(
@@ -64,7 +64,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
 
         Args:
-            :param runner_config:
+            runner_config:
         """
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
@@ -75,7 +75,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
 
         Args:
-            :param optimizer_config:
+            optimizer_config:
         """
         args = dict(**optimizer_config.args)
         args['params'] = self._task.model.parameters()
@@ -87,7 +87,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
 
         Args:
-            :param scheduler_config:
+            scheduler_config:
         """
         args = dict(scheduler_config.args)
         args['optimizer'] = self._task.optimizer
@@ -103,7 +103,7 @@ class PretrainingTask(ATask):
     def __init__(self, task_args: DictConfig) -> None:
         """
         Initilization of class Pretraining Task
-        	:param task_args: task parameters
+        	task_args: task parameters
         Return:
         	class Logical Pretraining Task
         """
