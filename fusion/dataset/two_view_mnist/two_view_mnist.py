@@ -52,7 +52,6 @@ class TwoViewMnist(ABaseDataset):
             num_workers=num_workers,
             seed=seed,
         )
-        self._num_classes = 10
 
     def load(self):
         """
@@ -72,7 +71,6 @@ class TwoViewMnist(ABaseDataset):
                 transform=transforms
             )
             if set_id == SetId.TRAIN:
-
                 self._set_num_classes(dataset.targets)
                 cv_datasets = self._prepare_fold(dataset)
                 for set_id, dataset in cv_datasets.items():

@@ -227,9 +227,6 @@ class MnistSvhn(ABaseDataset):
         """
         return super().get_loader(set_id)
 
-    def num_classes(self):
-        return super().num_classes
-
     @staticmethod
     def _rand_match_on_idx(l1, idx1, l2, idx2, max_d: int = 10000, dm: int = 10):
         """

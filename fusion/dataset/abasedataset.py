@@ -15,9 +15,6 @@ class SetId():
 
 
 class ABaseDataset(abc.ABC):
-    _num_classes: Optional[int] = None
-    _data_loaders: Dict[SetId, DataLoader] = {}
-
     @abc.abstractmethod
     def __init__(
         self,
@@ -41,6 +38,8 @@ class ABaseDataset(abc.ABC):
         self._num_workers = num_workers
         self._seed = seed
         torch.manual_seed(self._seed)
+        self._num_classes: Optional[int] = None
+        self._data_loaders: Dict[SetId, DataLoader] = {}
 
     @abc.abstractmethod
     def load(self):
