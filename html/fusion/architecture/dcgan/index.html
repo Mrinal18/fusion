@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>fusion.architecture.dcgan API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fusion.architecture.dcgan</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from .dcgan_encoder import DcganEncoder
+from .dcgan_decoder import DcganDecoder
+from .dcgan_autoencoder import DcganAutoEncoder
+
+
+__all__ = [
+    &#39;DcganEncoder&#39;,
+    &#39;DcganDecoder&#39;,
+    &#39;DcganAutoEncoder&#39;
+]</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="fusion.architecture.dcgan.dcgan_autoencoder" href="dcgan_autoencoder.html">fusion.architecture.dcgan.dcgan_autoencoder</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="fusion.architecture.dcgan.dcgan_decoder" href="dcgan_decoder.html">fusion.architecture.dcgan.dcgan_decoder</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="fusion.architecture.dcgan.dcgan_encoder" href="dcgan_encoder.html">fusion.architecture.dcgan.dcgan_encoder</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="fusion.architecture.dcgan.tests" href="tests/index.html">fusion.architecture.dcgan.tests</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fusion.architecture.dcgan.DcganAutoEncoder"><code class="flex name class">
+<span>class <span class="ident">DcganAutoEncoder</span></span>
+<span>(</span><span>dim_in: int, dim_h: int, dim_l: int, dim_cls=None, input_size: int = 32, input_dim: int = 2, conv_layer_class: Type[torch.nn.modules.conv._ConvNd] = torch.nn.modules.conv.Conv2d, conv_t_layer_class: Type[torch.nn.modules.conv._ConvNd] = torch.nn.modules.conv.ConvTranspose2d, norm_layer_class: Type[torch.nn.modules.batchnorm._BatchNorm] = torch.nn.modules.batchnorm.BatchNorm2d, activation_class: Type[torch.nn.modules.module.Module] = torch.nn.modules.activation.LeakyReLU, weights_initialization_type: str = 'xavier_uniform')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<p>The DCGAN Autoencoder class</p>
+<h2 id="args">Args</h2>
+<p>:param dim_in: The number of input channels
+:param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer in the encoder
+The number of feature channels are consecutively halved in the decoder starting with the first and the last layer has dim_h number of feature channels
+:param dim_l: The number of latent dimensions
+:param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
+The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+:param input_size: The input width and height of the image, default=32
+:param input_dim: The number of input dimensions, e.g. an image is 2-dimensional (input_dim=2) and a volume is 3-dimensional (input_dim=3), default=2
+:param conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+:param conv_t_layer_class: The type of transposed convolutional layer to use, default=nn.ConvTranspose2d
+:param norm_layer_class: The type of normalization layer to use, default=nn.BatchNorm2d
+:param activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+:param weights_initialization_type: The weight initialization type to use, default='xavier_uniform'</p>
+<h2 id="returns">Returns</h2>
+<p>Class of DCGAN autoencoder model</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DcganAutoEncoder(ABaseArchitecture):
+    def __init__(self,
+         dim_in: int,
+         dim_h: int,
+         dim_l: int,
+         dim_cls=None,
+         input_size: int = 32,
+         input_dim: int = 2,
+         conv_layer_class: TConv = nn.Conv2d,
+         conv_t_layer_class: TConv = nn.ConvTranspose2d,
+         norm_layer_class: TNorm = nn.BatchNorm2d,
+         activation_class: TActivation = nn.LeakyReLU,
+         weights_initialization_type: str = &#39;xavier_uniform&#39;,
+     ):
+        &#34;&#34;&#34;
+        The DCGAN Autoencoder class
+        Args:
+            :param dim_in: The number of input channels
+            :param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer in the encoder
+                          The number of feature channels are consecutively halved in the decoder starting with the first and the last layer has dim_h number of feature channels
+            :param dim_l: The number of latent dimensions
+            :param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers. 
+                            The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+                            If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+            :param input_size: The input width and height of the image, default=32
+            :param input_dim: The number of input dimensions, e.g. an image is 2-dimensional (input_dim=2) and a volume is 3-dimensional (input_dim=3), default=2
+            :param conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+            :param conv_t_layer_class: The type of transposed convolutional layer to use, default=nn.ConvTranspose2d
+            :param norm_layer_class: The type of normalization layer to use, default=nn.BatchNorm2d
+            :param activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+            :param weights_initialization_type: The weight initialization type to use, default=&#39;xavier_uniform&#39;
+
+        Returns:
+            Class of DCGAN autoencoder model
+
+        &#34;&#34;&#34;
+        super().__init__()
+        self._encoder = DcganEncoder(
+            dim_in, dim_h, dim_l, dim_cls=dim_cls,
+            input_size=input_size, conv_layer_class=conv_layer_class,
+            norm_layer_class=norm_layer_class, activation_class=activation_class,
+            weights_initialization_type=weights_initialization_type
+        )
+        self._decoder = DcganDecoder(
+            dim_in, dim_h, dim_l, dim_cls=dim_cls,
+            input_size=input_size, input_dim=input_dim,
+            conv_layer_class=conv_t_layer_class,
+            norm_layer_class=norm_layer_class,
+            activation_class=activation_class,
+            weights_initialization_type=weights_initialization_type
+        )
+
+    def forward(self, x: Tensor) -&gt; Tuple[Tuple, Tuple]:
+        &#34;&#34;&#34;
+        The forward method for the DCGAN autoencoder model
+        Args:
+            :param x: An input tensor
+        Returns:
+            z: The latent variable
+            x_hat: A reconstruction of the original input tensor
+
+        &#34;&#34;&#34;
+        z, _ = self._encoder(x)
+        x_hat, _ = self._decoder(z)
+        return z, x_hat
+
+    def init_weights(self):
+        &#34;&#34;&#34;
+        The weight initialization method for the encoder and decoder in the autoencoder
+        Returns:
+            Autoencoder with initialized weights
+
+        &#34;&#34;&#34;
+        self._encoder.init_weights()
+        self._decoder.init_weights()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="fusion.architecture.abasearchitecture.ABaseArchitecture" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture">ABaseArchitecture</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fusion.architecture.dcgan.DcganAutoEncoder.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fusion.architecture.dcgan.DcganAutoEncoder.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fusion.architecture.dcgan.DcganAutoEncoder.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> Tuple[Tuple, Tuple]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The forward method for the DCGAN autoencoder model</p>
+<h2 id="args">Args</h2>
+<p>:param x: An input tensor</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>z</code></dt>
+<dd>The latent variable</dd>
+<dt><code>x_hat</code></dt>
+<dd>A reconstruction of the original input tensor</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x: Tensor) -&gt; Tuple[Tuple, Tuple]:
+    &#34;&#34;&#34;
+    The forward method for the DCGAN autoencoder model
+    Args:
+        :param x: An input tensor
+    Returns:
+        z: The latent variable
+        x_hat: A reconstruction of the original input tensor
+
+    &#34;&#34;&#34;
+    z, _ = self._encoder(x)
+    x_hat, _ = self._decoder(z)
+    return z, x_hat</code></pre>
+</details>
+</dd>
+<dt id="fusion.architecture.dcgan.DcganAutoEncoder.init_weights"><code class="name flex">
+<span>def <span class="ident">init_weights</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The weight initialization method for the encoder and decoder in the autoencoder</p>
+<h2 id="returns">Returns</h2>
+<p>Autoencoder with initialized weights</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_weights(self):
+    &#34;&#34;&#34;
+    The weight initialization method for the encoder and decoder in the autoencoder
+    Returns:
+        Autoencoder with initialized weights
+
+    &#34;&#34;&#34;
+    self._encoder.init_weights()
+    self._decoder.init_weights()</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="fusion.architecture.abasearchitecture.ABaseArchitecture" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture">ABaseArchitecture</a></b></code>:
+<ul class="hlist">
+<li><code><a title="fusion.architecture.abasearchitecture.ABaseArchitecture.get_layers" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture.get_layers">get_layers</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="fusion.architecture.dcgan.DcganDecoder"><code class="flex name class">
+<span>class <span class="ident">DcganDecoder</span></span>
+<span>(</span><span>dim_in: int, dim_h: int, dim_l: int, dim_cls=None, input_size: int = 32, input_dim: int = 2, conv_layer_class: Type[torch.nn.modules.conv._ConvNd] = torch.nn.modules.conv.ConvTranspose2d, norm_layer_class: Type[torch.nn.modules.batchnorm._BatchNorm] = torch.nn.modules.batchnorm.BatchNorm2d, activation_class: Type[torch.nn.modules.module.Module] = torch.nn.modules.activation.ReLU, weights_initialization_type: str = 'xavier_uniform')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<p>Class of DCGAN Decoder</p>
+<h2 id="args">Args</h2>
+<p>:param dim_in: The number of input channels
+:param dim_h: The number of feature channels for the last transposed convolutional layer,
+the number of feature channels are halved after for each consecutive transposed convolutional layer after the first
+:param dim_l: The number of latent dimensions
+:param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
+The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+:param input_size: The input width and height of the image, default=32
+:param input_dim: The number of input dimensions, e.g. an image is 2-dimensional (input_dim=2) and a volume is 3-dimensional (input_dim=3), default=2
+:param conv_layer_class: The type of transposed convolutional layer to use, default=nn.ConvTranspose2d
+:param norm_layer_class: The type of normalization layer to use, default=nn.BatchNorm2d
+:param activation_class: The type of non-linear activation function to use, default=nn.ReLU
+:param weights_initialization_type: The weight initialization type to use, default='xavier_uniform'</p>
+<h2 id="return">Return</h2>
+<p>Class of DCGAN decoder model</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DcganDecoder(ABaseArchitecture):
+    def __init__(
+        self,
+        dim_in: int,
+        dim_h: int,
+        dim_l: int,
+        dim_cls=None,
+        input_size: int = 32,
+        input_dim: int = 2,
+        conv_layer_class: Type[nn.modules.conv._ConvNd] = nn.ConvTranspose2d,
+        norm_layer_class: Type[nn.modules.batchnorm._BatchNorm] = nn.BatchNorm2d,
+        activation_class: Type[nn.Module] = nn.ReLU,
+        weights_initialization_type: str = &#39;xavier_uniform&#39;,
+    ):
+        &#34;&#34;&#34;
+        Class of DCGAN Decoder
+        Args:
+            :param dim_in: The number of input channels
+            :param dim_h: The number of feature channels for the last transposed convolutional layer, 
+                          the number of feature channels are halved after for each consecutive transposed convolutional layer after the first
+            :param dim_l: The number of latent dimensions
+            :param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers. 
+                             The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+                             If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+            :param input_size: The input width and height of the image, default=32
+            :param input_dim: The number of input dimensions, e.g. an image is 2-dimensional (input_dim=2) and a volume is 3-dimensional (input_dim=3), default=2
+            :param conv_layer_class: The type of transposed convolutional layer to use, default=nn.ConvTranspose2d
+            :param norm_layer_class: The type of normalization layer to use, default=nn.BatchNorm2d
+            :param activation_class: The type of non-linear activation function to use, default=nn.ReLU
+            :param weights_initialization_type: The weight initialization type to use, default=&#39;xavier_uniform&#39;
+        Return:
+            Class of DCGAN decoder model
+            &#34;&#34;&#34;
+        super().__init__(
+            conv_layer_class=conv_layer_class,
+            norm_layer_class=norm_layer_class,
+            activation_class=activation_class,
+            weights_initialization_type=weights_initialization_type
+        )
+        self._dim_in = dim_in
+        self._dim_h = dim_h
+        self._dim_l = dim_l
+        self._dim_cls = dim_cls
+        self._input_size = input_size
+        self._unflatten = Unflatten(input_dim=input_dim)
+        self._layers: nn.ModuleList = nn.ModuleList([])
+        self._construct()
+
+    def _construct(self):
+        if self._input_size == 64:
+            self._layers.append(
+                BaseConvLayer(
+                    self._conv_layer_class, {
+                        &#39;in_channels&#39;:  self._dim_l, &#39;out_channels&#39;: 8 *  self._dim_h,
+                        &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 0, &#39;bias&#39;: False
+                    },
+                    norm_layer_class= self._norm_layer_class, norm_layer_args={
+                        &#39;num_features&#39;: 8 * self._dim_h
+                    },
+                    activation_class= self._activation_class, activation_args={
+                        &#39;inplace&#39;: True
+                    }
+                )
+            )
+            self._layers.append(
+                BaseConvLayer(
+                    self._conv_layer_class, {
+                        &#39;in_channels&#39;: 8 * self._dim_h, &#39;out_channels&#39;: 4 * self._dim_h,
+                        &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 1, &#39;bias&#39;: False
+                    },
+                    norm_layer_class=self._norm_layer_class, norm_layer_args={
+                        &#39;num_features&#39;: 4 * self._dim_h
+                    },
+                    activation_class=self._activation_class, activation_args={
+                        &#39;inplace&#39;: True
+                    }
+                )
+            )
+        elif self._input_size == 32:
+            self._layers.append(
+                BaseConvLayer(
+                    self._conv_layer_class, {
+                        &#39;in_channels&#39;: self._dim_l, &#39;out_channels&#39;: 4 * self._dim_h,
+                        &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 0, &#39;bias&#39;: False
+                    },
+                    norm_layer_class=self._norm_layer_class, norm_layer_args={
+                        &#39;num_features&#39;: 4 * self._dim_h
+                    },
+                    activation_class=self._activation_class, activation_args={
+                        &#39;inplace&#39;: True
+                    }
+                )
+            )
+        else:
+            raise NotImplementedError(&#34;DCGAN only supports input square images &#39; + \
+                &#39;with size 32, 64 in current implementation.&#34;)
+
+        self._layers.append(
+            BaseConvLayer(
+                self._conv_layer_class, {
+                    &#39;in_channels&#39;: 4 * self._dim_h, &#39;out_channels&#39;: 2 * self._dim_h,
+                    &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 1, &#39;bias&#39;: False
+                },
+                norm_layer_class=self._norm_layer_class, norm_layer_args={
+                    &#39;num_features&#39;: 2 * self._dim_h
+                },
+                activation_class=self._activation_class, activation_args={
+                    &#39;inplace&#39;: True
+                }
+            )
+        )
+        self._layers.append(
+            BaseConvLayer(
+                self._conv_layer_class, {
+                    &#39;in_channels&#39;: 2 * self._dim_h, &#39;out_channels&#39;: self._dim_h,
+                    &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 1, &#39;bias&#39;: False
+                },
+                norm_layer_class=self._norm_layer_class, norm_layer_args={
+                    &#39;num_features&#39;: self._dim_h
+                },
+                activation_class=self._activation_class, activation_args={
+                    &#39;inplace&#39;: True
+                }
+            )
+        )
+        self._layers.append(
+            BaseConvLayer(
+                self._conv_layer_class, {
+                    &#39;in_channels&#39;: self._dim_h, &#39;out_channels&#39;: self._dim_in,
+                    &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 1, &#39;bias&#39;: False
+                },
+                activation_class=nn.Tanh
+            )
+        )
+
+    def forward(self, x: Tensor) -&gt; Tuple[Tensor, Dict[int, Tensor]]:
+        &#34;&#34;&#34;
+        The forward method for the DCGAN autoencoder model
+        Args:
+            :param x: The input tensor
+        Returns:
+            x_hat: A reconstruction of the original input tensor
+            latents: The convolutional feature maps, with widths specified by self._dim_cls
+        &#34;&#34;&#34;
+        x_hat = self._unflatten(x)
+        latents = None
+        # Adds latent
+        if self._dim_cls is not None:
+            latents = {}
+            latents[1] = x_hat
+        for layer in self._layers:
+            x_hat, conv_latent = layer(x_hat)
+            # Add conv latent
+            if self._dim_cls is not None:
+                if conv_latent.size()[-1] in self._dim_cls:
+                    latents[conv_latent.size()[-1]] = conv_latent
+        return x_hat, latents
+
+    def init_weights(self):
+        &#34;&#34;&#34;
+        Weight initialization method
+        Return:
+            DcganDecoder with initialized weights
+
+        &#34;&#34;&#34;
+        for layer in self._layers:
+            layer.init_weights()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="fusion.architecture.abasearchitecture.ABaseArchitecture" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture">ABaseArchitecture</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fusion.architecture.dcgan.DcganDecoder.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fusion.architecture.dcgan.DcganDecoder.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fusion.architecture.dcgan.DcganDecoder.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> Tuple[torch.Tensor, Dict[int, torch.Tensor]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The forward method for the DCGAN autoencoder model</p>
+<h2 id="args">Args</h2>
+<p>:param x: The input tensor</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>x_hat</code></dt>
+<dd>A reconstruction of the original input tensor</dd>
+<dt><code>latents</code></dt>
+<dd>The convolutional feature maps, with widths specified by self._dim_cls</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x: Tensor) -&gt; Tuple[Tensor, Dict[int, Tensor]]:
+    &#34;&#34;&#34;
+    The forward method for the DCGAN autoencoder model
+    Args:
+        :param x: The input tensor
+    Returns:
+        x_hat: A reconstruction of the original input tensor
+        latents: The convolutional feature maps, with widths specified by self._dim_cls
+    &#34;&#34;&#34;
+    x_hat = self._unflatten(x)
+    latents = None
+    # Adds latent
+    if self._dim_cls is not None:
+        latents = {}
+        latents[1] = x_hat
+    for layer in self._layers:
+        x_hat, conv_latent = layer(x_hat)
+        # Add conv latent
+        if self._dim_cls is not None:
+            if conv_latent.size()[-1] in self._dim_cls:
+                latents[conv_latent.size()[-1]] = conv_latent
+    return x_hat, latents</code></pre>
+</details>
+</dd>
+<dt id="fusion.architecture.dcgan.DcganDecoder.init_weights"><code class="name flex">
+<span>def <span class="ident">init_weights</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Weight initialization method</p>
+<h2 id="return">Return</h2>
+<p>DcganDecoder with initialized weights</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_weights(self):
+    &#34;&#34;&#34;
+    Weight initialization method
+    Return:
+        DcganDecoder with initialized weights
+
+    &#34;&#34;&#34;
+    for layer in self._layers:
+        layer.init_weights()</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="fusion.architecture.abasearchitecture.ABaseArchitecture" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture">ABaseArchitecture</a></b></code>:
+<ul class="hlist">
+<li><code><a title="fusion.architecture.abasearchitecture.ABaseArchitecture.get_layers" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture.get_layers">get_layers</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="fusion.architecture.dcgan.DcganEncoder"><code class="flex name class">
+<span>class <span class="ident">DcganEncoder</span></span>
+<span>(</span><span>dim_in: int, dim_h: int, dim_l: int, dim_cls=None, input_size: int = 32, conv_layer_class: Type[torch.nn.modules.conv._ConvNd] = torch.nn.modules.conv.Conv2d, norm_layer_class: Type[torch.nn.modules.batchnorm._BatchNorm] = torch.nn.modules.batchnorm.BatchNorm2d, activation_class: Type[torch.nn.modules.module.Module] = torch.nn.modules.activation.LeakyReLU, weights_initialization_type: str = 'xavier_uniform')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<p>The DCGAN Encoder class</p>
+<h2 id="args">Args</h2>
+<p>:param dim_in: The number of input channels
+:param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
+:param dim_l: The number of latent dimensions
+:param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
+The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+:param input_size: The input width and height of the image, default=32
+:param conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+:param norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
+:param activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+:param weights_initialization_type: The weight initialization type to use, default='xavier_uniform'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DcganEncoder(ABaseArchitecture):
+    def __init__(
+        self,
+        dim_in: int,
+        dim_h: int,
+        dim_l: int,
+        dim_cls=None,
+        input_size: int = 32,
+        conv_layer_class: TConv = nn.Conv2d,
+        norm_layer_class: TNorm = nn.BatchNorm2d,
+        activation_class: TActivation = nn.LeakyReLU,
+        weights_initialization_type: str = &#39;xavier_uniform&#39;,
+    ):
+        &#34;&#34;&#34;
+        The DCGAN Encoder class
+        Args:
+            :param dim_in: The number of input channels
+            :param dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
+            :param dim_l: The number of latent dimensions
+            :param dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers. 
+                             The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+                             If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+            :param input_size: The input width and height of the image, default=32
+            :param conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+            :param norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
+            :param activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+            :param weights_initialization_type: The weight initialization type to use, default=&#39;xavier_uniform&#39;
+        &#34;&#34;&#34;
+        super().__init__(
+            conv_layer_class=conv_layer_class,
+            norm_layer_class=norm_layer_class,
+            activation_class=activation_class,
+            weights_initialization_type=weights_initialization_type,
+        )
+        self._dim_in = dim_in
+        self._dim_h = dim_h
+        self._dim_l = dim_l
+        self._dim_cls = dim_cls
+        self._input_size = input_size
+        self._flatten = Flatten()
+        self._layers: nn.ModuleList
+
+        self._construct()
+        self.init_weights()
+
+    def _construct(self):
+        self._layers = nn.ModuleList([
+            BaseConvLayer(
+                self._conv_layer_class, {
+                    &#39;in_channels&#39;: self._dim_in, &#39;out_channels&#39;: self._dim_h,
+                    &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 1, &#39;bias&#39;: False
+                },
+                activation_class=self._activation_class, activation_args={
+                    &#39;negative_slope&#39;: 0.2, &#39;inplace&#39;: True
+                }
+            ),
+            BaseConvLayer(
+                self._conv_layer_class, {
+                    &#39;in_channels&#39;: self._dim_h, &#39;out_channels&#39;: 2 * self._dim_h,
+                    &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 1, &#39;bias&#39;: False
+                },
+                norm_layer_class=self._norm_layer_class, norm_layer_args={
+                    &#39;num_features&#39;: 2 * self._dim_h
+                },
+                activation_class=self._activation_class, activation_args={
+                    &#39;negative_slope&#39;: 0.2, &#39;inplace&#39;: True
+                }
+            ),
+            BaseConvLayer(
+                self._conv_layer_class, {
+                    &#39;in_channels&#39;: 2 * self._dim_h, &#39;out_channels&#39;: 4 * self._dim_h,
+                    &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 1, &#39;bias&#39;: False
+                },
+                norm_layer_class=self._norm_layer_class, norm_layer_args={
+                    &#39;num_features&#39;: 4 * self._dim_h
+                },
+                activation_class=self._activation_class, activation_args={
+                    &#39;negative_slope&#39;: 0.2, &#39;inplace&#39;: True
+                }
+            ),
+        ])
+        if self._input_size == 64:
+            self._layers.append(
+                BaseConvLayer(
+                    self._conv_layer_class, {
+                        &#39;in_channels&#39;: 4 * self._dim_h, &#39;out_channels&#39;: 8 * self._dim_h,
+                        &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 1, &#39;bias&#39;: False
+                    },
+                    norm_layer_class=self._norm_layer_class, norm_layer_args={
+                        &#39;num_features&#39;: 8 * self._dim_h
+                    },
+                    activation_class=self._activation_class, activation_args={
+                        &#39;negative_slope&#39;: 0.2, &#39;inplace&#39;: True
+                    }
+                )
+            )
+            self._layers.append(
+                BaseConvLayer(
+                    self._conv_layer_class, {
+                        &#39;in_channels&#39;: 8 * self._dim_h, &#39;out_channels&#39;: self._dim_l,
+                        &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 0, &#39;bias&#39;: False
+                    },
+                ),
+            )
+        elif self._input_size == 32:
+            self._layers.append(
+                BaseConvLayer(
+                    self._conv_layer_class, {
+                        &#39;in_channels&#39;: 4 * self._dim_h, &#39;out_channels&#39;: self._dim_l,
+                        &#39;kernel_size&#39;: 4, &#39;stride&#39;: 2, &#39;padding&#39;: 0, &#39;bias&#39;: False
+                    },
+                )
+            )
+        else:
+            raise NotImplementedError(&#34;DCGAN only supports input square images &#39; + \
+                &#39;with size 32, 64 in current implementation.&#34;)
+
+
+    def forward(self, x: Tensor) -&gt; Tuple[Tensor, Dict[int, Tensor]]:
+        &#34;&#34;&#34;
+        The DCGAN encoder forward method
+        Args:
+            :param x: The input tensor
+        Returns:
+            z: The latent variable
+            latents: The convolutional feature maps, with widths specified by self._dim_cls
+        &#34;&#34;&#34;
+        latents = None
+        if self._dim_cls is not None:
+            latents = {}
+        for layer in self._layers:
+            x, conv_latent = layer(x)
+            # Add conv latent
+            if self._dim_cls is not None:
+                if conv_latent.size()[-1] in self._dim_cls:
+                    latents[conv_latent.size()[-1]] = conv_latent
+        # Adds latent
+        if self._dim_cls is not None:
+            latents[1] = x
+        # Flatten to get representation
+        z = self._flatten(x)
+        return z, latents
+
+    def init_weights(self):
+        &#34;&#34;&#34;
+        Weight initialization method
+        Returns:
+            DcganEncoder with initialized weights
+
+        &#34;&#34;&#34;
+        for layer in self._layers:
+            layer.init_weights(gain_type=&#39;leaky_relu&#39;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="fusion.architecture.abasearchitecture.ABaseArchitecture" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture">ABaseArchitecture</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fusion.architecture.dcgan.DcganEncoder.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fusion.architecture.dcgan.DcganEncoder.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fusion.architecture.dcgan.DcganEncoder.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> Tuple[torch.Tensor, Dict[int, torch.Tensor]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The DCGAN encoder forward method</p>
+<h2 id="args">Args</h2>
+<p>:param x: The input tensor</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>z</code></dt>
+<dd>The latent variable</dd>
+<dt><code>latents</code></dt>
+<dd>The convolutional feature maps, with widths specified by self._dim_cls</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x: Tensor) -&gt; Tuple[Tensor, Dict[int, Tensor]]:
+    &#34;&#34;&#34;
+    The DCGAN encoder forward method
+    Args:
+        :param x: The input tensor
+    Returns:
+        z: The latent variable
+        latents: The convolutional feature maps, with widths specified by self._dim_cls
+    &#34;&#34;&#34;
+    latents = None
+    if self._dim_cls is not None:
+        latents = {}
+    for layer in self._layers:
+        x, conv_latent = layer(x)
+        # Add conv latent
+        if self._dim_cls is not None:
+            if conv_latent.size()[-1] in self._dim_cls:
+                latents[conv_latent.size()[-1]] = conv_latent
+    # Adds latent
+    if self._dim_cls is not None:
+        latents[1] = x
+    # Flatten to get representation
+    z = self._flatten(x)
+    return z, latents</code></pre>
+</details>
+</dd>
+<dt id="fusion.architecture.dcgan.DcganEncoder.init_weights"><code class="name flex">
+<span>def <span class="ident">init_weights</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Weight initialization method</p>
+<h2 id="returns">Returns</h2>
+<p>DcganEncoder with initialized weights</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_weights(self):
+    &#34;&#34;&#34;
+    Weight initialization method
+    Returns:
+        DcganEncoder with initialized weights
+
+    &#34;&#34;&#34;
+    for layer in self._layers:
+        layer.init_weights(gain_type=&#39;leaky_relu&#39;)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="fusion.architecture.abasearchitecture.ABaseArchitecture" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture">ABaseArchitecture</a></b></code>:
+<ul class="hlist">
+<li><code><a title="fusion.architecture.abasearchitecture.ABaseArchitecture.get_layers" href="../abasearchitecture.html#fusion.architecture.abasearchitecture.ABaseArchitecture.get_layers">get_layers</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fusion.architecture" href="../index.html">fusion.architecture</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="fusion.architecture.dcgan.dcgan_autoencoder" href="dcgan_autoencoder.html">fusion.architecture.dcgan.dcgan_autoencoder</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.dcgan_decoder" href="dcgan_decoder.html">fusion.architecture.dcgan.dcgan_decoder</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.dcgan_encoder" href="dcgan_encoder.html">fusion.architecture.dcgan.dcgan_encoder</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.tests" href="tests/index.html">fusion.architecture.dcgan.tests</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fusion.architecture.dcgan.DcganAutoEncoder" href="#fusion.architecture.dcgan.DcganAutoEncoder">DcganAutoEncoder</a></code></h4>
+<ul class="">
+<li><code><a title="fusion.architecture.dcgan.DcganAutoEncoder.dump_patches" href="#fusion.architecture.dcgan.DcganAutoEncoder.dump_patches">dump_patches</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganAutoEncoder.forward" href="#fusion.architecture.dcgan.DcganAutoEncoder.forward">forward</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganAutoEncoder.init_weights" href="#fusion.architecture.dcgan.DcganAutoEncoder.init_weights">init_weights</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganAutoEncoder.training" href="#fusion.architecture.dcgan.DcganAutoEncoder.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fusion.architecture.dcgan.DcganDecoder" href="#fusion.architecture.dcgan.DcganDecoder">DcganDecoder</a></code></h4>
+<ul class="">
+<li><code><a title="fusion.architecture.dcgan.DcganDecoder.dump_patches" href="#fusion.architecture.dcgan.DcganDecoder.dump_patches">dump_patches</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganDecoder.forward" href="#fusion.architecture.dcgan.DcganDecoder.forward">forward</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganDecoder.init_weights" href="#fusion.architecture.dcgan.DcganDecoder.init_weights">init_weights</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganDecoder.training" href="#fusion.architecture.dcgan.DcganDecoder.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fusion.architecture.dcgan.DcganEncoder" href="#fusion.architecture.dcgan.DcganEncoder">DcganEncoder</a></code></h4>
+<ul class="">
+<li><code><a title="fusion.architecture.dcgan.DcganEncoder.dump_patches" href="#fusion.architecture.dcgan.DcganEncoder.dump_patches">dump_patches</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganEncoder.forward" href="#fusion.architecture.dcgan.DcganEncoder.forward">forward</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganEncoder.init_weights" href="#fusion.architecture.dcgan.DcganEncoder.init_weights">init_weights</a></code></li>
+<li><code><a title="fusion.architecture.dcgan.DcganEncoder.training" href="#fusion.architecture.dcgan.DcganEncoder.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

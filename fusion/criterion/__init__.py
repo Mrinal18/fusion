@@ -16,7 +16,7 @@ criterion_provider.register_object('VolumetricMultiDim', VolumetricMultiDim)
 
 
 __all__ = [
-    'CrossEntropyLoss',
+    'CustomCrossEntropyLoss',
     'BCEWithLogitsLoss',
     'AE',
     'criterion_provider',
