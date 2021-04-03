@@ -1,12 +1,13 @@
-from torch.utils import data
 from fusion.dataset.two_view_mnist.two_view_mnist import TwoViewMnist
 import unittest
 
+
 class TestTwoViewMnist(unittest.TestCase):
-    def test_forward(self):
+    @unittest.skip("Skipping TwoViewMnist, as it requires data loading")
+    def test_two_view_mnist(self):
         dataset = TwoViewMnist(
             # TODO: Here hard coded path for the dataset
-            dataset_dir='../../../../data/',
+            dataset_dir='./data/',
             batch_size=1,
             num_workers=1
         )

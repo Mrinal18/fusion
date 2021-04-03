@@ -2,11 +2,12 @@ from fusion.dataset.mnist_svhn.mnist_svhn import MnistSvhn
 import unittest
 
 class TestMnistSvhn(unittest.TestCase):
-    def test_forward(self):
+    @unittest.skip("Skipping MnistSvhn, as it requires data loading")
+    def test_mnist_svhn(self):
         BATCH_SIZE = 8
         dataset = MnistSvhn(
             # TODO: Here hard coded path for the dataset
-            dataset_dir='../../../../data/',
+            dataset_dir='./data/',
             batch_size=BATCH_SIZE,
             sources = [0, 1],
             shuffle=True,
