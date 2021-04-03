@@ -44,7 +44,7 @@ class MnistSvhn(ABaseDataset):
 
         """
         super().__init__(
-            dataset_dir,
+            dataset_dir + 'MnistSvhn',
             fold=fold,
             num_folds=num_folds,
             sources=sources,
@@ -56,7 +56,8 @@ class MnistSvhn(ABaseDataset):
         )
         self._sources = sources
         self._indexes: Dict[str, Dict[str, Any]] = {}
-        self._dataset_dir = self._dataset_dir + "MnistSvhn"
+        self._mnist_dataset_dir = self._dataset_dir + '/MNIST/'
+        self._svhn_dataset_dir = self._dataset_dir + '/SVHN/'
 
     def load(self):
         """
@@ -143,13 +144,13 @@ class MnistSvhn(ABaseDataset):
             train = True if set_id != SetId.TEST else False
             tx = MNISTTransform()
             dataset = torchvision.datasets.MNIST(
-                self._dataset_dir, train=train, download=False, transform=tx)
+                self._mnist_dataset_dir, train=train, download=False, transform=tx)
         elif dataset_name == 'svhn':
             # validation uses training set
             split = SetId.TRAIN if set_id != SetId.TEST else SetId.TEST
             tx = SVHNTransform()
             dataset = torchvision.datasets.SVHN(
-                self._dataset_dir, split=split, download=False, transform=tx)
+                self._svhn_dataset_dir, split=split, download=False, transform=tx)
         else:
             raise NotImplementedError
         # select fold
@@ -248,32 +249,31 @@ class MnistSvhn(ABaseDataset):
     def _download_dataset(self):
         max_d = 10000  # maximum number of datapoints per class
         dm = 30  # data multiplier: random permutations to match
-        mnist_dataset_dir = self._dataset_dir + '/MNIST/'
-        svhn_dataset_dir = self._dataset_dir + '/SVHN/'
+
         # get the individual datasets
         tx = torchvision.transforms.ToTensor()
-        if os.path.exists(mnist_dataset_dir):
+        if os.path.exists(self._mnist_dataset_dir):
             download = False
         else:
             download = True
-            os.mkdir(mnist_dataset_dir)
+            os.mkdir(self._mnist_dataset_dir)
         # load mnist
         train_mnist = torchvision.datasets.MNIST(
-            mnist_dataset_dir, train=True, download=download, transform=tx)
+            self._mnist_dataset_dir, train=True, download=download, transform=tx)
         test_mnist = torchvision.datasets.MNIST(
-            mnist_dataset_dir, train=False, download=download, transform=tx)
+            self._mnist_dataset_dir, train=False, download=download, transform=tx)
 
-        if os.path.exists(svhn_dataset_dir):
+        if os.path.exists(self._svhn_dataset_dir):
             download = False
         else:
             download = True
-            os.mkdir(svhn_dataset_dir)
+            os.mkdir(self._svhn_dataset_dir)
         # load svhn
         train_svhn = torchvision.datasets.SVHN(
-            svhn_dataset_dir,
+            self._svhn_dataset_dir,
             split="train", download=download, transform=tx)
         test_svhn = torchvision.datasets.SVHN(
-            svhn_dataset_dir,
+            self._svhn_dataset_dir,
             split=SetId.TEST, download=download, transform=tx)
 
         # svhn labels need extra work
