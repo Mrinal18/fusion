@@ -27,8 +27,7 @@ class ConvHead(ABaseArchitecture):
             Args:
             dim_in: The number of input channels
             dim_l: The number of latent dimensions
-            dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer in the encoder
-                          The number of feature channels are consecutively halved in the decoder starting with the first and the last layer has dim_h number of feature channels
+            dim_h: The number of feature channels for the convolutional layer. It is kept fixed for all hidden layers
             num_h_layers: The number of convolutional layers
             conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
             norm_layer_class: The type of normalization layer to use, default=nn.BatchNorm2d
