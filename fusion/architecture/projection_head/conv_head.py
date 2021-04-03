@@ -25,15 +25,16 @@ class ConvHead(ABaseArchitecture):
         """
         Initialization of Convolution head model
             Args:
-            dim_in:
-            dim_l:
-            dim_h:
-            num_h_layers:
-            conv_layer_class:
-            norm_layer_class:
-            activation_class:
-            weights_initialization_type:
-            use_bias:
+            dim_in: The number of input channels
+            dim_l: The number of latent dimensions
+            dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer in the encoder
+                          The number of feature channels are consecutively halved in the decoder starting with the first and the last layer has dim_h number of feature channels
+            num_h_layers: The number of convolutional layers
+            conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+            norm_layer_class: The type of normalization layer to use, default=nn.BatchNorm2d
+            activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+            weights_initialization_type: The weight initialization type to use, default='xavier_uniform'
+            use_bias: Flag of use bias in convolutional layer
 
         Returns:
             Convolution head model

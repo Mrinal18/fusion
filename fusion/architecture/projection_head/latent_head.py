@@ -20,13 +20,14 @@ class LatentHead(ABaseArchitecture):
         Initialization Class of Latent Head model
 
         Args:
-            dim_in:
-            dim_l:
-            dim_h:
-            num_h_layers:
-            use_linear:
-            use_bias:
-            use_bn:
+            dim_in: The number of input channels
+            dim_l: The number of latent dimensions
+            dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer in the encoder
+                          The number of feature channels are consecutively halved in the decoder starting with the first and the last layer has dim_h number of feature channels
+            num_h_layers: The number of convolutional layers
+            use_linear: Flag of use linear layer
+            use_bias: Flag of use bias in convolutional layer
+            use_bn: Flag of use batch normalization
 
         Return:
             Class of Latent Head model
