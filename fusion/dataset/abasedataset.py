@@ -58,7 +58,6 @@ class ABaseDataset(abc.ABC):
     def get_cv_loaders(self) -> Dict[SetId, DataLoader]:
         """Returns dictionary with cross-validation loaders
         """
-        print (self._data_loaders)
         return {set_id: self._data_loaders[set_id] for set_id in [SetId.TRAIN, SetId.VALID]}
 
     @abc.abstractmethod

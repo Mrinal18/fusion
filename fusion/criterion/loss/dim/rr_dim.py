@@ -16,17 +16,15 @@ class RrDim(BaseDim):
                 if rep_source_id_one != rep_source_id_two:
                     assert dim_conv_latent in rep_two.keys()
                     assert dim_conv_latent in rep_one.keys()
-                    loss, penalty = self._estimator(
-                        rep_one[dim_conv_latent], rep_one[dim_conv_latent]
-                    )
                     name = self._name_it(
                         rep_source_id_one, rep_source_id_two, dim_conv_latent
                     )
-                    raw_losses[f'{name}_loss'] = loss.item()
-                    ret_loss = ret_loss + loss if ret_loss is not None else loss
-                    if penalty is not None:
-                        raw_losses[f'{name}_penalty'] = penalty.item()
-                        ret_loss = ret_loss + penalty if ret_loss is not None else penalty
+                    loss, penalty = self._estimator(
+                        rep_one[dim_conv_latent], rep_one[dim_conv_latent]
+                    )
+                    ret_loss, raw_losses = self._update_loss(
+                        name, ret_loss, raw_losses, loss, penalty
+                    )
         return ret_loss, raw_losses
 
     def _name_it(self, rep_source_id, conv_source_id, dim_conv):

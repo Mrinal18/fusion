@@ -125,7 +125,7 @@ class PretrainingTask(ATask):
             optimizer=self._optimizer,
             scheduler=self._scheduler,
             loaders=self._dataset.get_cv_loaders(),
-            #logdir=self._task_args['logdir'],
+            logdir=self._task_args['logdir'],
             num_epochs=self._task_args['num_epochs'],
             verbose=self._task_args['verbose'],
             # resume=self._task_args['resume'],

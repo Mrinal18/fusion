@@ -9,15 +9,15 @@ sources: [0, 1]
 fold: 0
 num_folds: 5
 seed: 343
-num_workers: 4
+num_workers: 8
 logdir: ./
-pretrained_checkpoint:
+pretrained_checkpoint: ${work_dir}/out/${name}/${experiment.fold}/PretrainingTask/best.pth
 defaults:
   - dataset: two_view_mnist
   - architecture: dcgan_encoder
   - model: dim
-  - criterion: spatial_multi_dim
-  - task: pretraining
+  - criterion: ce
+  - task: linear_evaluation
   - optimizer: radam
   - scheduler: one_cycle_lr
   - runner: catalyst_runner

@@ -1,5 +1,6 @@
 from catalyst import dl, metrics
 from fusion.runner import ABaseRunner
+import torch
 import torch.nn.functional as F
 from typing import Mapping, Any
 
@@ -67,3 +68,10 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         for key in ["loss"]:
             self.loader_metrics[key] = self.meters[key].compute()[0]
         super().on_loader_end(runner)
+
+    def get_loggers(self):
+        return {
+            "console": dl.ConsoleLogger(),
+            "csv": dl.CSVLogger(logdir=self._logdir),
+            "tensorboard": dl.TensorboardLogger(logdir=self._logdir),
+        }

@@ -1,8 +1,9 @@
+name: default
 hydra:
     run:
-        dir: ./out/${experiment.model.name}_/runs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+        dir: ./out/${name}/${experiment.fold}/${experiment.task.name}/
     sweep:
-        dir: ./out/${experiment.model.name}_/multiruns/${now:%Y-%m-%d_%H-%M-%S}
+        dir: ./out/${name}/${experiment.fold}/${experiment.task.name}/
         subdir: ${hydra.job.num}
 work_dir: ${hydra:runtime.cwd}
 data_dir: ${work_dir}/data/

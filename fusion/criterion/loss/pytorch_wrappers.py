@@ -21,7 +21,7 @@ class CustomCrossEntropyLoss(ABaseLoss):
         """
         Forward method of class Cross Entropy Loss
         Args:
-            :param input: input tensor
+            :param preds: input tensor
             :param target: target tensor
 
         Return:
@@ -47,7 +47,7 @@ class MSELoss(ABaseLoss):
         """
         Forward method of class MSE Loss
         Args:
-            :param input: input tensor
+            :param preds: input tensor
             :param target: target tensor
 
         Return:
@@ -75,7 +75,7 @@ class BCEWithLogitsLoss(ABaseLoss):
         Forward method of class Binary Cross Entropy with
          logits loss
         Args:
-            :param input: input tensor
+            :param preds: input tensor
             :param target: target tensor
 
         Return:

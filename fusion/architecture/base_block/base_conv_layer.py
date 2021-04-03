@@ -84,7 +84,7 @@ class BaseConvLayer(ABaseArchitecture):
             x = layer(x)
         return x, conv_latent
 
-    def init_weights(self, gain_type='relu'):
+    def init_weights(self, gain_type: str = 'relu'):
         """
         Method for initialization weights
         Returns:

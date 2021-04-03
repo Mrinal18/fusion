@@ -87,7 +87,10 @@ class TwoViewMnist(ABaseDataset):
             shuffle=self._shuffle,
             drop_last=self._drop_last,
             num_workers=self._num_workers,
-            worker_init_fn=seed_worker
+            worker_init_fn=seed_worker,
+            prefetch_factor=self._batch_size,
+            persistent_workers=True,
+            pin_memory=True
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id
         self._data_loaders[set_id] = data_loader
