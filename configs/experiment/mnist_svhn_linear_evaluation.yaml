@@ -1,5 +1,5 @@
 name: ${model.name}
-dim_in: [1, 3]
+dim_in: [1, 1]
 dim_l: 64
 dim_cls: [8]
 dataset_dir: ${data_dir}
@@ -11,13 +11,13 @@ num_folds: 5
 seed: 343
 num_workers: 8
 logdir: ./
-pretrained_checkpoint:
+pretrained_checkpoint: ${work_dir}/${dir}/${name}/${experiment.fold}/PretrainingTask/best.pth
 defaults:
   - dataset: mnist_svhn
   - architecture: dcgan_encoder
   - model: dim
-  - criterion: spatial_multi_dim
-  - task: pretraining
+  - criterion: ce
+  - task: linear_evaluation
   - optimizer: radam
   - scheduler: one_cycle_lr
-  - runner: mnist_svhn_runner
+  - runner: catalyst_runner

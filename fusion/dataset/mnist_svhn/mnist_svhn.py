@@ -66,18 +66,18 @@ class MnistSvhn(ABaseDataset):
         # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry
         samplers = {
             'mnist': {
-                'train': lambda d, i: self._indexes['train']['mnist'][i],
-                'valid': lambda d, i: self._indexes['valid']['mnist'][i],
-                'test': lambda d, i: self._indexes['test']['mnist'][i],
+                SetId.TRAIN: lambda d, i: self._indexes[SetId.TRAIN]['mnist'][i],
+                SetId.VALID: lambda d, i: self._indexes[SetId.VALID]['mnist'][i],
+                SetId.TEST: lambda d, i: self._indexes[SetId.TEST]['mnist'][i],
             },
             'svhn': {
-                'train': lambda d, i: self._indexes['train']['svhn'][i],
-                'valid': lambda d, i: self._indexes['valid']['svhn'][i],
-                'test': lambda d, i: self._indexes['test']['svhn'][i],
+                SetId.TRAIN: lambda d, i: self._indexes[SetId.TRAIN]['svhn'][i],
+                SetId.VALID: lambda d, i: self._indexes[SetId.VALID]['svhn'][i],
+                SetId.TEST: lambda d, i: self._indexes[SetId.TEST]['svhn'][i],
             }
         }
 
-        for set_id in [SetId.TRAIN, SetId.VALID. SetId.TEST]:
+        for set_id in [SetId.TRAIN, SetId.VALID, SetId.TEST]:
             dataset = None
             sampler_mnist = samplers['mnist'][set_id]
             sampler_svhn = samplers['svhn'][set_id]
@@ -129,9 +129,9 @@ class MnistSvhn(ABaseDataset):
     def _load(self, set_id: SetId, dataset_name: str):
         # define filename for pair indexes
         if set_id != SetId.TEST:
-            filename = f"{set_id.name.lower()}-ms-{dataset_name}-idx-{self._fold}.pt"
+            filename = f"{set_id.lower()}-ms-{dataset_name}-idx-{self._fold}.pt"
         else:
-            filename = f"{set_id.name.lower()}-ms-{dataset_name}-idx.pt"
+            filename = f"{set_id.lower()}-ms-{dataset_name}-idx.pt"
         # load paired indexes
         indexes = torch.load(os.path.join(self._dataset_dir, filename))
         # load dataset
@@ -154,7 +154,7 @@ class MnistSvhn(ABaseDataset):
             cv_indexes = torch.load(
                 os.path.join(
                     self._dataset_dir,
-                    f"{set_id.name.lower()}-ms-{dataset_name}-cv-idx-{self._fold}.pt"
+                    f"{set_id.lower()}-ms-{dataset_name}-cv-idx-{self._fold}.pt"
                 )
             )
             dataset.data = dataset.data[cv_indexes]
@@ -166,7 +166,8 @@ class MnistSvhn(ABaseDataset):
                 raise NotImplementedError
         dataset = DataLoader(
             dataset, batch_size=1, shuffle=False,
-            pin_memory=False, num_workers=1
+            pin_memory=True, num_workers=1,
+
         )
         return dataset, indexes
 
@@ -178,6 +179,8 @@ class MnistSvhn(ABaseDataset):
             drop_last=self._drop_last,
             num_workers=self._num_workers,
             worker_init_fn=seed_worker,
+            prefetch_factor=self._batch_size,
+            persistent_workers=True,
             pin_memory=True
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id
@@ -268,7 +271,7 @@ class MnistSvhn(ABaseDataset):
             split="train", download=download, transform=tx)
         test_svhn = torchvision.datasets.SVHN(
             self._dataset_dir,
-            split='test', download=download, transform=tx)
+            split=SetId.TEST, download=download, transform=tx)
 
         # svhn labels need extra work
         train_svhn.labels = torch.LongTensor(
