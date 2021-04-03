@@ -47,7 +47,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         &#34;&#34;&#34;
 
         Args:
-            :param task_args:
+            task_args:
         &#34;&#34;&#34;
         self._task = PretrainingTask(task_args.args)
 
@@ -55,7 +55,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         &#34;&#34;&#34;
 
         Args:
-            :param dataset_config:
+            dataset_config:
         &#34;&#34;&#34;
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
@@ -66,7 +66,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         &#34;&#34;&#34;
 
         Args:
-            :param model_config:
+            model_config:
         &#34;&#34;&#34;
         if &#39;num_classes&#39; in model_config.args.keys():
             model_config.args[&#39;num_classes&#39;] = self._task.dataset._num_classes
@@ -80,7 +80,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         &#34;&#34;&#34;
 
         Args:
-            :param criterion_config:
+            criterion_config:
         &#34;&#34;&#34;
         args = {} if criterion_config.args is None else criterion_config.args
         self._task.criterion = criterion_provider.get(
@@ -91,7 +91,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         &#34;&#34;&#34;
 
         Args:
-            :param runner_config:
+            runner_config:
         &#34;&#34;&#34;
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
@@ -102,7 +102,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         &#34;&#34;&#34;
 
         Args:
-            :param optimizer_config:
+            optimizer_config:
         &#34;&#34;&#34;
         args = dict(**optimizer_config.args)
         args[&#39;params&#39;] = self._task.model.parameters()
@@ -114,7 +114,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
         &#34;&#34;&#34;
 
         Args:
-            :param scheduler_config:
+            scheduler_config:
         &#34;&#34;&#34;
         args = dict(scheduler_config.args)
         args[&#39;optimizer&#39;] = self._task.optimizer
@@ -130,7 +130,7 @@ class PretrainingTask(ATask):
     def __init__(self, task_args: DictConfig) -&gt; None:
         &#34;&#34;&#34;
         Initilization of class Pretraining Task
-                :param task_args: task parameters
+                task_args: task parameters
         Return:
                 class Logical Pretraining Task
         &#34;&#34;&#34;
@@ -178,7 +178,7 @@ class PretrainingTask(ATask):
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
 <p>Initilization of class Pretraining Task
-:param task_args: task parameters</p>
+task_args: task parameters</p>
 <h2 id="return">Return</h2>
 <p>class Logical Pretraining Task</p></div>
 <details class="source">
@@ -189,7 +189,7 @@ inheritance.</p>
     def __init__(self, task_args: DictConfig) -&gt; None:
         &#34;&#34;&#34;
         Initilization of class Pretraining Task
-                :param task_args: task parameters
+                task_args: task parameters
         Return:
                 class Logical Pretraining Task
         &#34;&#34;&#34;
@@ -279,7 +279,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-            :param task_args:
+            task_args:
         &#34;&#34;&#34;
         self._task = PretrainingTask(task_args.args)
 
@@ -287,7 +287,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-            :param dataset_config:
+            dataset_config:
         &#34;&#34;&#34;
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
@@ -298,7 +298,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-            :param model_config:
+            model_config:
         &#34;&#34;&#34;
         if &#39;num_classes&#39; in model_config.args.keys():
             model_config.args[&#39;num_classes&#39;] = self._task.dataset._num_classes
@@ -312,7 +312,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-            :param criterion_config:
+            criterion_config:
         &#34;&#34;&#34;
         args = {} if criterion_config.args is None else criterion_config.args
         self._task.criterion = criterion_provider.get(
@@ -323,7 +323,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-            :param runner_config:
+            runner_config:
         &#34;&#34;&#34;
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
@@ -334,7 +334,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-            :param optimizer_config:
+            optimizer_config:
         &#34;&#34;&#34;
         args = dict(**optimizer_config.args)
         args[&#39;params&#39;] = self._task.model.parameters()
@@ -346,7 +346,7 @@ inheritance.</p></div>
         &#34;&#34;&#34;
 
         Args:
-            :param scheduler_config:
+            scheduler_config:
         &#34;&#34;&#34;
         args = dict(scheduler_config.args)
         args[&#39;optimizer&#39;] = self._task.optimizer
@@ -373,7 +373,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param criterion_config:</p></div>
+<p>criterion_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -382,7 +382,7 @@ inheritance.</p></div>
     &#34;&#34;&#34;
 
     Args:
-        :param criterion_config:
+        criterion_config:
     &#34;&#34;&#34;
     args = {} if criterion_config.args is None else criterion_config.args
     self._task.criterion = criterion_provider.get(
@@ -395,7 +395,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param dataset_config:</p></div>
+<p>dataset_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -404,7 +404,7 @@ inheritance.</p></div>
     &#34;&#34;&#34;
 
     Args:
-        :param dataset_config:
+        dataset_config:
     &#34;&#34;&#34;
     self._task.dataset = dataset_provider.get(
         dataset_config.name, **dataset_config.args
@@ -417,7 +417,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param model_config:</p></div>
+<p>model_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -426,7 +426,7 @@ inheritance.</p></div>
     &#34;&#34;&#34;
 
     Args:
-        :param model_config:
+        model_config:
     &#34;&#34;&#34;
     if &#39;num_classes&#39; in model_config.args.keys():
         model_config.args[&#39;num_classes&#39;] = self._task.dataset._num_classes
@@ -442,7 +442,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param optimizer_config:</p></div>
+<p>optimizer_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -451,7 +451,7 @@ inheritance.</p></div>
     &#34;&#34;&#34;
 
     Args:
-        :param optimizer_config:
+        optimizer_config:
     &#34;&#34;&#34;
     args = dict(**optimizer_config.args)
     args[&#39;params&#39;] = self._task.model.parameters()
@@ -465,7 +465,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param runner_config:</p></div>
+<p>runner_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -474,7 +474,7 @@ inheritance.</p></div>
     &#34;&#34;&#34;
 
     Args:
-        :param runner_config:
+        runner_config:
     &#34;&#34;&#34;
     runner_args = {} if runner_config.args is None else runner_config.args
     self._task.runner = runner_provider.get(
@@ -487,7 +487,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param scheduler_config:</p></div>
+<p>scheduler_config:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -496,7 +496,7 @@ inheritance.</p></div>
     &#34;&#34;&#34;
 
     Args:
-        :param scheduler_config:
+        scheduler_config:
     &#34;&#34;&#34;
     args = dict(scheduler_config.args)
     args[&#39;optimizer&#39;] = self._task.optimizer
@@ -513,7 +513,7 @@ inheritance.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
-<p>:param task_args:</p></div>
+<p>task_args:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -522,7 +522,7 @@ inheritance.</p></div>
     &#34;&#34;&#34;
 
     Args:
-        :param task_args:
+        task_args:
     &#34;&#34;&#34;
     self._task = PretrainingTask(task_args.args)</code></pre>
 </details>

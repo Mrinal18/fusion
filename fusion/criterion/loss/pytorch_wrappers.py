@@ -10,7 +10,7 @@ class CustomCrossEntropyLoss(ABaseLoss):
         """
         Initilization of pytorch wrapper of class Cross Entropy Loss
         Args:
-            :param kwargs: parameters of Cross Entropy Loss
+            kwargs: parameters of Cross Entropy Loss
         Return
             Class of Cross Entropy Loss
         """
@@ -21,8 +21,8 @@ class CustomCrossEntropyLoss(ABaseLoss):
         """
         Forward method of class Cross Entropy Loss
         Args:
-            :param preds: input tensor
-            :param target: target tensor
+            preds: input tensor
+            target: target tensor
 
         Return:
             Cross Entropy Loss between input and target tensor
@@ -35,7 +35,7 @@ class MSELoss(ABaseLoss):
         """
         Initilization of pytorch wrapper of class MSE Loss
         Args:
-            :param kwargs: parameters of MSE Loss
+            kwargs: parameters of MSE Loss
         Return
             Class of MSE Loss
         """
@@ -47,8 +47,8 @@ class MSELoss(ABaseLoss):
         """
         Forward method of class MSE Loss
         Args:
-            :param preds: input tensor
-            :param target: target tensor
+            preds: input tensor
+            target: target tensor
 
         Return:
             MSE Loss between input and target tensor
@@ -63,7 +63,7 @@ class BCEWithLogitsLoss(ABaseLoss):
         Initilization of pytorch wrapper of class Binary Cross Entropy with
          logits loss
         Args:
-            :param kwargs: parameters of Cross Entropy Loss
+            kwargs: parameters of Cross Entropy Loss
         Return
             Class of Binary Cross Entropy with logits loss
         """
@@ -75,8 +75,8 @@ class BCEWithLogitsLoss(ABaseLoss):
         Forward method of class Binary Cross Entropy with
          logits loss
         Args:
-            :param preds: input tensor
-            :param target: target tensor
+            preds: input tensor
+            target: target tensor
 
         Return:
              Class of Binary Cross Entropy with logits loss

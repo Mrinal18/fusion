@@ -35,8 +35,8 @@ class Factory:
         def register_object(self, key: str, model: Any):
                 &#34;&#34;&#34;
 
-                :param key:
-                :param model:
+                key:
+                model:
                 :return:
                 &#34;&#34;&#34;
                 self._objects[key] = model
@@ -44,8 +44,8 @@ class Factory:
         def create(self, key: str, **kwargs):
                 &#34;&#34;&#34;
 
-                :param key:
-                :param kwargs:
+                key:
+                kwargs:
                 :return:
                 &#34;&#34;&#34;
                 obj = self._objects.get(key)
@@ -84,8 +84,8 @@ class ObjectProvider(Factory):
         def register_object(self, key: str, model: Any):
                 &#34;&#34;&#34;
 
-                :param key:
-                :param model:
+                key:
+                model:
                 :return:
                 &#34;&#34;&#34;
                 self._objects[key] = model
@@ -93,8 +93,8 @@ class ObjectProvider(Factory):
         def create(self, key: str, **kwargs):
                 &#34;&#34;&#34;
 
-                :param key:
-                :param kwargs:
+                key:
+                kwargs:
                 :return:
                 &#34;&#34;&#34;
                 obj = self._objects.get(key)
@@ -112,8 +112,8 @@ class ObjectProvider(Factory):
 <span>def <span class="ident">create</span></span>(<span>self, key: str, **kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:param key:
-:param kwargs:
+<div class="desc"><p>key:
+kwargs:
 :return:</p></div>
 <details class="source">
 <summary>
@@ -122,8 +122,8 @@ class ObjectProvider(Factory):
 <pre><code class="python">def create(self, key: str, **kwargs):
         &#34;&#34;&#34;
 
-        :param key:
-        :param kwargs:
+        key:
+        kwargs:
         :return:
         &#34;&#34;&#34;
         obj = self._objects.get(key)
@@ -136,8 +136,8 @@ class ObjectProvider(Factory):
 <span>def <span class="ident">register_object</span></span>(<span>self, key: str, model: Any)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:param key:
-:param model:
+<div class="desc"><p>key:
+model:
 :return:</p></div>
 <details class="source">
 <summary>
@@ -146,8 +146,8 @@ class ObjectProvider(Factory):
 <pre><code class="python">def register_object(self, key: str, model: Any):
         &#34;&#34;&#34;
 
-        :param key:
-        :param model:
+        key:
+        model:
         :return:
         &#34;&#34;&#34;
         self._objects[key] = model</code></pre>

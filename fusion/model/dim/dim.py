@@ -20,11 +20,11 @@ class Dim(ABaseModel):
     ):
         """
         Args:
-            :param sources:
-            :param architecture:
-            :param architecture_params:
-            :param conv_head_params:
-            :param latent_head_params:
+            sources:
+            architecture:
+            architecture_params:
+            conv_head_params:
+            latent_head_params:
         Return:
 
         """
@@ -76,7 +76,7 @@ class Dim(ABaseModel):
         """
 
         Args:
-            :param x: input tensor
+            x: input tensor
 
         Return
 

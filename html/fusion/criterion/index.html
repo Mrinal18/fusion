@@ -84,7 +84,7 @@ __all__ = [
 <dd>
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
-<p>:param kwargs:</p></div>
+<p>kwargs:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -93,7 +93,7 @@ inheritance.</p>
     def __init__(self, **kwargs):
         &#34;&#34;&#34;
 
-        :param kwargs:
+        kwargs:
         &#34;&#34;&#34;
         super().__init__()
         self._loss = nn.MSELoss(**kwargs)
@@ -101,8 +101,8 @@ inheritance.</p>
     def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -&gt; Tensor:
         &#34;&#34;&#34;
 
-        :param preds:
-        :param target:
+        preds:
+        target:
         :return:
         &#34;&#34;&#34;
         assert target is not None
@@ -134,8 +134,8 @@ inheritance.</p>
 <span>def <span class="ident">forward</span></span>(<span>self, preds: <a title="fusion.model.misc.ModelOutput" href="../model/misc/index.html#fusion.model.misc.ModelOutput">ModelOutput</a>, target: Union[torch.Tensor, NoneType] = None) ‑> torch.Tensor</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:param preds:
-:param target:
+<div class="desc"><p>preds:
+target:
 :return:</p></div>
 <details class="source">
 <summary>
@@ -144,8 +144,8 @@ inheritance.</p>
 <pre><code class="python">def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -&gt; Tensor:
     &#34;&#34;&#34;
 
-    :param preds:
-    :param target:
+    preds:
+    target:
     :return:
     &#34;&#34;&#34;
     assert target is not None
@@ -167,8 +167,11 @@ inheritance.</p>
 <p>Initilization of pytorch wrapper of class Binary Cross Entropy with
 logits loss</p>
 <h2 id="args">Args</h2>
-<p>:param kwargs: parameters of Cross Entropy Loss
-Return
+<dl>
+<dt><strong><code>kwargs</code></strong></dt>
+<dd>parameters of Cross Entropy Loss</dd>
+</dl>
+<p>Return
 Class of Binary Cross Entropy with logits loss</p></div>
 <details class="source">
 <summary>
@@ -180,7 +183,7 @@ Class of Binary Cross Entropy with logits loss</p></div>
         Initilization of pytorch wrapper of class Binary Cross Entropy with
          logits loss
         Args:
-            :param kwargs: parameters of Cross Entropy Loss
+            kwargs: parameters of Cross Entropy Loss
         Return
             Class of Binary Cross Entropy with logits loss
         &#34;&#34;&#34;
@@ -192,8 +195,8 @@ Class of Binary Cross Entropy with logits loss</p></div>
         Forward method of class Binary Cross Entropy with
          logits loss
         Args:
-            :param preds: input tensor
-            :param target: target tensor
+            preds: input tensor
+            target: target tensor
 
         Return:
              Class of Binary Cross Entropy with logits loss
@@ -229,8 +232,12 @@ Class of Binary Cross Entropy with logits loss</p></div>
 <div class="desc"><p>Forward method of class Binary Cross Entropy with
 logits loss</p>
 <h2 id="args">Args</h2>
-<p>:param preds: input tensor
-:param target: target tensor</p>
+<dl>
+<dt><strong><code>preds</code></strong></dt>
+<dd>input tensor</dd>
+<dt><strong><code>target</code></strong></dt>
+<dd>target tensor</dd>
+</dl>
 <h2 id="return">Return</h2>
 <p>Class of Binary Cross Entropy with logits loss
 between input and target tensor</p></div>
@@ -243,8 +250,8 @@ between input and target tensor</p></div>
     Forward method of class Binary Cross Entropy with
      logits loss
     Args:
-        :param preds: input tensor
-        :param target: target tensor
+        preds: input tensor
+        target: target tensor
 
     Return:
          Class of Binary Cross Entropy with logits loss
@@ -266,8 +273,11 @@ between input and target tensor</p></div>
 inheritance.</p>
 <p>Initilization of pytorch wrapper of class Cross Entropy Loss</p>
 <h2 id="args">Args</h2>
-<p>:param kwargs: parameters of Cross Entropy Loss
-Return
+<dl>
+<dt><strong><code>kwargs</code></strong></dt>
+<dd>parameters of Cross Entropy Loss</dd>
+</dl>
+<p>Return
 Class of Cross Entropy Loss</p></div>
 <details class="source">
 <summary>
@@ -278,7 +288,7 @@ Class of Cross Entropy Loss</p></div>
         &#34;&#34;&#34;
         Initilization of pytorch wrapper of class Cross Entropy Loss
         Args:
-            :param kwargs: parameters of Cross Entropy Loss
+            kwargs: parameters of Cross Entropy Loss
         Return
             Class of Cross Entropy Loss
         &#34;&#34;&#34;
@@ -289,8 +299,8 @@ Class of Cross Entropy Loss</p></div>
         &#34;&#34;&#34;
         Forward method of class Cross Entropy Loss
         Args:
-            :param preds: input tensor
-            :param target: target tensor
+            preds: input tensor
+            target: target tensor
 
         Return:
             Cross Entropy Loss between input and target tensor
@@ -322,8 +332,12 @@ Class of Cross Entropy Loss</p></div>
 <dd>
 <div class="desc"><p>Forward method of class Cross Entropy Loss</p>
 <h2 id="args">Args</h2>
-<p>:param preds: input tensor
-:param target: target tensor</p>
+<dl>
+<dt><strong><code>preds</code></strong></dt>
+<dd>input tensor</dd>
+<dt><strong><code>target</code></strong></dt>
+<dd>target tensor</dd>
+</dl>
 <h2 id="return">Return</h2>
 <p>Cross Entropy Loss between input and target tensor</p></div>
 <details class="source">
@@ -334,8 +348,8 @@ Class of Cross Entropy Loss</p></div>
     &#34;&#34;&#34;
     Forward method of class Cross Entropy Loss
     Args:
-        :param preds: input tensor
-        :param target: target tensor
+        preds: input tensor
+        target: target tensor
 
     Return:
         Cross Entropy Loss between input and target tensor

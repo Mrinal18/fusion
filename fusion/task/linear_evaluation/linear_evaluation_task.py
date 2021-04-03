@@ -17,7 +17,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 	def create_new_task(self, task_args: DictConfig):
 		"""
 
-        :param task_args:
+        task_args:
         :return:
         """
 		self._task = LinearEvaluationTask(task_args.args)
@@ -26,7 +26,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 		"""
 
 		Args:
-			:param model_config:
+			model_config:
 
 		"""
 		self._task.model = {}
@@ -63,7 +63,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 		"""
 
 		Args:
-			:param criterion_config:
+			criterion_config:
 
 		"""
 		# TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
@@ -74,7 +74,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 	def add_runner(self, runner_config: DictConfig):
 		"""
 		Args:
-			:param runner_config:
+			runner_config:
 
 		"""
 		runner_args = {} if runner_config.args is None else runner_config.args
@@ -84,7 +84,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 		"""
 
 		Args:
-			:param optimizer_config:
+			optimizer_config:
 		"""
 		self._task.optimizer = {}
 		for source_id, source_model in self._task.model.items():
@@ -99,7 +99,7 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 		"""
 
 		Args:
-			:param scheduler_config:
+			scheduler_config:
 
 		"""
 		self._task.scheduler = {}
@@ -119,7 +119,7 @@ class LinearEvaluationTask(ATask):
 	def __init__(self, task_args: DictConfig) -> None:
 		"""
 		Initilization of class Linear Evaluation Task
-			:param task_args: task parameters
+			task_args: task parameters
 		Return:
 			class Linear Evaluation Task
 		"""

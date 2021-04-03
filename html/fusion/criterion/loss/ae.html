@@ -40,7 +40,7 @@ class AE(ABaseLoss):
     def __init__(self, **kwargs):
         &#34;&#34;&#34;
 
-        :param kwargs:
+        kwargs:
         &#34;&#34;&#34;
         super().__init__()
         self._loss = nn.MSELoss(**kwargs)
@@ -48,8 +48,8 @@ class AE(ABaseLoss):
     def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -&gt; Tensor:
         &#34;&#34;&#34;
 
-        :param preds:
-        :param target:
+        preds:
+        target:
         :return:
         &#34;&#34;&#34;
         assert target is not None
@@ -75,7 +75,7 @@ class AE(ABaseLoss):
 <dd>
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
-<p>:param kwargs:</p></div>
+<p>kwargs:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -84,7 +84,7 @@ inheritance.</p>
     def __init__(self, **kwargs):
         &#34;&#34;&#34;
 
-        :param kwargs:
+        kwargs:
         &#34;&#34;&#34;
         super().__init__()
         self._loss = nn.MSELoss(**kwargs)
@@ -92,8 +92,8 @@ inheritance.</p>
     def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -&gt; Tensor:
         &#34;&#34;&#34;
 
-        :param preds:
-        :param target:
+        preds:
+        target:
         :return:
         &#34;&#34;&#34;
         assert target is not None
@@ -125,8 +125,8 @@ inheritance.</p>
 <span>def <span class="ident">forward</span></span>(<span>self, preds: <a title="fusion.model.misc.ModelOutput" href="../../model/misc/index.html#fusion.model.misc.ModelOutput">ModelOutput</a>, target: Union[torch.Tensor, NoneType] = None) ‑> torch.Tensor</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:param preds:
-:param target:
+<div class="desc"><p>preds:
+target:
 :return:</p></div>
 <details class="source">
 <summary>
@@ -135,8 +135,8 @@ inheritance.</p>
 <pre><code class="python">def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -&gt; Tensor:
     &#34;&#34;&#34;
 
-    :param preds:
-    :param target:
+    preds:
+    target:
     :return:
     &#34;&#34;&#34;
     assert target is not None

@@ -10,7 +10,7 @@ class SVHNTransform:
         """
         Make SVHN transform
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Return:
             Transform tensor
         """
@@ -26,7 +26,7 @@ class MNISTTransform:
         """
         Make MNIST transform
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Return:
             Transform tensor
         """

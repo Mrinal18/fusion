@@ -12,9 +12,9 @@ class AE(ABaseModel):
         Initialization class of autoencoder model
 
         Args:
-            :param sources:
-            :param architecture: type of architecture
-            :param architecture_params: parameters of architecture
+            sources:
+            architecture: type of architecture
+            architecture_params: parameters of architecture
 
         Return:
             Autoencoder model
@@ -24,8 +24,8 @@ class AE(ABaseModel):
     def _source_forward(self, source_id: int, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
         """
 
-        :param source_id:
-        :param x:
+        source_id:
+        x:
         :return:
         """
         return self._encoder[source_id](x[int(source_id)])
@@ -36,7 +36,7 @@ class AE(ABaseModel):
 
         Args:
 
-            :param x: input tensor
+            x: input tensor
         Return:
             Result of forward method of autoencoder model
 

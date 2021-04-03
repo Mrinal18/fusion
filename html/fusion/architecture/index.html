@@ -79,11 +79,11 @@ __all__ = [
 <dd>
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
-<p>:param conv_layer_class:
-:param norm_layer_class:
-:param dp_layer_class:
-:param activation_class:
-:param weights_initialization_type:</p></div>
+<p>conv_layer_class:
+norm_layer_class:
+dp_layer_class:
+activation_class:
+weights_initialization_type:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -100,11 +100,11 @@ inheritance.</p>
     ):
         &#34;&#34;&#34;
 
-        :param conv_layer_class:
-        :param norm_layer_class:
-        :param dp_layer_class:
-        :param activation_class:
-        :param weights_initialization_type:
+        conv_layer_class:
+        norm_layer_class:
+        dp_layer_class:
+        activation_class:
+        weights_initialization_type:
         &#34;&#34;&#34;
         super().__init__()
         self._layers: Optional[nn.ModuleList] = None

@@ -20,10 +20,10 @@ class Supervised(ABaseModel):
 
         Initialization of supervise model
         Args:
-            :param dim_l: output dimension of encoder
-            :param num_classes: number of classes
-            :param architecture: type of architecture
-            :param architecture_params: parameters of architecture
+            dim_l: output dimension of encoder
+            num_classes: number of classes
+            architecture: type of architecture
+            architecture_params: parameters of architecture
         Return:
             Supervise model
 
@@ -37,7 +37,7 @@ class Supervised(ABaseModel):
         """
         Forward method of supervised models
         Args:
-            :param x: input tensor
+            x: input tensor
         Return:
             result of forward propagation
         """

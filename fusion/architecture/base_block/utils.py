@@ -18,7 +18,7 @@ class Flatten(nn.Module):
         The forward function that receives an input tensor and flattens it
         
         Args:
-            :param input_tensor: Input tensor to flatten
+            input_tensor: Input tensor to flatten
         Return:
             Flattened tensor
         """
@@ -32,7 +32,7 @@ class Unflatten(nn.Module):
         Custom Pytorch module that unflattens the tensor for a set number of dimensions
         
         Args:
-            :param input_dim: Input dimension, the input tensor is unsqueezed input_dim times
+            input_dim: Input dimension, the input tensor is unsqueezed input_dim times
 
         Return:
             Unflattened tensor
@@ -45,7 +45,7 @@ class Unflatten(nn.Module):
         The forward function that receives a tensor and unflattens it self.input_dim times
         
         Args:
-            :param input_tensor: Input tensor to unflatten
+            input_tensor: Input tensor to unflatten
         Return:
             Unflattened tensor
         """

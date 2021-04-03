@@ -16,7 +16,7 @@ class Experiment:
     def __init__(self, config: DictConfig):
         """
 
-        :param config:
+        config:
         """
         print(OmegaConf.to_yaml(config))
         self._config = config['experiment']

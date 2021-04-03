@@ -29,15 +29,15 @@ class BaseConvLayer(ABaseArchitecture):
         The forward function in the class returns a tuple: (output after all specified sub-layers, output after convolutional sub-layer only)
 
         Args:
-            :param conv_layer_class: Convolutional layer class
-            :param conv_layer_args: Parameters for the convolution layer
-            :param norm_layer_class:  Normalization layer class
-            :param norm_layer_args: Parameters for the normalization layer
-            :param dp_layer_class: Dropout layer class
-            :param dp_layer_args: Parameters for the droupout layer
-            :param activation_class: Activation function class
-            :param activation_args: Parameters for the activation function
-            :param weights_initialization_type: Type of initialization weights
+            conv_layer_class: Convolutional layer class
+            conv_layer_args: Parameters for the convolution layer
+            norm_layer_class:  Normalization layer class
+            norm_layer_args: Parameters for the normalization layer
+            dp_layer_class: Dropout layer class
+            dp_layer_args: Parameters for the droupout layer
+            activation_class: Activation function class
+            activation_args: Parameters for the activation function
+            weights_initialization_type: Type of initialization weights
 
         :return
             Base class of convolution layer
@@ -72,11 +72,11 @@ class BaseConvLayer(ABaseArchitecture):
         """
         Forward method for the base class of this custom convolutional layer
         Args:
-            :param x: Input tensor
+            x: Input tensor
         Returns:
             Args:
-                :param x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
-                :param conv_latent: The tensor after only passing through the convolutional sub-layer
+                x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
+                conv_latent: The tensor after only passing through the convolutional sub-layer
         """
         x = self._layer[0](x)
         conv_latent = x
