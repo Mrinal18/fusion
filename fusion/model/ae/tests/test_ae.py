@@ -2,7 +2,6 @@ import torch
 import unittest
 
 from fusion.model import AE
-
 class TestAE(unittest.TestCase):
 
     def test_forward(self):
@@ -26,8 +25,8 @@ class TestAE(unittest.TestCase):
         # forward pass
         output = model(x)
         # check outputs
-        for _, latent in output.latents.items():
-            self.assertEqual(latent.size(1), dim_l)
+        for _, z in output.z.items():
+            self.assertEqual(z.size(1), dim_l)
         self.assertEqual(output.attrs['x'].size(), x[0].size())
         self.assertEqual(output.attrs['x_hat'].size(), x[0].size())
 

@@ -1,5 +1,5 @@
 name: ${model.name}
-dim_in: [1, 1]
+dim_in: [1, 3]
 dim_l: 64
 dim_cls: [8]
 dataset_dir: ${data_dir}
