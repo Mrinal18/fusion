@@ -1,4 +1,5 @@
 import abc
+from dataclasses import dataclass
 
 from typing import Dict, List, Optional
 
@@ -6,6 +7,7 @@ import torch
 from torch.utils.data import DataLoader
 
 
+@dataclass
 class SetId():
     TRAIN = 'train'
     TEST = 'test'

@@ -76,7 +76,9 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 			runner_config: dictionary with runner's parameters from config
 		"""
 		runner_args = {} if runner_config.args is None else runner_config.args
-		self._task.runner = dl.SupervisedRunner(**runner_args)
+		self._task.runner = runner_provider.get(
+            runner_config.name, **runner_args
+		)
 
 	def add_optimizer(self, optimizer_config: DictConfig):
 		"""
@@ -131,7 +133,7 @@ class LinearEvaluationTask(ATask):
 			logdir = self._task_args['logdir'] + f'/linear_{source_id}/'
 			self._callbacks = [
 				dl.AccuracyCallback(
-					input_key=f"logits",
+					input_key=f"logits_{source_id}",
 					target_key="targets",
 				),
 				dl.CheckpointCallback(

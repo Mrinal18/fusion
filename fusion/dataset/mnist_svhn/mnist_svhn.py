@@ -44,7 +44,7 @@ class MnistSvhn(ABaseDataset):
 
         """
         super().__init__(
-            dataset_dir + 'MnistSvhn',
+            dataset_dir + f'MnistSvhn_{fold}',
             fold=fold,
             num_folds=num_folds,
             sources=sources,

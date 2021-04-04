@@ -52,10 +52,8 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         # ToDo: Add self.batch for callbacks
         for source_id, source_z in outputs.z.items():
             probs = F.softmax(source_z, dim=-1)
-            self.batch = {
-                f"logits_{source_id}": source_z,
-                f"probs_{source_id}": probs
-            }
+            self.batch[f"logits_{source_id}"] = source_z
+            self.batch[f"probs_{source_id}"] = probs
 
     def on_loader_start(self, runner):
         super().on_loader_start(runner)

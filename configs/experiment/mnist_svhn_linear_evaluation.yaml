@@ -16,8 +16,8 @@ defaults:
   - dataset: mnist_svhn
   - architecture: dcgan_encoder
   - model: dim
-  - criterion: ce
+  - criterion: cce
   - task: linear_evaluation
   - optimizer: radam
   - scheduler: one_cycle_lr
-  - runner: catalyst_runner
+  - runner: mnist_svhn_runner

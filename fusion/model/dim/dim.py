@@ -7,7 +7,7 @@ from torch import Tensor
 
 from fusion.architecture.projection_head import ConvHead, LatentHead
 from fusion.model import ABaseModel
-from fusion.model.misc import  ModelOutput
+from fusion.model.misc import ModelOutput
 
 class Dim(ABaseModel):
     def __init__(

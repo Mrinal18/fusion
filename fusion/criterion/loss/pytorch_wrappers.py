@@ -1,5 +1,7 @@
 from typing import Optional
 
+from fusion.model.misc import ModelOutput
+
 import torch.nn as nn
 from torch import Tensor
 
@@ -17,17 +19,23 @@ class CustomCrossEntropyLoss(ABaseLoss):
         super().__init__()
         self._loss = nn.CrossEntropyLoss(**kwargs)
 
-    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
+    def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -> Tensor:
         """
         Forward method of class Cross Entropy Loss
         Args:
-            preds: input tensor
+            preds: input model's output
             target: target tensor
 
         Return:
             Cross Entropy Loss between input and target tensor
         """
-        return self._loss(preds, target)
+        ret_loss = None
+        raw_losses = {}
+        for source_id, z in preds.z.items():
+            loss = self._loss(z, target)
+            ret_loss = ret_loss + loss if ret_loss is not None else loss
+            raw_losses[f"CE{source_id}"] = loss
+        return ret_loss, raw_losses
 
 
 class MSELoss(ABaseLoss):
@@ -83,5 +91,10 @@ class BCEWithLogitsLoss(ABaseLoss):
              between input and target tensor
         """
         assert target is not None
-        loss = self._loss(preds.squeeze(1), target.float())
-        return loss
+        ret_loss = None
+        raw_losses = {}
+        for source_id, z in preds.z.items():
+            loss = self._loss(z.squeeze(1), target)
+            ret_loss = ret_loss + loss if ret_loss is not None else loss
+            raw_losses[f"CE{source_id}"] = loss
+        return ret_loss, raw_losses

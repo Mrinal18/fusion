@@ -16,7 +16,7 @@ defaults:
   - dataset: two_view_mnist
   - architecture: dcgan_encoder
   - model: dim
-  - criterion: ce
+  - criterion: cce
   - task: linear_evaluation
   - optimizer: radam
   - scheduler: one_cycle_lr

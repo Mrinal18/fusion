@@ -2,6 +2,7 @@ import torch.nn as nn
 from torch import Tensor
 
 from fusion.architecture.base_block import Flatten
+from fusion.model.misc import ModelOutput
 
 
 class LinearEvaluator(nn.Module):
@@ -20,7 +21,7 @@ class LinearEvaluator(nn.Module):
         self._linear = nn.Linear(dim_l, num_classes)
         self._source_id = source_id
 
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x: Tensor) -> ModelOutput:
         """
 
         x:
@@ -33,4 +34,4 @@ class LinearEvaluator(nn.Module):
             x = x.unsqueeze(0)
         x = self._flatten(x)
         x = self._linear(x)
-        return x
+        return ModelOutput(z={0: x}, attrs={})
