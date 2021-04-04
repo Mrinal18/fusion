@@ -51,14 +51,14 @@ class MnistSvhn(ABaseDataset):
         # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry
         samplers = {
             'mnist': {
-                'train': lambda d, i: self._indexes['train']['mnist'][i],
-                'valid': lambda d, i: self._indexes['valid']['mnist'][i],
-                'test': lambda d, i: self._indexes['test']['mnist'][i],
+                SetId.TRAIN: lambda d, i: self._indexes[SetId.TRAIN]['mnist'][i],
+                SetId.VALID: lambda d, i: self._indexes[SetId.VALID]['mnist'][i],
+                SetId.TEST: lambda d, i: self._indexes[SetId.TEST]['mnist'][i],
             },
             'svhn': {
-                'train': lambda d, i: self._indexes['train']['svhn'][i],
-                'valid': lambda d, i: self._indexes['valid']['svhn'][i],
-                'test': lambda d, i: self._indexes['test']['svhn'][i],
+                SetId.TRAIN: lambda d, i: self._indexes[SetId.TRAIN]['svhn'][i],
+                SetId.VALID: lambda d, i: self._indexes[SetId.VALID]['svhn'][i],
+                SetId.TEST: lambda d, i: self._indexes[SetId.TEST]['svhn'][i],
             }
         }
 
@@ -114,9 +114,9 @@ class MnistSvhn(ABaseDataset):
     def _load(self, set_id: SetId, dataset_name: str):
         # define filename for pair indexes
         if set_id != SetId.TEST:
-            filename = f"{set_id.name.lower()}-ms-{dataset_name}-idx-{self._fold}.pt"
+            filename = f"{set_id.value}-ms-{dataset_name}-idx-{self._fold}.pt"
         else:
-            filename = f"{set_id.name.lower()}-ms-{dataset_name}-idx.pt"
+            filename = f"{set_id.value}-ms-{dataset_name}-idx.pt"
         # load paired indexes
         indexes = torch.load(os.path.join(self._dataset_dir, filename))
         # load dataset
@@ -139,7 +139,7 @@ class MnistSvhn(ABaseDataset):
             cv_indexes = torch.load(
                 os.path.join(
                     self._dataset_dir,
-                    f"{set_id.name.lower()}-ms-{dataset_name}-cv-idx-{self._fold}.pt"
+                    f"{set_id.value}-ms-{dataset_name}-cv-idx-{self._fold}.pt"
                 )
             )
             dataset.data = dataset.data[cv_indexes]

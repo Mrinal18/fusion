@@ -6,10 +6,10 @@ from tensor.utils.data import DataLoader
 
 
 class SetId(Enum):
-    TRAIN = 1
-    TEST = 2
-    VALID = 3
-    INFER = 4
+    TRAIN = 'train'
+    TEST = 'test'
+    VALID = 'valid'
+    INFER = 'infer'
 
 
 class ABaseDataset(abc.ABC):
