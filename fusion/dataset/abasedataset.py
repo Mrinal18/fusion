@@ -7,8 +7,7 @@ import torch
 from torch.utils.data import DataLoader
 
 
-@dataclass
-class SetId():
+class SetId(Enum):
     TRAIN = 'train'
     TEST = 'test'
     VALID = 'valid'

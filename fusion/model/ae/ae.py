@@ -30,7 +30,7 @@ class AE(ABaseModel):
         """
         return self._encoder[source_id](x[int(source_id)])
 
-    def forward(self, x: Tensor) -> ModelOutput:
+    def forward(self, x: ModelOutput) -> ModelOutput:
         """
         Forward method of autoencoder model
 

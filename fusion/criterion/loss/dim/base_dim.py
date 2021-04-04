@@ -1,13 +1,15 @@
 import abc
 from typing import Optional
 
+from fusion.criterion.mi_estimator import ABaseMIEstimator
+
 
 class BaseDim(abc.ABC):
     _name: Optional[str] = None
 
     def __init__(
         self,
-        estimator,
+        estimator: ABaseMIEstimator,
         weight: float = 1.0,
     ):
         self._estimator = estimator
