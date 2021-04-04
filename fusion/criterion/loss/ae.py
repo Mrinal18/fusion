@@ -4,6 +4,7 @@ import torch.nn as nn
 from tensor import Tensor
 
 from . import ABaseLoss
+from fusion.model import ModelOutput
 
 
 class AE(ABaseLoss):
@@ -15,7 +16,7 @@ class AE(ABaseLoss):
         super().__init__()
         self._loss = nn.MSELoss(**kwargs)
 
-    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
+    def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -> Tensor:
         """
 
         :param preds:

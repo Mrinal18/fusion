@@ -1,9 +1,9 @@
 import abc
 from collections import namedtuple
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import numpy as np
-import torch as T
+import torch
 import torch.nn as nn
 from torch import Tensor
 
@@ -12,13 +12,15 @@ from fusion.criterion.loss.dim import dim_mode_provider
 from fusion.criterion.loss.dim import CR_MODE, RR_MODE, \
     CC_MODE, XX_MODE
 from fusion.criterion.mi_estimator import mi_estimator_provider
+from fusion.model import ModelOutput
+from fusion.utils import Setting
 
 
 class MultiDim(ABaseLoss):
     def __init__(
         self,
         dim_cls: List[int],
-        estimator_setting,
+        estimator_setting: Setting,
         modes: List[str] = [CR_MODE, XX_MODE, CC_MODE, RR_MODE],
         weights: List[float] = [1., 1., 1., 1.],
     ):
@@ -42,7 +44,7 @@ class MultiDim(ABaseLoss):
             )
 
     @abc.abstractmethod
-    def _create_masks(self):
+    def _create_masks(self) -> Dict[int, nn.parameter.Parameter]:
         pass
 
     @staticmethod
@@ -50,22 +52,24 @@ class MultiDim(ABaseLoss):
         return target.reshape(target.size(0), target.size(1), -1)
 
     @staticmethod
-    def _sample_location(conv_latents, masks):
+    def _sample_location(conv_latents: Tensor,
+                         mask: Optional[nn.parameter.Parameter]) -> Tensor:
         n_batch = conv_latents.size(0)
         n_channels = conv_latents.size(1)
-        if masks is not None:
+        if mask is not None:
             # subsample from conv-ish r_cnv to get a single vector
-            mask_idx = torch.randint(0, masks.size(0), (n_batch,))
+            mask_idx = torch.randint(0, mask.size(0), (n_batch,))
             if torch.cuda.is_available():
                 mask_idx = mask_idx.cuda(torch.device("cuda:{}".format(0)))
-                masks = masks.cuda()
-            conv_latents = torch.masked_select(conv_latents, masks[mask_idx])
+                masks = mask.cuda()
+            conv_latents = torch.masked_select(conv_latents, mask[mask_idx])
         # flatten features for use as globals in glb->lcl nce cost
         locations = conv_latents.reshape(n_batch, n_channels, 1)
         return locations
 
-    def _prepare_reps_convs(self, latents):
-        reps, convs = {}, {}
+    def _prepare_reps_convs(self, latents: Dict[int, Dict[int, Tensor]]):
+        reps: Dict[int, Dict[int, Tensor]] = {}
+        convs: Dict[int, Dict[int, Tensor]] = {}
         for source_id in latents.keys():
             reps[source_id] = {}
             convs[source_id] = {}
@@ -73,13 +77,13 @@ class MultiDim(ABaseLoss):
                 if conv_latent_size == 1:
                     source = self._sample_location(
                         latents[source_id][conv_latent_size],
-                        masks=None
+                        mask=None
                     )
                     reps[source_id][conv_latent_size] = source
                 elif conv_latent_size > 1:
                     source = self._sample_location(
                         latents[source_id][conv_latent_size],
-                        masks=self._masks[conv_latent_size]
+                        mask=self._masks[conv_latent_size]
                     )
                     reps[source_id][conv_latent_size] = source
                     target = self._reshape_target(
@@ -90,7 +94,7 @@ class MultiDim(ABaseLoss):
                     assert conv_latent_size < 0
         return reps, convs
 
-    def forward(self, preds: Tensor, target: Optional[Tensor] = None):
+    def forward(self, preds: ModelOutput, target: Optional[Tensor] = None):
         del target
         # prepare sources and targets
         latents = preds.attrs['latents']
@@ -106,7 +110,7 @@ class MultiDim(ABaseLoss):
 
 
 class SpatialMultiDim(MultiDim):
-    def _create_masks(self):
+    def _create_masks(self) -> Dict[int, nn.parameter.Parameter]:
         masks = {}
         for dim_cl in self._dim_cls:
             mask = np.zeros((dim_cl, dim_cl, 1, dim_cl, dim_cl))
@@ -122,7 +126,7 @@ class SpatialMultiDim(MultiDim):
 
 
 class VolumetricMultiDim(MultiDim):
-    def _create_masks(self):
+    def _create_masks(self) -> Dict[int, nn.parameter.Parameter]:
         masks = {}
         for dim_cl in self._dim_cls:
             mask = torch.zeros((dim_cl, dim_cl, dim_cl, 1, dim_cl, dim_cl, dim_cl))

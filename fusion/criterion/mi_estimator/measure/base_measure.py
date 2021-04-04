@@ -1,11 +1,12 @@
 import abc
 import math
+
 import torch
 import torch.nn.functional as F
 from torch import Tensor
 
 
-def log_sum_exp(x: Tensor, axis=None):
+def log_sum_exp(x: Tensor, axis: int = 0):
     """Log sum exp function
     Args:
         x: Input.
@@ -19,96 +20,96 @@ def log_sum_exp(x: Tensor, axis=None):
 
 
 class ABaseMeasure(abc.ABC):
-    def __init__(self, average=False):
+    def __init__(self, average: bool =False):
         self._average = average
 
     @abc.abstractmethod
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         pass
 
     @abc.abstractmethod
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         pass
 
-    def _if_average(self, e):
+    def _if_average(self, e: Tensor) -> Tensor:
         return e.mean() if self._average else e
 
 
 class GanMeasure(ABaseMeasure):
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         Ep = -F.softplus(-p)
         return self._if_average(Ep)
 
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         Eq = F.softplus(-q) + q
         return self._if_average(Eq)
 
 
 class JsdMeasure(ABaseMeasure):
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         Ep = math.log(2.) - F.softplus(-p)
         return self._if_average(Ep)
 
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         Eq = F.softplus(-q) + q - math.log(2.)
         return self._if_average(Eq)
 
 
 class X2Measure(ABaseMeasure):
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         Ep = p ** 2
         return self._if_average(Ep)
 
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         Eq = -0.5 * ((torch.sqrt(q ** 2) + 1.) ** 2)
         return self._if_average(Eq)
 
 
 class KLMeasure(ABaseMeasure):
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         Ep = p
         return self._if_average(Ep)
 
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         Eq = torch.exp(q - 1.)
         return self._if_average(Eq)
 
 
 class RKLMeasure(ABaseMeasure):
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         Ep = -torch.exp(-p)
         return self._if_average(Ep)
 
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         Eq = q - 1.
         return self._if_average(Eq)
 
 
 class DVMeasure(ABaseMeasure):
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         Ep = p
         return self._if_average(Ep)
 
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         Eq = log_sum_exp(q, 0) - math.log(q.size(0))
         return self._if_average(Eq)
 
 
 class H2Measure(ABaseMeasure):
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         Ep = 1. - torch.exp(-p)
         return self._if_average(Ep)
 
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         Eq = torch.exp(q) - 1.
         return self._if_average(Eq)
 
 
 class W1Measure(ABaseMeasure):
-    def get_positive_expectation(self, p):
+    def get_positive_expectation(self, p: Tensor) -> Tensor:
         Ep = p
         return self._if_average(Ep)
 
-    def get_negative_expectation(self, q):
+    def get_negative_expectation(self, q: Tensor) -> Tensor:
         Eq = q
         return self._if_average(Eq)
