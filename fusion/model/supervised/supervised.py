@@ -43,7 +43,7 @@ class Supervised(ABaseModel):
         """
         assert len(x) == 1
         x = self._source_forward(self._sources[0], x)
-        return ModelOutput(z={0: x}, attrs={})
+        return ModelOutput(z={self._sources[0]: x}, attrs={})
 
     def _source_forward(self, source_id: int, x: Tensor) -> Tensor:
         x, _ = self._encoder[str(source_id)](x[0])
