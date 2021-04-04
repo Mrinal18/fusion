@@ -2,9 +2,9 @@ name: default
 dir: out
 hydra:
     run:
-        dir: ./${dir}/${name}/${experiment.fold}/${experiment.task.name}/
+        dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${experiment.task.name}/
     sweep:
-        dir: ./${dir}/${name}/${experiment.fold}/${experiment.task.name}/
+        dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${experiment.task.name}/
         subdir: ${hydra.job.num}
 work_dir: ${hydra:runtime.cwd}
 data_dir: ${work_dir}/data/

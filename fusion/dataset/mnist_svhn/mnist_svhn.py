@@ -1,6 +1,7 @@
+from catalyst.data.loader import BatchPrefetchLoaderWrapper
 import copy
 import os
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, Optional
 
 from sklearn.model_selection import StratifiedKFold
 import torch
@@ -26,6 +27,10 @@ class MnistSvhn(ABaseDataset):
             drop_last: bool = False,
             num_workers: int = 0,
             seed: int = 343,
+            prefetch_factor: int = 2,
+            pin_memory: bool = False,
+            persistent_workers: bool = False,
+            num_prefetches: Optional[int] = None,
     ):
         """
         Initialization of Class MnistSvhn dataset
@@ -53,6 +58,10 @@ class MnistSvhn(ABaseDataset):
             drop_last=drop_last,
             num_workers=num_workers,
             seed=seed,
+            prefetch_factor=prefetch_factor,
+            pin_memory=pin_memory,
+            persistent_workers=persistent_workers,
+            num_prefetches=num_prefetches
         )
         self._sources = sources
         self._indexes: Dict[str, Dict[str, Any]] = {}
@@ -183,8 +192,16 @@ class MnistSvhn(ABaseDataset):
             drop_last=self._drop_last,
             num_workers=self._num_workers,
             worker_init_fn=seed_worker,
+            prefetch_factor=self._prefetch_factor,
+            persistent_workers=self._persistent_workers,
+            pin_memory=self._pin_memory
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id
+        if torch.cuda.is_available():
+            data_loader = BatchPrefetchLoaderWrapper(
+                data_loader, num_prefetches=
+                self._num_prefetches
+            )
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets: Tensor):

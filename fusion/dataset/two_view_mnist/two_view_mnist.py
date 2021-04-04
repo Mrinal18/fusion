@@ -1,7 +1,8 @@
 import os
 import copy
-from typing import Dict, List
+from typing import Dict, List, Optional
 
+from catalyst.data.loader import BatchPrefetchLoaderWrapper
 
 from sklearn.model_selection import StratifiedKFold
 import torch
@@ -28,6 +29,10 @@ class TwoViewMnist(ABaseDataset):
             drop_last: bool = False,
             num_workers: int = 0,
             seed: int = 343,
+            prefetch_factor: int = 2,
+            pin_memory: bool = False,
+            persistent_workers: bool = False,
+            num_prefetches: Optional[int] = None,
     ):
         """
 
@@ -51,6 +56,10 @@ class TwoViewMnist(ABaseDataset):
             drop_last=drop_last,
             num_workers=num_workers,
             seed=seed,
+            prefetch_factor=prefetch_factor,
+            pin_memory=pin_memory,
+            persistent_workers=persistent_workers,
+            num_prefetches=num_prefetches
         )
 
     def load(self):
@@ -86,11 +95,15 @@ class TwoViewMnist(ABaseDataset):
             drop_last=self._drop_last,
             num_workers=self._num_workers,
             worker_init_fn=seed_worker,
-            prefetch_factor=self._batch_size,
-            persistent_workers=True,
-            pin_memory=True
+            prefetch_factor=self._prefetch_factor,
+            persistent_workers=self._persistent_workers,
+            pin_memory=self._pin_memory
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id
+        if torch.cuda.is_available() and self._num_prefetches is not None:
+            data_loader = BatchPrefetchLoaderWrapper(
+                data_loader, num_prefetches=self._num_prefetches
+            )
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets):

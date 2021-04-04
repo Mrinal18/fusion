@@ -1,4 +1,5 @@
 from catalyst import dl, metrics
+from catalyst.data.loader import BatchPrefetchLoaderWrapper
 from fusion.runner import ABaseRunner
 import torch
 import torch.nn.functional as F
@@ -54,6 +55,9 @@ class CatalystRunner(ABaseRunner, dl.Runner):
             probs = F.softmax(source_z, dim=-1)
             self.batch[f"logits_{source_id}"] = source_z
             self.batch[f"probs_{source_id}"] = probs
+
+    def get_loaders(self, stage):
+        return self._loaders
 
     def on_loader_start(self, runner):
         super().on_loader_start(runner)

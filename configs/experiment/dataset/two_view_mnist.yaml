@@ -11,3 +11,7 @@ args:
   drop_last: ${experiment.task.drop_last}
   num_workers: ${experiment.num_workers}
   seed: ${experiment.seed}
+  persistent_workers: False
+  pin_memory: False
+  prefetch_factor: 2
+  num_prefetches: 1024
