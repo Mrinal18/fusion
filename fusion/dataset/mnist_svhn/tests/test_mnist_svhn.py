@@ -1,5 +1,7 @@
 from fusion.dataset.mnist_svhn.mnist_svhn import MnistSvhn
+from fusion.dataset.abasedataset import SetId
 import unittest
+
 
 class TestMnistSvhn(unittest.TestCase):
     @unittest.skip("Skipping MnistSvhn, as it requires data loading")
@@ -15,16 +17,16 @@ class TestMnistSvhn(unittest.TestCase):
             drop_last=False
         )
         dataset.load()
-        for set_id in ['infer', 'train', 'valid']:
+        for set_id in [SetId.INFER, SetId.TRAIN, SetId.VALID]:
             d = dataset.get_loader(set_id)
             for i, sample in enumerate(d):
                 break
             self.assertEqual((sample[0][1] == sample[1][1]).all(), True)
 
         self.assertEqual(dataset.num_classes, 10)
-        self.assertEqual(len(dataset.get_loader('train')), 1345620 // BATCH_SIZE + 1)
-        self.assertEqual(len(dataset.get_loader('valid')), 336420 // BATCH_SIZE + 1)
-        self.assertEqual(len(dataset.get_loader('infer')), 300000 // BATCH_SIZE)
+        self.assertEqual(len(dataset.get_loader(SetId.TRAIN)), 1345620 // BATCH_SIZE + 1)
+        self.assertEqual(len(dataset.get_loader(SetId.VALID)), 336420 // BATCH_SIZE + 1)
+        self.assertEqual(len(dataset.get_loader(SetId.INFER)), 300000 // BATCH_SIZE)
         self.assertEqual(len(dataset.get_cv_loaders()), 2)
         self.assertEqual(len(dataset.get_all_loaders()), 3)
 

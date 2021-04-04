@@ -6,7 +6,7 @@ from torch import Tensor
 from fusion.model.misc import ModelOutput
 
 from . import ABaseLoss
-from fusion.model import ModelOutput
+
 
 
 class AE(ABaseLoss):

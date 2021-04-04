@@ -1,4 +1,5 @@
 from fusion.dataset.two_view_mnist.two_view_mnist import TwoViewMnist
+from fusion.dataset.abasedataset import SetId
 import unittest
 
 
@@ -13,9 +14,9 @@ class TestTwoViewMnist(unittest.TestCase):
         )
         dataset.load()
         self.assertEqual(dataset.num_classes, 10)
-        self.assertEqual(len(dataset.get_loader('train')), 48000)
-        self.assertEqual(len(dataset.get_loader('valid')), 12000)
-        self.assertEqual(len(dataset.get_loader('infer')), 10000)
+        self.assertEqual(len(dataset.get_loader(SetId.TRAIN)), 48000)
+        self.assertEqual(len(dataset.get_loader(SetId.VALID)), 12000)
+        self.assertEqual(len(dataset.get_loader(SetId.INFER)), 10000)
         self.assertEqual(len(dataset.get_cv_loaders()), 2)
         self.assertEqual(len(dataset.get_all_loaders()), 3)
 

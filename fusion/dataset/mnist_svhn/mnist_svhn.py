@@ -49,7 +49,7 @@ class MnistSvhn(ABaseDataset):
 
         """
         super().__init__(
-            dataset_dir + f'MnistSvhn_{fold}',
+            dataset_dir + f'MnistSvhn/{fold}/',
             fold=fold,
             num_folds=num_folds,
             sources=sources,
@@ -73,7 +73,7 @@ class MnistSvhn(ABaseDataset):
         Method to load dataset
         """
         if not os.path.exists(self._dataset_dir):
-            os.mkdir(self._dataset_dir)
+            os.makedirs(self._dataset_dir)
             self._download_dataset()
         self._num_classes = 10
         # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry
@@ -156,7 +156,7 @@ class MnistSvhn(ABaseDataset):
                 self._mnist_dataset_dir, train=train, download=False, transform=tx)
         elif dataset_name == 'svhn':
             # validation uses training set
-            split = SetId.TRAIN if set_id != SetId.TEST else SetId.TEST
+            split = SetId.TRAIN.value if set_id != SetId.TEST else SetId.TEST.value
             tx = SVHNTransform()
             dataset = torchvision.datasets.SVHN(
                 self._svhn_dataset_dir, split=split, download=False, transform=tx)
@@ -288,10 +288,10 @@ class MnistSvhn(ABaseDataset):
         # load svhn
         train_svhn = torchvision.datasets.SVHN(
             self._svhn_dataset_dir,
-            split="train", download=download, transform=tx)
+            split=SetId.TRAIN.value, download=download, transform=tx)
         test_svhn = torchvision.datasets.SVHN(
             self._svhn_dataset_dir,
-            split=SetId.TEST, download=download, transform=tx)
+            split=SetId.TEST.value, download=download, transform=tx)
 
         # svhn labels need extra work
         train_svhn.labels = torch.LongTensor(

@@ -5,7 +5,7 @@ from typing import Optional
 import torch.nn as nn
 from torch import Tensor
 
-from fusion.model import ModelOutput
+from fusion.model.misc import ModelOutput
 
 
 class ABaseLoss(abc.ABC, nn.Module):
