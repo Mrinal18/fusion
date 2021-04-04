@@ -1,0 +1,7 @@
+name: "Dim"
+dim_l: ${experiment.dim_l}
+args:
+  sources: ${experiment.sources}
+  architecture: ${experiment.architecture.name}
+  architecture_params: ${experiment.architecture.args}
+  pretrained_checkpoint: ${experiment.pretrained_checkpoint}

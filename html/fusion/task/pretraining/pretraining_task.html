@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>fusion.task.pretraining.pretraining_task API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fusion.task.pretraining.pretraining_task</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from catalyst import dl
+
+from omegaconf import DictConfig
+from fusion.dataset import dataset_provider
+from fusion.dataset.abasedataset import SetId
+from fusion.model import model_provider
+from fusion.criterion import criterion_provider
+from fusion.optimizer import optimizer_provider
+from fusion.runner import runner_provider
+from fusion.scheduler import scheduler_provider
+from fusion.task import ATask, ATaskBuilder
+import logging
+
+
+class PretrainingTaskBuilder(ATaskBuilder):
+    _task: ATask
+
+    def create_new_task(self, task_args: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            task_args:
+        &#34;&#34;&#34;
+        self._task = PretrainingTask(task_args.args)
+
+    def add_dataset(self, dataset_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            dataset_config:
+        &#34;&#34;&#34;
+        self._task.dataset = dataset_provider.get(
+            dataset_config.name, **dataset_config.args
+        )
+        self._task.dataset.load()
+
+    def add_model(self, model_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            model_config:
+        &#34;&#34;&#34;
+        if &#39;num_classes&#39; in model_config.args.keys():
+            model_config.args[&#39;num_classes&#39;] = self._task.dataset._num_classes
+        model_args = {**model_config.args}
+        model_args.pop(&#39;pretrained_checkpoint&#39;)
+        self._task.model = model_provider.get(
+            model_config.name, **model_args
+        )
+
+    def add_criterion(self, criterion_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            criterion_config:
+        &#34;&#34;&#34;
+        args = {} if criterion_config.args is None else criterion_config.args
+        self._task.criterion = criterion_provider.get(
+            criterion_config.name, **args
+        )
+
+    def add_runner(self, runner_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            runner_config:
+        &#34;&#34;&#34;
+        runner_args = {} if runner_config.args is None else runner_config.args
+        self._task.runner = runner_provider.get(
+            runner_config.name, **runner_args
+        )
+
+    def add_optimizer(self, optimizer_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            optimizer_config:
+        &#34;&#34;&#34;
+        args = dict(**optimizer_config.args)
+        args[&#39;params&#39;] = self._task.model.parameters()
+        self._task.optimizer = optimizer_provider.get(
+            optimizer_config.name, **args
+        )
+
+    def add_scheduler(self, scheduler_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            scheduler_config:
+        &#34;&#34;&#34;
+        args = dict(scheduler_config.args)
+        args[&#39;optimizer&#39;] = self._task.optimizer
+        args[&#39;steps_per_epoch&#39;] = len(
+            self._task.dataset.get_loader(SetId.TRAIN))
+        args[&#39;epochs&#39;] = self._task.task_args[&#39;num_epochs&#39;]
+        self._task.scheduler = scheduler_provider.get(
+            scheduler_config.name, **args
+        )
+
+
+class PretrainingTask(ATask):
+    def __init__(self, task_args: DictConfig) -&gt; None:
+        &#34;&#34;&#34;
+        Initilization of class Pretraining Task
+                task_args: task parameters
+        Return:
+                class Logical Pretraining Task
+        &#34;&#34;&#34;
+        super().__init__(task_args)
+
+    def run(self):
+        &#34;&#34;&#34;
+        Method launch training of Pretraining Task
+        &#34;&#34;&#34;
+        logging.info(f&#34;logdir: {self._task_args[&#39;logdir&#39;]}&#34;)
+        self._callbacks = [
+            dl.CheckpointCallback(
+                logdir=self._task_args[&#39;logdir&#39;], loader_key=&#34;valid&#34;, metric_key=&#34;loss&#34;, minimize=True, save_n_best=3
+            ),
+        ]
+        self._runner.train(
+            model=self._model,
+            criterion=self._criterion,
+            optimizer=self._optimizer,
+            scheduler=self._scheduler,
+            loaders=self._dataset.get_cv_loaders(),
+            logdir=self._task_args[&#39;logdir&#39;],
+            num_epochs=self._task_args[&#39;num_epochs&#39;],
+            verbose=self._task_args[&#39;verbose&#39;],
+            # resume=self._task_args[&#39;resume&#39;],
+            timeit=self._task_args[&#39;timeit&#39;],
+            callbacks=self._callbacks,
+        )</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTask"><code class="flex name class">
+<span>class <span class="ident">PretrainingTask</span></span>
+<span>(</span><span>task_args: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<p>Initilization of class Pretraining Task
+task_args: task parameters</p>
+<h2 id="return">Return</h2>
+<p>class Logical Pretraining Task</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PretrainingTask(ATask):
+    def __init__(self, task_args: DictConfig) -&gt; None:
+        &#34;&#34;&#34;
+        Initilization of class Pretraining Task
+                task_args: task parameters
+        Return:
+                class Logical Pretraining Task
+        &#34;&#34;&#34;
+        super().__init__(task_args)
+
+    def run(self):
+        &#34;&#34;&#34;
+        Method launch training of Pretraining Task
+        &#34;&#34;&#34;
+        logging.info(f&#34;logdir: {self._task_args[&#39;logdir&#39;]}&#34;)
+        self._callbacks = [
+            dl.CheckpointCallback(
+                logdir=self._task_args[&#39;logdir&#39;], loader_key=&#34;valid&#34;, metric_key=&#34;loss&#34;, minimize=True, save_n_best=3
+            ),
+        ]
+        self._runner.train(
+            model=self._model,
+            criterion=self._criterion,
+            optimizer=self._optimizer,
+            scheduler=self._scheduler,
+            loaders=self._dataset.get_cv_loaders(),
+            logdir=self._task_args[&#39;logdir&#39;],
+            num_epochs=self._task_args[&#39;num_epochs&#39;],
+            verbose=self._task_args[&#39;verbose&#39;],
+            # resume=self._task_args[&#39;resume&#39;],
+            timeit=self._task_args[&#39;timeit&#39;],
+            callbacks=self._callbacks,
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="fusion.task.atask.ATask" href="../atask.html#fusion.task.atask.ATask">ATask</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTask.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Method launch training of Pretraining Task</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(self):
+    &#34;&#34;&#34;
+    Method launch training of Pretraining Task
+    &#34;&#34;&#34;
+    logging.info(f&#34;logdir: {self._task_args[&#39;logdir&#39;]}&#34;)
+    self._callbacks = [
+        dl.CheckpointCallback(
+            logdir=self._task_args[&#39;logdir&#39;], loader_key=&#34;valid&#34;, metric_key=&#34;loss&#34;, minimize=True, save_n_best=3
+        ),
+    ]
+    self._runner.train(
+        model=self._model,
+        criterion=self._criterion,
+        optimizer=self._optimizer,
+        scheduler=self._scheduler,
+        loaders=self._dataset.get_cv_loaders(),
+        logdir=self._task_args[&#39;logdir&#39;],
+        num_epochs=self._task_args[&#39;num_epochs&#39;],
+        verbose=self._task_args[&#39;verbose&#39;],
+        # resume=self._task_args[&#39;resume&#39;],
+        timeit=self._task_args[&#39;timeit&#39;],
+        callbacks=self._callbacks,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder"><code class="flex name class">
+<span>class <span class="ident">PretrainingTaskBuilder</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PretrainingTaskBuilder(ATaskBuilder):
+    _task: ATask
+
+    def create_new_task(self, task_args: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            task_args:
+        &#34;&#34;&#34;
+        self._task = PretrainingTask(task_args.args)
+
+    def add_dataset(self, dataset_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            dataset_config:
+        &#34;&#34;&#34;
+        self._task.dataset = dataset_provider.get(
+            dataset_config.name, **dataset_config.args
+        )
+        self._task.dataset.load()
+
+    def add_model(self, model_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            model_config:
+        &#34;&#34;&#34;
+        if &#39;num_classes&#39; in model_config.args.keys():
+            model_config.args[&#39;num_classes&#39;] = self._task.dataset._num_classes
+        model_args = {**model_config.args}
+        model_args.pop(&#39;pretrained_checkpoint&#39;)
+        self._task.model = model_provider.get(
+            model_config.name, **model_args
+        )
+
+    def add_criterion(self, criterion_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            criterion_config:
+        &#34;&#34;&#34;
+        args = {} if criterion_config.args is None else criterion_config.args
+        self._task.criterion = criterion_provider.get(
+            criterion_config.name, **args
+        )
+
+    def add_runner(self, runner_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            runner_config:
+        &#34;&#34;&#34;
+        runner_args = {} if runner_config.args is None else runner_config.args
+        self._task.runner = runner_provider.get(
+            runner_config.name, **runner_args
+        )
+
+    def add_optimizer(self, optimizer_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            optimizer_config:
+        &#34;&#34;&#34;
+        args = dict(**optimizer_config.args)
+        args[&#39;params&#39;] = self._task.model.parameters()
+        self._task.optimizer = optimizer_provider.get(
+            optimizer_config.name, **args
+        )
+
+    def add_scheduler(self, scheduler_config: DictConfig):
+        &#34;&#34;&#34;
+
+        Args:
+            scheduler_config:
+        &#34;&#34;&#34;
+        args = dict(scheduler_config.args)
+        args[&#39;optimizer&#39;] = self._task.optimizer
+        args[&#39;steps_per_epoch&#39;] = len(
+            self._task.dataset.get_loader(SetId.TRAIN))
+        args[&#39;epochs&#39;] = self._task.task_args[&#39;num_epochs&#39;]
+        self._task.scheduler = scheduler_provider.get(
+            scheduler_config.name, **args
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="fusion.task.atask.ATaskBuilder" href="../atask.html#fusion.task.atask.ATaskBuilder">ATaskBuilder</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="fusion.task.linear_evaluation.linear_evaluation_task.LinearEvaluationTaskBuilder" href="../linear_evaluation/linear_evaluation_task.html#fusion.task.linear_evaluation.linear_evaluation_task.LinearEvaluationTaskBuilder">LinearEvaluationTaskBuilder</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_criterion"><code class="name flex">
+<span>def <span class="ident">add_criterion</span></span>(<span>self, criterion_config: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>criterion_config:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_criterion(self, criterion_config: DictConfig):
+    &#34;&#34;&#34;
+
+    Args:
+        criterion_config:
+    &#34;&#34;&#34;
+    args = {} if criterion_config.args is None else criterion_config.args
+    self._task.criterion = criterion_provider.get(
+        criterion_config.name, **args
+    )</code></pre>
+</details>
+</dd>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_dataset"><code class="name flex">
+<span>def <span class="ident">add_dataset</span></span>(<span>self, dataset_config: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>dataset_config:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_dataset(self, dataset_config: DictConfig):
+    &#34;&#34;&#34;
+
+    Args:
+        dataset_config:
+    &#34;&#34;&#34;
+    self._task.dataset = dataset_provider.get(
+        dataset_config.name, **dataset_config.args
+    )
+    self._task.dataset.load()</code></pre>
+</details>
+</dd>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_model"><code class="name flex">
+<span>def <span class="ident">add_model</span></span>(<span>self, model_config: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>model_config:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_model(self, model_config: DictConfig):
+    &#34;&#34;&#34;
+
+    Args:
+        model_config:
+    &#34;&#34;&#34;
+    if &#39;num_classes&#39; in model_config.args.keys():
+        model_config.args[&#39;num_classes&#39;] = self._task.dataset._num_classes
+    model_args = {**model_config.args}
+    model_args.pop(&#39;pretrained_checkpoint&#39;)
+    self._task.model = model_provider.get(
+        model_config.name, **model_args
+    )</code></pre>
+</details>
+</dd>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_optimizer"><code class="name flex">
+<span>def <span class="ident">add_optimizer</span></span>(<span>self, optimizer_config: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>optimizer_config:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_optimizer(self, optimizer_config: DictConfig):
+    &#34;&#34;&#34;
+
+    Args:
+        optimizer_config:
+    &#34;&#34;&#34;
+    args = dict(**optimizer_config.args)
+    args[&#39;params&#39;] = self._task.model.parameters()
+    self._task.optimizer = optimizer_provider.get(
+        optimizer_config.name, **args
+    )</code></pre>
+</details>
+</dd>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_runner"><code class="name flex">
+<span>def <span class="ident">add_runner</span></span>(<span>self, runner_config: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>runner_config:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_runner(self, runner_config: DictConfig):
+    &#34;&#34;&#34;
+
+    Args:
+        runner_config:
+    &#34;&#34;&#34;
+    runner_args = {} if runner_config.args is None else runner_config.args
+    self._task.runner = runner_provider.get(
+        runner_config.name, **runner_args
+    )</code></pre>
+</details>
+</dd>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_scheduler"><code class="name flex">
+<span>def <span class="ident">add_scheduler</span></span>(<span>self, scheduler_config: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>scheduler_config:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_scheduler(self, scheduler_config: DictConfig):
+    &#34;&#34;&#34;
+
+    Args:
+        scheduler_config:
+    &#34;&#34;&#34;
+    args = dict(scheduler_config.args)
+    args[&#39;optimizer&#39;] = self._task.optimizer
+    args[&#39;steps_per_epoch&#39;] = len(
+        self._task.dataset.get_loader(SetId.TRAIN))
+    args[&#39;epochs&#39;] = self._task.task_args[&#39;num_epochs&#39;]
+    self._task.scheduler = scheduler_provider.get(
+        scheduler_config.name, **args
+    )</code></pre>
+</details>
+</dd>
+<dt id="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.create_new_task"><code class="name flex">
+<span>def <span class="ident">create_new_task</span></span>(<span>self, task_args: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="args">Args</h2>
+<p>task_args:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_new_task(self, task_args: DictConfig):
+    &#34;&#34;&#34;
+
+    Args:
+        task_args:
+    &#34;&#34;&#34;
+    self._task = PretrainingTask(task_args.args)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fusion.task.pretraining" href="index.html">fusion.task.pretraining</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTask" href="#fusion.task.pretraining.pretraining_task.PretrainingTask">PretrainingTask</a></code></h4>
+<ul class="">
+<li><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTask.run" href="#fusion.task.pretraining.pretraining_task.PretrainingTask.run">run</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder" href="#fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder">PretrainingTaskBuilder</a></code></h4>
+<ul class="two-column">
+<li><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_criterion" href="#fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_criterion">add_criterion</a></code></li>
+<li><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_dataset" href="#fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_dataset">add_dataset</a></code></li>
+<li><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_model" href="#fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_model">add_model</a></code></li>
+<li><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_optimizer" href="#fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_optimizer">add_optimizer</a></code></li>
+<li><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_runner" href="#fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_runner">add_runner</a></code></li>
+<li><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_scheduler" href="#fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.add_scheduler">add_scheduler</a></code></li>
+<li><code><a title="fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.create_new_task" href="#fusion.task.pretraining.pretraining_task.PretrainingTaskBuilder.create_new_task">create_new_task</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

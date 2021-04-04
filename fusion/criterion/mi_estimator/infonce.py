@@ -31,6 +31,7 @@ class InfoNceEstimator(ABaseMIEstimator):
         # bs x bs x x_locs x y_locs
         pos_scores = (pos_mask * scores)
         pos_scores = pos_scores.reshape(bs, bs, -1)
+
         pos_scores = pos_scores.sum(1)
 
         neg_mask = 1 - pos_mask
@@ -42,9 +43,7 @@ class InfoNceEstimator(ABaseMIEstimator):
         neg_scores = neg_scores.reshape(bs, -1)
         neg_mask = neg_mask.reshape(bs, -1)
         neg_maxes = torch.max(neg_scores, dim=1, keepdim=True)[0]
-        neg_sumexp = (
-                neg_mask * torch.exp(neg_scores - neg_maxes)
-        ).sum(dim=1, keepdim=True)
+        neg_sumexp = (neg_mask * torch.exp(neg_scores - neg_maxes)).sum(dim=1, keepdim=True)
         all_logsumexp = torch.log(
             torch.exp(pos_scores - neg_maxes) + neg_sumexp)
         pos_shiftexp = pos_scores - neg_maxes

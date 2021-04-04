@@ -3,7 +3,7 @@ import abc
 from typing import Optional
 
 import torch.nn as nn
-from tensor import Tensor
+from torch import Tensor
 
 from fusion.model import ModelOutput
 

@@ -1,8 +1,10 @@
 import abc
-from enum import Enum
+from dataclasses import dataclass
+
 from typing import Dict, List, Optional
 
-from tensor.utils.data import DataLoader
+import torch
+from torch.utils.data import DataLoader
 
 
 class SetId(Enum):
@@ -12,10 +14,8 @@ class SetId(Enum):
     INFER = 'infer'
 
 
-class ABaseDataset(abc.ABC):
-    _num_classes: Optional[int] = None
-    _data_loaders: Dict[SetId, DataLoader] = {}
 
+class ABaseDataset(abc.ABC):
     @abc.abstractmethod
     def __init__(
         self,
@@ -28,6 +28,10 @@ class ABaseDataset(abc.ABC):
         drop_last: bool = False,
         num_workers: int = 0,
         seed: int = 343,
+        prefetch_factor: int = 2,
+        pin_memory: bool = False,
+        persistent_workers: bool = False,
+        num_prefetches: Optional[int] = None,
     ):
         self._dataset_dir = dataset_dir
         self._fold = fold
@@ -38,6 +42,13 @@ class ABaseDataset(abc.ABC):
         self._drop_last = drop_last
         self._num_workers = num_workers
         self._seed = seed
+        self._prefetch_factor = prefetch_factor
+        self._pin_memory = pin_memory
+        self._persistent_workers = persistent_workers
+        self._num_prefetches = num_prefetches
+        torch.manual_seed(self._seed)
+        self._num_classes: Optional[int] = None
+        self._data_loaders: Dict[SetId, DataLoader] = {}
 
     @abc.abstractmethod
     def load(self):
@@ -67,7 +78,6 @@ class ABaseDataset(abc.ABC):
         return self._data_loaders[set_id]
 
     @property
-    @abc.abstractmethod
     def num_classes(self) -> Optional[int]:
         """Number of classes
         """

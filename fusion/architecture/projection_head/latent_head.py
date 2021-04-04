@@ -1,4 +1,5 @@
 from fusion.architecture import ABaseArchitecture
+
 import torch.nn as nn
 from torch import Tensor
 
@@ -16,14 +17,20 @@ class LatentHead(ABaseArchitecture):
         weights_initialization_type: str = 'xavier_uniform',
     ):
         """
+        Initialization Class of Latent Head model
 
-        :param dim_in:
-        :param dim_l:
-        :param dim_h:
-        :param num_h_layers:
-        :param use_linear:
-        :param use_bias:
-        :param use_bn:
+        Args:
+            dim_in: The number of input channels
+            dim_l: The number of latent dimensions
+            dim_h: The number of feature channels for the convolutional layer. It is kept fixed for all hidden layers
+            num_h_layers: The number of convolutional layers
+            use_linear: Flag of use linear layer
+            use_bias: Flag of use bias in convolutional layer
+            use_bn: Flag of use batch normalization
+
+        Return:
+            Class of Latent Head model
+
         """
         super().__init__()
         self._num_h_layers = num_h_layers
@@ -55,11 +62,23 @@ class LatentHead(ABaseArchitecture):
         self.init_weights()
 
     def forward(self, x: Tensor) -> Tensor:
+        """
+        Forward method of Latent Head model
+        Args:
+            x:  input tensor
+        Returns:
+            x
+        """
         if self._use_linear:
             x = self._head(x)
         return x
 
     def init_weights(self):
+        """
+        Method for initialization weights
+        Return:
+            Latent Head model with initialization weights
+        """
         for layer in self._head:
             if isinstance(layer, nn.Linear):
                 nn.init.xavier_uniform_(

@@ -1,7 +1,9 @@
-catalyst==20.10.1
-hydra_core==1.0.4
-torchvision==0.8.1
+catalyst==21.3.2
 omegaconf==2.0.5
-torch==1.7.0
+hydra_core==1.0.4
+torchnet==0.0.4
+numpy==1.20.2
+torchvision==0.9.1
+torch==1.8.1
 hydra==2.5
-scikit_learn==0.23.2
+scikit_learn==0.24.1

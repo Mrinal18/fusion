@@ -2,16 +2,17 @@ import torch.nn as nn
 from torch import Tensor
 
 from fusion.architecture.base_block import Flatten
+from fusion.model.misc import ModelOutput
 
 
 class LinearEvaluator(nn.Module):
     def __init__(self, encoder, num_classes: int, dim_l: int, source_id: int):
         """
 
-        :param encoder:
-        :param num_classes:
-        :param dim_l:
-        :param source_id:
+        encoder:
+        num_classes:
+        dim_l:
+        source_id:
         """
         super().__init__()
         self._encoder = encoder
@@ -20,17 +21,18 @@ class LinearEvaluator(nn.Module):
         self._linear = nn.Linear(dim_l, num_classes)
         self._source_id = source_id
 
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x: Tensor) -> ModelOutput:
         """
 
-        :param x:
+        x:
         :return:
         """
-        x = x[self._source_id]
+        source_id = self._source_id if len(x) > 1 else 0
+        x = x[source_id]
         x = self._encoder(x)[0]
         x = x.detach()
         if len(x.shape) == 1:
             x = x.unsqueeze(0)
         x = self._flatten(x)
         x = self._linear(x)
-        return x
+        return ModelOutput(z={self._source_id: x}, attrs={})

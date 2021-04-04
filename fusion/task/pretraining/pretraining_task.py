@@ -1,12 +1,16 @@
-from omegaconf import DictConfig
 
+from catalyst import dl
+
+from omegaconf import DictConfig
 from fusion.dataset import dataset_provider
+from fusion.dataset.abasedataset import SetId
 from fusion.model import model_provider
 from fusion.criterion import criterion_provider
 from fusion.optimizer import optimizer_provider
 from fusion.runner import runner_provider
 from fusion.scheduler import scheduler_provider
 from fusion.task import ATask, ATaskBuilder
+import logging
 
 
 class PretrainingTaskBuilder(ATaskBuilder):
@@ -14,18 +18,18 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def create_new_task(self, task_args: DictConfig):
         """
-
-        :param task_args:
-        :return:
+		Method for create new pretraining task
+		Args:
+        	task_args: dictionary with task's parameters from config
         """
         self._task = PretrainingTask(task_args.args)
 
     def add_dataset(self, dataset_config: DictConfig):
         """
-
-        :param dataset_config:
-        :return:
-        """
+		Method for add dataset to pretraining task
+		Args:
+			dataset_config: dictionary with dataset's parameters from config
+		"""
         self._task.dataset = dataset_provider.get(
             dataset_config.name, **dataset_config.args
         )
@@ -33,9 +37,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_model(self, model_config: DictConfig):
         """
-
-        :param model_config:
-        :return:
+        Method for add model to pretraining task
+        Args:
+            model_config: dictionary with model's parameters from config
         """
         if 'num_classes' in model_config.args.keys():
             model_config.args['num_classes'] = self._task.dataset._num_classes
@@ -47,8 +51,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_criterion(self, criterion_config: DictConfig):
         """
-        :param criterion_config:
-        :return:
+        Method for add criterion to pretraining task
+        Args:
+            criterion_config: dictionary with criterion's parameters from config
         """
         args = {} if criterion_config.args is None else criterion_config.args
         self._task.criterion = criterion_provider.get(
@@ -57,9 +62,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_runner(self, runner_config: DictConfig):
         """
-
-        :param runner_config:
-        :return:
+        Method for add runner to pretraining task
+        Args:
+            runner_config: dictionary with runner's parameters from config
         """
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
@@ -68,9 +73,9 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_optimizer(self, optimizer_config: DictConfig):
         """
-
-        :param optimizer_config:
-        :return:
+        Method for add optimizer to pretraining task
+        Args:
+            optimizer_config: dictionary with optimizer's parameters from config
         """
         args = dict(**optimizer_config.args)
         args['params'] = self._task.model.parameters()
@@ -80,14 +85,14 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_scheduler(self, scheduler_config: DictConfig):
         """
-
-        :param scheduler_config:
-        :return:
+        Method for add scheduler to pretraining task
+        Args:
+            scheduler_config: dictionary with scheduler's parameters from config
         """
         args = dict(scheduler_config.args)
         args['optimizer'] = self._task.optimizer
         args['steps_per_epoch'] = len(
-            self._task.dataset.get_loader('train'))
+            self._task.dataset.get_loader(SetId.TRAIN))
         args['epochs'] = self._task.task_args['num_epochs']
         self._task.scheduler = scheduler_provider.get(
             scheduler_config.name, **args
@@ -96,9 +101,24 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
 class PretrainingTask(ATask):
     def __init__(self, task_args: DictConfig) -> None:
+        """
+        Initilization of class Pretraining Task
+        	task_args: task parameters
+        Return:
+        	class Logical Pretraining Task
+        """
         super().__init__(task_args)
 
     def run(self):
+        """
+        Method launch training of Pretraining Task
+        """
+        logging.info(f"logdir: {self._task_args['logdir']}")
+        self._callbacks = [
+            dl.CheckpointCallback(
+                logdir=self._task_args['logdir'], loader_key="valid", metric_key="loss", minimize=True, save_n_best=3
+            ),
+        ]
         self._runner.train(
             model=self._model,
             criterion=self._criterion,
@@ -108,7 +128,7 @@ class PretrainingTask(ATask):
             logdir=self._task_args['logdir'],
             num_epochs=self._task_args['num_epochs'],
             verbose=self._task_args['verbose'],
-            resume=self._task_args['resume'],
+            # resume=self._task_args['resume'],
             timeit=self._task_args['timeit'],
             callbacks=self._callbacks,
         )

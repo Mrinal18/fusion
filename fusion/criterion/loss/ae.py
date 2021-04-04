@@ -1,7 +1,9 @@
 from typing import Optional
 
 import torch.nn as nn
-from tensor import Tensor
+from torch import Tensor
+
+from fusion.model.misc import ModelOutput
 
 from . import ABaseLoss
 from fusion.model import ModelOutput
@@ -11,7 +13,7 @@ class AE(ABaseLoss):
     def __init__(self, **kwargs):
         """
 
-        :param kwargs:
+        kwargs:
         """
         super().__init__()
         self._loss = nn.MSELoss(**kwargs)
@@ -19,8 +21,8 @@ class AE(ABaseLoss):
     def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -> Tensor:
         """
 
-        :param preds:
-        :param target:
+        preds:
+        target:
         :return:
         """
         assert target is not None

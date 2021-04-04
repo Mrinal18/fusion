@@ -1,6 +1,7 @@
+from catalyst.data.loader import BatchPrefetchLoaderWrapper
 import copy
 import os
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, Optional
 
 from sklearn.model_selection import StratifiedKFold
 import torch
@@ -9,6 +10,7 @@ from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
 from torchnet.dataset import TensorDataset, ResampleDataset
 
+from fusion.dataset.utils import seed_worker
 from fusion.dataset.abasedataset import ABaseDataset, SetId
 from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
 
@@ -25,9 +27,29 @@ class MnistSvhn(ABaseDataset):
             drop_last: bool = False,
             num_workers: int = 0,
             seed: int = 343,
+            prefetch_factor: int = 2,
+            pin_memory: bool = False,
+            persistent_workers: bool = False,
+            num_prefetches: Optional[int] = None,
     ):
+        """
+        Initialization of Class MnistSvhn dataset
+        Args:
+            dataset_dir: path to dataset
+            fold: number of fold for validation
+            num_folds: counts of folds
+            views: number of views
+            batch_size: how many samples per batch to load
+            shuffle: set to True to have the data reshuffled at every epoch
+            drop_last: set to True to drop the last incomplete batch
+            num_workers: how many subprocesses to use for data loading
+            seed: number of seed
+        Return:
+            Dataset MnistSvhn
+
+        """
         super().__init__(
-            dataset_dir,
+            dataset_dir + f'MnistSvhn_{fold}',
             fold=fold,
             num_folds=num_folds,
             sources=sources,
@@ -36,17 +58,23 @@ class MnistSvhn(ABaseDataset):
             drop_last=drop_last,
             num_workers=num_workers,
             seed=seed,
+            prefetch_factor=prefetch_factor,
+            pin_memory=pin_memory,
+            persistent_workers=persistent_workers,
+            num_prefetches=num_prefetches
         )
         self._sources = sources
         self._indexes: Dict[str, Dict[str, Any]] = {}
+        self._mnist_dataset_dir = self._dataset_dir + '/MNIST/'
+        self._svhn_dataset_dir = self._dataset_dir + '/SVHN/'
 
     def load(self):
         """
         Method to load dataset
-        :return:
-
         """
-        self._download_dataset(self._dataset_dir)
+        if not os.path.exists(self._dataset_dir):
+            os.mkdir(self._dataset_dir)
+            self._download_dataset()
         self._num_classes = 10
         # Don't touch it, otherwise lazy evaluation and lambda functions will make you cry
         samplers = {
@@ -62,7 +90,7 @@ class MnistSvhn(ABaseDataset):
             }
         }
 
-        for set_id in [SetId.TRAIN, SetId.VALID. SetId.TEST]:
+        for set_id in [SetId.TRAIN, SetId.VALID, SetId.TEST]:
             dataset = None
             sampler_mnist = samplers['mnist'][set_id]
             sampler_svhn = samplers['svhn'][set_id]
@@ -125,13 +153,13 @@ class MnistSvhn(ABaseDataset):
             train = True if set_id != SetId.TEST else False
             tx = MNISTTransform()
             dataset = torchvision.datasets.MNIST(
-                self._dataset_dir, train=train, download=False, transform=tx)
+                self._mnist_dataset_dir, train=train, download=False, transform=tx)
         elif dataset_name == 'svhn':
             # validation uses training set
             split = SetId.TRAIN if set_id != SetId.TEST else SetId.TEST
             tx = SVHNTransform()
             dataset = torchvision.datasets.SVHN(
-                self._dataset_dir, split=split, download=False, transform=tx)
+                self._svhn_dataset_dir, split=split, download=False, transform=tx)
         else:
             raise NotImplementedError
         # select fold
@@ -151,7 +179,8 @@ class MnistSvhn(ABaseDataset):
                 raise NotImplementedError
         dataset = DataLoader(
             dataset, batch_size=1, shuffle=False,
-            pin_memory=False, num_workers=1
+            pin_memory=True, num_workers=1,
+            worker_init_fn=seed_worker,
         )
         return dataset, indexes
 
@@ -162,16 +191,26 @@ class MnistSvhn(ABaseDataset):
             shuffle=self._shuffle,
             drop_last=self._drop_last,
             num_workers=self._num_workers,
-            pin_memory=True
+            worker_init_fn=seed_worker,
+            prefetch_factor=self._prefetch_factor,
+            persistent_workers=self._persistent_workers,
+            pin_memory=self._pin_memory
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id
+        if torch.cuda.is_available():
+            data_loader = BatchPrefetchLoaderWrapper(
+                data_loader, num_prefetches=
+                self._num_prefetches
+            )
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets: Tensor):
         self._num_classes = len(torch.unique(targets))
 
-    def _prepare_fold(self, dataset: Union[torchvision.datasets.MNIST, torchvision.datasets.SVHN],
-            dataset_name: str):
+    def _prepare_fold(
+            self, dataset: Union[torchvision.datasets.MNIST, torchvision.datasets.SVHN],
+            dataset_name: str
+    ):
         kf = StratifiedKFold(
             n_splits=self._num_folds,
             shuffle=self._shuffle,
@@ -187,16 +226,26 @@ class MnistSvhn(ABaseDataset):
         return train_index, valid_index
 
     def get_all_loaders(self):
+        """
+        Return all loaders
+        """
         return super().get_all_loaders()
 
     def get_cv_loaders(self):
+        """
+        Return all cross-validation loaders
+        """
         return super().get_cv_loaders()
 
     def get_loader(self, set_id: SetId):
+        """
+        Get loader by set_id
+        Args:
+            set_id:
+        Return:
+            Loader by set_id
+        """
         return super().get_loader(set_id)
-
-    def num_classes(self):
-        return super().num_classes
 
     @staticmethod
     def _rand_match_on_idx(l1, idx1, l2, idx2, max_d: int = 10000, dm: int = 10):
@@ -214,30 +263,35 @@ class MnistSvhn(ABaseDataset):
                 _idx2.append(l_idx2[torch.randperm(n)])
         return torch.cat(_idx1), torch.cat(_idx2)
 
-    def _download_dataset(self, dataset_dir: str):
+    def _download_dataset(self):
         max_d = 10000  # maximum number of datapoints per class
         dm = 30  # data multiplier: random permutations to match
 
         # get the individual datasets
         tx = torchvision.transforms.ToTensor()
-        if os.path.exists(self._dataset_dir):
+        if os.path.exists(self._mnist_dataset_dir):
             download = False
         else:
             download = True
-            os.mkdir(self._dataset_dir)
+            os.mkdir(self._mnist_dataset_dir)
         # load mnist
         train_mnist = torchvision.datasets.MNIST(
-            dataset_dir, train=True, download=download, transform=tx)
+            self._mnist_dataset_dir, train=True, download=download, transform=tx)
         test_mnist = torchvision.datasets.MNIST(
-            dataset_dir, train=False, download=download, transform=tx)
+            self._mnist_dataset_dir, train=False, download=download, transform=tx)
 
+        if os.path.exists(self._svhn_dataset_dir):
+            download = False
+        else:
+            download = True
+            os.mkdir(self._svhn_dataset_dir)
         # load svhn
         train_svhn = torchvision.datasets.SVHN(
-            self._dataset_dir,
+            self._svhn_dataset_dir,
             split="train", download=download, transform=tx)
         test_svhn = torchvision.datasets.SVHN(
-            self._dataset_dir,
-            split='test', download=download, transform=tx)
+            self._svhn_dataset_dir,
+            split=SetId.TEST, download=download, transform=tx)
 
         # svhn labels need extra work
         train_svhn.labels = torch.LongTensor(
@@ -255,15 +309,15 @@ class MnistSvhn(ABaseDataset):
         idx1, idx2 = self._rand_match_on_idx(
             mnist_l, mnist_li, svhn_l, svhn_li, max_d=max_d, dm=dm)
         torch.save(idx1, os.path.join(
-            dataset_dir, f"train-ms-mnist-idx-{self._fold}.pt"))
+            self._dataset_dir, f"train-ms-mnist-idx-{self._fold}.pt"))
         torch.save(idx2, os.path.join(
-            dataset_dir, f"train-ms-svhn-idx-{self._fold}.pt"))
+            self._dataset_dir, f"train-ms-svhn-idx-{self._fold}.pt"))
         torch.save(mnist_train_idxs,
                    os.path.join(
-                       dataset_dir, f'train-ms-mnist-cv-idx-{self._fold}.pt'))
+                       self._dataset_dir, f'train-ms-mnist-cv-idx-{self._fold}.pt'))
         torch.save(svhn_train_idxs,
                    os.path.join(
-                       dataset_dir, f'train-ms-svhn-cv-idx-{self._fold}.pt'))
+                       self._dataset_dir, f'train-ms-svhn-cv-idx-{self._fold}.pt'))
 
         # save and pair validation set
         mnist_l, mnist_li = train_mnist.targets[mnist_valid_idxs].sort()
@@ -271,20 +325,20 @@ class MnistSvhn(ABaseDataset):
         idx1, idx2 = self._rand_match_on_idx(
             mnist_l, mnist_li, svhn_l, svhn_li, max_d=max_d, dm=dm)
         torch.save(idx1, os.path.join(
-            dataset_dir, f'valid-ms-mnist-idx-{self._fold}.pt'))
+            self._dataset_dir, f'valid-ms-mnist-idx-{self._fold}.pt'))
         torch.save(idx2, os.path.join(
-            dataset_dir, f'valid-ms-svhn-idx-{self._fold}.pt'))
+            self._dataset_dir, f'valid-ms-svhn-idx-{self._fold}.pt'))
         torch.save(mnist_valid_idxs,
                    os.path.join(
-                       dataset_dir, f'valid-ms-mnist-cv-idx-{self._fold}.pt'))
+                       self._dataset_dir, f'valid-ms-mnist-cv-idx-{self._fold}.pt'))
         torch.save(svhn_valid_idxs,
                    os.path.join(
-                       dataset_dir,f'valid-ms-svhn-cv-idx-{self._fold}.pt'))
+                       self._dataset_dir,f'valid-ms-svhn-cv-idx-{self._fold}.pt'))
 
         # save and pair test set
         mnist_l, mnist_li = test_mnist.targets.sort()
         svhn_l, svhn_li = test_svhn.labels.sort()
         idx1, idx2 = self._rand_match_on_idx(
             mnist_l, mnist_li, svhn_l, svhn_li, max_d=max_d, dm=dm)
-        torch.save(idx1, os.path.join(dataset_dir, 'test-ms-mnist-idx.pt'))
-        torch.save(idx2, os.path.join(dataset_dir, 'test-ms-svhn-idx.pt'))
+        torch.save(idx1, os.path.join(self._dataset_dir, 'test-ms-mnist-idx.pt'))
+        torch.save(idx2, os.path.join(self._dataset_dir, 'test-ms-svhn-idx.pt'))

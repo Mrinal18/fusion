@@ -12,9 +12,9 @@ class ABaseModel(abc.ABC, nn.Module):
     def __init__(self, sources: List[int], architecture: str, architecture_params: Dict[str, Any]):
         """
 
-         :param sources:
-         :param architecture:
-         :param architecture_params:
+         sources:
+         architecture:
+         architecture_params:
          """
         super().__init__()
         self._sources = sources

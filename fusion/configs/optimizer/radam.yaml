@@ -1,4 +1,0 @@
-# @package optimizer
-name: "RAdam"
-args:
-  lr: 4e-4

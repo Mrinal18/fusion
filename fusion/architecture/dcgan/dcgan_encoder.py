@@ -1,4 +1,4 @@
-from typing import Dict, Iterable, Tuple, Type
+from typing import Dict, Tuple
 
 import torch.nn as nn
 from torch import Tensor
@@ -22,16 +22,19 @@ class DcganEncoder(ABaseArchitecture):
         weights_initialization_type: str = 'xavier_uniform',
     ):
         """
-
-        :param dim_in:
-        :param dim_h:
-        :param dim_l:
-        :param dim_cls:
-        :param input_size:
-        :param conv_layer_class:
-        :param norm_layer_class:
-        :param activation_class:
-        :param weights_initialization_type:
+        The DCGAN Encoder class
+        Args:
+            dim_in: The number of input channels
+            dim_h: The number of feature channels for the first convolutional layer, the number of feature channels double with each next convolutional layer
+            dim_l: The number of latent dimensions
+            dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
+                             The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
+                             If dim_cls=None, the information between z and none of the convolutional feature maps is maximized, default=None
+            input_size: The input width and height of the image, default=32
+            conv_layer_class: The type of convolutional layer to use, default=nn.Conv2d
+            norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
+            activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
+            weights_initialization_type: The weight initialization type to use, default='xavier_uniform'
         """
         super().__init__(
             conv_layer_class=conv_layer_class,
@@ -122,7 +125,16 @@ class DcganEncoder(ABaseArchitecture):
             raise NotImplementedError("DCGAN only supports input square images ' + \
                 'with size 32, 64 in current implementation.")
 
+
     def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
+        """
+        The DCGAN encoder forward method
+        Args:
+            x: The input tensor
+        Returns:
+            z: The latent variable
+            latents: The convolutional feature maps, with widths specified by self._dim_cls
+        """
         latents = None
         if self._dim_cls is not None:
             latents = {}
@@ -140,5 +152,11 @@ class DcganEncoder(ABaseArchitecture):
         return z, latents
 
     def init_weights(self):
+        """
+        Weight initialization method
+        Returns:
+            DcganEncoder with initialized weights
+
+        """
         for layer in self._layers:
-            layer.init_weights()
+            layer.init_weights(gain_type='leaky_relu')

@@ -7,8 +7,8 @@ class Factory:
 	def register_object(self, key: str, model: Any):
 		"""
 
-		:param key:
-		:param model:
+		key:
+		model:
 		:return:
 		"""
 		self._objects[key] = model
@@ -16,8 +16,8 @@ class Factory:
 	def create(self, key: str, **kwargs):
 		"""
 
-		:param key:
-		:param kwargs:
+		key:
+		kwargs:
 		:return:
 		"""
 		obj = self._objects.get(key)

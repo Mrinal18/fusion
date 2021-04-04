@@ -1,5 +1,8 @@
+import os
 import copy
-from typing import Dict, List
+from typing import Dict, List, Optional
+
+from catalyst.data.loader import BatchPrefetchLoaderWrapper
 
 from sklearn.model_selection import StratifiedKFold
 import torch
@@ -11,6 +14,7 @@ from fusion.dataset.abasetransform import ABaseTransform
 from fusion.dataset.two_view_mnist.transforms import TwoViewMnistTransform
 from fusion.dataset.two_view_mnist.transforms import RandomRotationTransform
 from fusion.dataset.two_view_mnist.transforms import UniformNoiseTransform
+from fusion.dataset.utils import seed_worker
 
 
 class TwoViewMnist(ABaseDataset):
@@ -25,18 +29,22 @@ class TwoViewMnist(ABaseDataset):
             drop_last: bool = False,
             num_workers: int = 0,
             seed: int = 343,
+            prefetch_factor: int = 2,
+            pin_memory: bool = False,
+            persistent_workers: bool = False,
+            num_prefetches: Optional[int] = None,
     ):
         """
 
-        :param dataset_dir:
-        :param fold:
-        :param num_folds:
-        :param sources:
-        :param batch_size:
-        :param shuffle:
-        :param drop_last:
-        :param num_workers:
-        :param seed:
+        dataset_dir:
+        fold:
+        num_folds:
+        sources:
+        batch_size:
+        shuffle:
+        drop_last:
+        num_workers:
+        seed:
         """
         super().__init__(
             dataset_dir,
@@ -48,8 +56,11 @@ class TwoViewMnist(ABaseDataset):
             drop_last=drop_last,
             num_workers=num_workers,
             seed=seed,
+            prefetch_factor=prefetch_factor,
+            pin_memory=pin_memory,
+            persistent_workers=persistent_workers,
+            num_prefetches=num_prefetches
         )
-        self._num_classes = None
 
     def load(self):
         """
@@ -59,10 +70,13 @@ class TwoViewMnist(ABaseDataset):
         for set_id in [SetId.TRAIN, SetId.TEST]:
             train = True if set_id == SetId.TRAIN else False
             transforms = self._prepare_transforms(set_id)
+            download=True
+            if os.path.exists(self._dataset_dir):
+                download = False
             dataset = torchvision.datasets.MNIST(
                 self._dataset_dir,
                 train=train,
-                download=True,
+                download=download,
                 transform=transforms
             )
             if set_id == SetId.TRAIN:
@@ -79,18 +93,26 @@ class TwoViewMnist(ABaseDataset):
             batch_size=self._batch_size,
             shuffle=self._shuffle,
             drop_last=self._drop_last,
-            num_workers=self._num_workers
+            num_workers=self._num_workers,
+            worker_init_fn=seed_worker,
+            prefetch_factor=self._prefetch_factor,
+            persistent_workers=self._persistent_workers,
+            pin_memory=self._pin_memory
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id
+        if torch.cuda.is_available() and self._num_prefetches is not None:
+            data_loader = BatchPrefetchLoaderWrapper(
+                data_loader, num_prefetches=self._num_prefetches
+            )
         self._data_loaders[set_id] = data_loader
 
     def _set_num_classes(self, targets):
-        self.num_classes = len(torch.unique(targets))
+        self._num_classes = len(torch.unique(targets))
 
     def _prepare_fold(self, dataset: torchvision.datasets.MNIST):
         kf = StratifiedKFold(
             n_splits=self._num_folds,
-            shuffle=self._shuffle,
+            shuffle=True,
             random_state=self._seed
         )
         X, y = dataset.data, dataset.targets
@@ -109,7 +131,7 @@ class TwoViewMnist(ABaseDataset):
         assert train_dataset.targets.size(0) == len(train_index)
         return {
             SetId.TRAIN: train_dataset,
-            SetId.TEST: valid_dataset
+            SetId.VALID: valid_dataset
         }
 
     def _prepare_transforms(self, set_id: SetId) -> ABaseTransform:

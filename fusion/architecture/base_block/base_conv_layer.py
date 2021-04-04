@@ -3,7 +3,8 @@ from typing import Any, Dict, Optional, Tuple, Type
 import torch.nn as nn
 from torch import Tensor
 
-from fusion.architecture.abasearchitecture import ABaseArchitecture, TActivation, TDropout, TConv, TNorm
+from fusion.architecture.abasearchitecture import ABaseArchitecture, \
+    TActivation, TDropout, TConv, TNorm
 
 
 class BaseConvLayer(ABaseArchitecture):
@@ -20,17 +21,28 @@ class BaseConvLayer(ABaseArchitecture):
         weights_initialization_type: str = 'xavier_uniform'
     ):
         """
+        Base class of the convolution layer, this class allows the specification of the following sub-layers in order of appearing in the forward function:
+            1) A convolutional layer
+            2) A normalization method
+            3) A dropout layer
+            4) The non-linear activation that should be used
+        The forward function in the class returns a tuple: (output after all specified sub-layers, output after convolutional sub-layer only)
 
-        :param conv_layer_class:
-        :param conv_layer_args:
-        :param norm_layer_class:
-        :param norm_layer_args:
-        :param dp_layer_class:
-        :param dp_layer_args:
-        :param activation_class:
-        :param activation_args:
-        :param weights_initialization_type:
+        Args:
+            conv_layer_class: Convolutional layer class
+            conv_layer_args: Parameters for the convolution layer
+            norm_layer_class:  Normalization layer class
+            norm_layer_args: Parameters for the normalization layer
+            dp_layer_class: Dropout layer class
+            dp_layer_args: Parameters for the droupout layer
+            activation_class: Activation function class
+            activation_args: Parameters for the activation function
+            weights_initialization_type: Type of initialization weights
+
+        :return
+            Base class of convolution layer
         """
+
         super(BaseConvLayer, self).__init__(
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
@@ -58,9 +70,13 @@ class BaseConvLayer(ABaseArchitecture):
 
     def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
         """
-
-        :param x:
-        :return:
+        Forward method for the base class of this custom convolutional layer
+        Args:
+            x: Input tensor
+        Returns:
+            Args:
+                x: The tensor after passing through all the specified sub-layers: convolutional layer, normalization layer, dropout layer, activation function
+                conv_latent: The tensor after only passing through the convolutional sub-layer
         """
         x = self._layer[0](x)
         conv_latent = x
@@ -68,14 +84,17 @@ class BaseConvLayer(ABaseArchitecture):
             x = layer(x)
         return x, conv_latent
 
-    def init_weights(self):
+    def init_weights(self, gain_type: str = 'relu'):
         """
+        Method for initialization weights
+        Returns:
+            Layer with initialization weights
 
-        :return:
         """
         if self._weights_initialization_type == 'xavier_uniform':
             nn.init.xavier_uniform_(
-                self._layer[0].weight, gain=nn.init.calculate_gain('relu')
+                self._layer[0].weight, gain=nn.init.calculate_gain(gain_type)
+
             )
             if not isinstance(self._layer[0].bias, type(None)):
                 nn.init.constant_(self._layer[0].bias, 0)

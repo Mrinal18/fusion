@@ -55,14 +55,15 @@ class TestSpatialMultiDim(unittest.TestCase):
             weights=[1., 1., 1., 1.]
         )
         ret_loss, raw_losses = criterion(output)
+        print (raw_losses)
         losses = [
-            9.4785, 0.3428, 9.5307, 0.5374, # CR
-            9.9195, 0.5636, 11.8387, 1.0671, # XX
+            6.1393, 0.0019, 9.5305, 0.5373, # CR
+            6.1271, 0.0017, 11.8385, 1.0670, # XX
             11.5989, 1.8206, 12.1579, 2.2010, # CC
-            0.1648, 1.6105, 0.2620, 2.9762 # RR
+            2.0436, 7.1816e-05, 0.2619, 2.9756 # RR
         ]
         for i, (_, loss) in enumerate(raw_losses.items()):
-            self.assertAlmostEqual(loss.item(), losses[i], places=3)
+            self.assertAlmostEqual(loss, losses[i], places=3)
 
 
 if __name__ == '__main__':

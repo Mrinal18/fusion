@@ -2,9 +2,7 @@
 
 ### Package Architecture
 
-- 11/08/2020: Drafted the architecture of the models using [PlantUML](https://plantuml.com/)
-- 11/10/2020: Made project as a python package and created the directory structure.
-
+The architecture of the models using [PlantUML](https://plantuml.com/)
 
 ### Coding ToDo List:
 - architecture
@@ -13,7 +11,12 @@
     - VaeDecoder
 - model
   - MMVAE
+  - S-AE
 - criterion
+  - loss
+    - S-AE
+    - L-CCA
+    - DCCAE
   - mi_estimator
     - critic
       - Bilinear
@@ -25,4 +28,4 @@
   - logreg evaluation
   - saliency
 - configs
-  - needed yaml with hydra for all models
+  - hydra configs for all models

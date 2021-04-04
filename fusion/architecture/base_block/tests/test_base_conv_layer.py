@@ -7,6 +7,7 @@ from fusion.architecture.base_block import BaseConvLayer
 
 class TestBaseConvLayer(unittest.TestCase):
 
+
     def test_forward(self):
         base_layer = BaseConvLayer(
             conv_layer_class=nn.Conv1d,
