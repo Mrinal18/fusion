@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fusion", # Replace with your own username
-    version="0.0.1",
+    version="0.1",
     author="Alex Fedorov",
     author_email="eidos92@gmail.com",
     description="A multi-modal representation learning package",
