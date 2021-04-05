@@ -1,16 +1,16 @@
 # Fusion
-Fusion is self-supervised framework for data with multiple sources.
+Fusion is a self-supervised framework for data with multiple sources—specifically, this framework aims to support neuroimaging applications.
 
-The goal of Fusion is to provide foundation for fair comparision of new models in different multi-view, multi-domain or multi-modal scenarios. We provide two datasets with multi-view, multi-domain natural images. However, further the code will be updated with multi-modal neuroimaging datasets.
+Fusion aims to provide a foundation for fair comparison of new models in different multi-view, multi-domain, or multi-modal scenarios. Currently, we provide only two datasets with multi-view, multi-domain natural images. Further, the repository will be updated with multi-modal neuroimaging datasets.
 
-The additional goal of Fusion is to reproduce the following works:
-https://arxiv.org/abs/2012.13623, https://arxiv.org/abs/2012.13619 and https://arxiv.org/abs/2103.15914. The results on basic datasets will be posted soon.
+The other goal of Fusion is to reproduce the following works:
+https://arxiv.org/abs/2012.13623, https://arxiv.org/abs/2012.13619, and https://arxiv.org/abs/2103.15914.
 
-This project is under active development and the codebase is subject to change.
+This project is under active development, and the codebase is subject to change.
 
 ---
 ## Installation
-To instal rqeuirements:
+To install requirements:
 ```
 pip install requirements.txt
 ```
@@ -24,17 +24,21 @@ pip install -e .
 ```
 ---
 ## Experiments
-To run default experiment use:
+To run a default experiment, use:
 ```
 python main.py
 ```
-The default experiment will pretrain XX model on Two-View Mnist dataset.
+The default experiment will train the XX model on the Two-View MNIST dataset.
 
-The code is writting mostly with PyTorch (https://pytorch.org/).
+The code is written mainly with PyTorch (https://pytorch.org/).
 
-The experiments are defined using Hydra configs (https://hydra.cc/docs/next/intro) and located in the directory `configs`.
+The experiments are defined using the Hydra configs (https://hydra.cc/docs/next/intro) and located in the directory `configs`.
 
-The training pipeline is based on Catalyst framework (https://catalyst-team.github.io/catalyst/).
+The training pipeline is based on the Catalyst framework (https://catalyst-team.github.io/catalyst/).
+
+---
+## Questions
+If you have any questions about implementation and training, don't hesitate to either open an issue here or send an email to eidos92@gmail.com.
 
 ---
 ## Development
@@ -75,8 +79,7 @@ Current ToDo list:
 ---
 ### Package Architecture
 
-The architecture of the models using [PlantUML](https://plantuml.com/)
-P.s. need to be updated.
+The package's software architecture is available in the directory `UML` based on [PlantUML](https://plantuml.com/).
 
 ---
 ## Citation
