@@ -123,7 +123,9 @@ For out-of-distribution generalization please cite:
 
 ---
 ## Acknowledgement
-Thanks to Devon Hjelm (https://github.com/rdevon) and Philip Bachman (https://github.com/Philip-Bachman) for providing code for DIM (https://github.com/rdevon/DIM) and AMDIM (https://github.com/Philip-Bachman/amdim-public).
+Specials thanks to [Devon Hjelm](https://github.com/rdevon) and [Philip Bachman](https://github.com/Philip-Bachman) for providing code for [DIM](https://github.com/rdevon/DIM) and [AMDIM](https://github.com/Philip-Bachman/amdim-public).
+
+Additionally thanks to [Sergey Kolesnikov](https://github.com/Scitator) for the help on [Catalyst](https://github.com/catalyst-team/catalyst) framework and [Kevin Wang](https://github.com/ssktotoro) for support.
 
 This work is supported by NIH R01 EB006841.
 
