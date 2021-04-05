@@ -120,8 +120,11 @@ For out-of-distribution generalization please cite:
       primaryClass={cs.CV}
 }
 ```
+
 ---
 ## Acknowledgement
+Thanks to Devon Hjelm (https://github.com/rdevon) and Philip Bachman (https://github.com/Philip-Bachman) for providing code for DIM (https://github.com/rdevon/DIM) and AMDIM (https://github.com/Philip-Bachman/amdim-public).
+
 This work is supported by NIH R01 EB006841.
 
 Data were provided in part by OASIS-3: Principal
