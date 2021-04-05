@@ -156,7 +156,7 @@ class MnistSvhn(ABaseDataset):
                 self._mnist_dataset_dir, train=train, download=False, transform=tx)
         elif dataset_name == 'svhn':
             # validation uses training set
-            split = SetId.TRAIN.value if set_id != SetId.TEST else SetId.TEST.value
+            split = SetId.TRAIN if set_id != SetId.TEST else SetId.TEST
             tx = SVHNTransform()
             dataset = torchvision.datasets.SVHN(
                 self._svhn_dataset_dir, split=split, download=False, transform=tx)
@@ -288,10 +288,10 @@ class MnistSvhn(ABaseDataset):
         # load svhn
         train_svhn = torchvision.datasets.SVHN(
             self._svhn_dataset_dir,
-            split=SetId.TRAIN.value, download=download, transform=tx)
+            split=SetId.TRAIN, download=download, transform=tx)
         test_svhn = torchvision.datasets.SVHN(
             self._svhn_dataset_dir,
-            split=SetId.TEST.value, download=download, transform=tx)
+            split=SetId.TEST, download=download, transform=tx)
 
         # svhn labels need extra work
         train_svhn.labels = torch.LongTensor(
