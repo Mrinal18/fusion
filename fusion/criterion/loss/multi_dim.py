@@ -87,7 +87,7 @@ class MultiDim(ABaseLoss):
             mask_idx = torch.randint(0, mask.size(0), (n_batch,))
             if torch.cuda.is_available():
                 mask_idx = mask_idx.cuda(torch.device("cuda:{}".format(0)))
-                masks = mask.cuda()
+                mask = mask.cuda()
             conv_latents = torch.masked_select(conv_latents, mask[mask_idx])
         # flatten features for use as globals in glb->lcl nce cost
         locations = conv_latents.reshape(n_batch, n_channels, 1)

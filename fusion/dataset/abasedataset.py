@@ -1,6 +1,6 @@
 import abc
 from dataclasses import dataclass
-from enum import Enum
+
 
 from typing import Dict, List, Optional
 
@@ -8,7 +8,8 @@ import torch
 from torch.utils.data import DataLoader
 
 
-class SetId(Enum):
+@dataclass
+class SetId():
     TRAIN = 'train'
     TEST = 'test'
     VALID = 'valid'

@@ -142,9 +142,9 @@ class MnistSvhn(ABaseDataset):
     def _load(self, set_id: SetId, dataset_name: str):
         # define filename for pair indexes
         if set_id != SetId.TEST:
-            filename = f"{set_id.value}-ms-{dataset_name}-idx-{self._fold}.pt"
+            filename = f"{set_id}-ms-{dataset_name}-idx-{self._fold}.pt"
         else:
-            filename = f"{set_id.value}-ms-{dataset_name}-idx.pt"
+            filename = f"{set_id}-ms-{dataset_name}-idx.pt"
         # load paired indexes
         indexes = torch.load(os.path.join(self._dataset_dir, filename))
         # load dataset
@@ -167,7 +167,7 @@ class MnistSvhn(ABaseDataset):
             cv_indexes = torch.load(
                 os.path.join(
                     self._dataset_dir,
-                    f"{set_id.value}-ms-{dataset_name}-cv-idx-{self._fold}.pt"
+                    f"{set_id}-ms-{dataset_name}-cv-idx-{self._fold}.pt"
                 )
             )
             dataset.data = dataset.data[cv_indexes]
