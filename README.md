@@ -1,5 +1,5 @@
 # Fusion
-Fusion is a self-supervised framework for data with multiple sources—specifically, this framework aims to support neuroimaging applications.
+Fusion is a self-supervised framework for data with multiple sources — specifically, this framework aims to support neuroimaging applications.
 
 Fusion aims to provide a foundation for fair comparison of new models in different multi-view, multi-domain, or multi-modal scenarios. Currently, we provide only two datasets with multi-view, multi-domain natural images. Further, the repository will be updated with multi-modal neuroimaging datasets.
 
