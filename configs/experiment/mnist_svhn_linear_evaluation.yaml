@@ -11,7 +11,7 @@ num_folds: 5
 seed: 343
 num_workers: 8
 logdir: ./
-pretrained_checkpoint: ${work_dir}/${dir}/${name}/${experiment.fold}/PretrainingTask/best.pth
+pretrained_checkpoint: ${work_dir}/${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/PretrainingTask/best.pth
 defaults:
   - dataset: mnist_svhn
   - architecture: dcgan_encoder
