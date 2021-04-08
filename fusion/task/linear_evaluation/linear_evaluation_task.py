@@ -149,7 +149,7 @@ class LinearEvaluationTask(ATask):
 				criterion=self._criterion,
 				optimizer=self._optimizer[source_id],
 				scheduler=self._scheduler[source_id],
-				loaders=self._dataset.get_cv_loaders(),
+				loaders=self._dataset.get_all_loaders(),
 				logdir=logdir,
 				num_epochs=self._task_args['num_epochs'],
 				verbose=self._task_args['verbose'],
