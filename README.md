@@ -68,7 +68,6 @@ Current ToDo list:
         - Bilinear
       - Donsker Varadhan Loss
     - misc
-      - cca
       - mmvae
   - task
     - logreg evaluation with optuna
