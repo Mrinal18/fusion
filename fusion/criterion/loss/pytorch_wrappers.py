@@ -29,13 +29,13 @@ class CustomCrossEntropyLoss(ABaseLoss):
         Return:
             Cross Entropy Loss between input and target tensor
         """
-        ret_loss = None
+        total_loss = None
         raw_losses = {}
         for source_id, z in preds.z.items():
             loss = self._loss(z, target)
-            ret_loss = ret_loss + loss if ret_loss is not None else loss
+            total_loss = total_loss + loss if total_loss is not None else loss
             raw_losses[f"CE{source_id}"] = loss
-        return ret_loss, raw_losses
+        return total_loss, raw_losses
 
 
 class MSELoss(ABaseLoss):
@@ -91,10 +91,10 @@ class BCEWithLogitsLoss(ABaseLoss):
              between input and target tensor
         """
         assert target is not None
-        ret_loss = None
+        total_loss = None
         raw_losses = {}
         for source_id, z in preds.z.items():
             loss = self._loss(z.squeeze(1), target)
-            ret_loss = ret_loss + loss if ret_loss is not None else loss
+            total_loss = total_loss + loss if total_loss is not None else loss
             raw_losses[f"CE{source_id}"] = loss
-        return ret_loss, raw_losses
+        return total_loss, raw_losses

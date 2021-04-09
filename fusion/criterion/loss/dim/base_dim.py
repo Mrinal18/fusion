@@ -19,11 +19,11 @@ class BaseDim(abc.ABC):
     def __call__(self, reps, convs):
         pass
 
-    def _update_loss(self, name, ret_loss, raw_losses, loss, penalty):
+    def _update_loss(self, name, total_loss, raw_losses, loss, penalty):
         loss = self._weight * loss
         raw_losses[f'{name}_loss'] = loss.item()
-        ret_loss = ret_loss + loss if ret_loss is not None else loss
+        total_loss = total_loss + loss if total_loss is not None else loss
         if penalty is not None:
             raw_losses[f'{name}_penalty'] = penalty.item()
-            ret_loss = ret_loss + penalty if ret_loss is not None else penalty
-        return ret_loss, raw_losses
+            total_loss = total_loss + penalty if total_loss is not None else penalty
+        return total_loss, raw_losses

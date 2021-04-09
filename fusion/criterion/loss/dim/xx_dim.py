@@ -8,7 +8,7 @@ class XxDim(BaseDim):
     _name = XX_MODE
 
     def __call__(self, reps, convs):
-        ret_loss = None
+        total_loss = None
         raw_losses = {}
         dim_conv_latent = 1
         for rep_source_id, rep in reps.items():
@@ -21,10 +21,10 @@ class XxDim(BaseDim):
                         loss, penalty = self._estimator(
                            conv_latent, rep[dim_conv_latent])
                         loss = self._weight * loss
-                        ret_loss, raw_losses = self._update_loss(
-                            name, ret_loss, raw_losses, loss, penalty
+                        total_loss, raw_losses = self._update_loss(
+                            name, total_loss, raw_losses, loss, penalty
                         )
-        return ret_loss, raw_losses
+        return total_loss, raw_losses
 
     def _name_it(self, rep_source_id, conv_source_id, dim_conv):
         return f"{self._name}{dim_conv}_" \

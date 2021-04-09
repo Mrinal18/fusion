@@ -54,7 +54,7 @@ class TestSpatialMultiDim(unittest.TestCase):
             modes=[CR_MODE, XX_MODE, CC_MODE, RR_MODE],
             weights=[1., 1., 1., 1.]
         )
-        ret_loss, raw_losses = criterion(output)
+        total_loss, raw_losses = criterion(output)
         print (raw_losses)
         losses = [
             6.1393, 0.0019, 9.5305, 0.5373, # CR

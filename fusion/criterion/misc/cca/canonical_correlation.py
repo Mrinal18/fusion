@@ -25,12 +25,31 @@ from typing import Optional
 class CanonicalCorrelation(ABaseLoss):
     def __init__(
         self,
-        eps=1e-3,
-        r1=1e-7,
-        r2=1e-7,
-        use_all_singular_values=True,
-        num_canonical_components: Optional[int] = None
+        eps: float = 1e-3,
+        r1: float = 1e-7,
+        r2: float = 1e-7,
+        use_all_singular_values: bool = True,
+        num_top_canonical_components: Optional[int] = None
     ):
+        """
+        Implementation of the loss functions in the DCCA
+        based on mvlearn package
+        (https://github.com/mvlearn/mvlearn/blob/main/mvlearn/embed/dcca.py).
+
+        Andrew, Galen, Raman Arora, Jeff Bilmes, and Karen Livescu.
+        "Deep canonical correlation analysis."
+        In International conference on machine learning,
+        pp. 1247-1255. PMLR, 2013.
+
+        Args:
+            eps: Parameter for numerical stability
+            r1: Parameter for numerical stability
+            r2: Parameter for numerical stability
+            use_all_singular_values: Boolean flag whether or not to use all the singular values in the loss calculation
+            num_top_canonical_components: Number of top canonical components used if use_all_singular_values is false
+        Returns:
+            Instance of CanonicalCorrelation
+        """
         super().__init__()
         self._eps = eps
         self._r1 = r1
@@ -39,10 +58,21 @@ class CanonicalCorrelation(ABaseLoss):
         if not self._use_all_singular_values:
             assert self._num_canonical_components is not None
             assert self._num_canonical_components > 0
-        self._num_canonical_components = num_canonical_components
+        self._num_canonical_components = num_top_canonical_components
 
     def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -> Tensor:
-        ret_loss = None
+        """
+        Forward pass for the loss.
+
+        Args:
+            preds: Model output
+            target: Targets, however, loss do no use them.
+        Returns:
+            total_loss: Total loss
+            raw_losses: Dictionary for logging with all the computed losses
+        """
+        del target
+        total_loss = None
         raw_losses = {}
         for source_id_one, z_one in preds.z.items():
             for source_id_two, z_two in preds.z.items():
@@ -50,10 +80,19 @@ class CanonicalCorrelation(ABaseLoss):
                     name = f'CCA_{source_id_one}:{source_id_two}'
                     loss = self._linear_cca(z_one, z_two)
                     raw_losses[name] = loss.item()
-                    ret_loss = ret_loss + loss if ret_loss is not None else loss
-        return ret_loss, raw_losses
+                    total_loss = total_loss + loss if total_loss is not None else loss
+        return total_loss, raw_losses
 
     def _linear_cca(self, h1, h2):
+        """
+        Computes Linear Canonical Correlation between 2 sources
+
+        Args:
+            h1: Representation of the first source
+            h2: Representation of the second source
+        Return:
+            Negative correlation between 2 sources
+        """
         # Transpose matrices so each column is a sample
         h1, h2 = h1.t(), h2.t()
 
