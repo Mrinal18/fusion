@@ -1,5 +1,4 @@
 name: "Supervised"
-architecture: dcgan_encoder
 args:
   dim_l: ${experiment.dim_l}
   sources: ${experiment.sources}

@@ -14,5 +14,5 @@ args:
       penalty_setting:
         class_type: L2Penalty
         args:
-  modes: [XX]
+  modes: [CR]
   weights: [1.]

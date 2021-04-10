@@ -13,7 +13,7 @@ num_workers: 8
 logdir: ./0/
 pretrained_checkpoint:
 defaults:
-  - dataset: mnist_svhn
+  - dataset: two_view_mnist
   - model: supervised
   - criterion: cce
   - task: pretraining
