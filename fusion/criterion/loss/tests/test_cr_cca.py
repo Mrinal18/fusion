@@ -50,8 +50,8 @@ class TestSpatialMultiDim(unittest.TestCase):
     def test_cr_cca(self):
         output, dim_cls, estimator_setting = self._generate_output()
         criterion = CR_CCA(
-            input_dim=2,
             dim_cls=dim_cls,
+            input_dim=2,
             estimator_setting=estimator_setting,
             cca_setting=Setting(class_type=CanonicalCorrelation, args={})
         )
