@@ -82,7 +82,7 @@ class CanonicalCorrelation(ABaseLoss):
         for source_id_one, z_one in preds.z.items():
             for source_id_two, z_two in preds.z.items():
                 if source_id_one != source_id_two:
-                    name = f'CCA_{source_id_one}:{source_id_two}'
+                    name = f'CCA_{source_id_one}_{source_id_two}'
                     loss = self._linear_cca(z_one, z_two)
                     raw_losses[name] = loss.item()
                     total_loss = total_loss_summation(total_loss, loss)
