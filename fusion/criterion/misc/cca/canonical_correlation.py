@@ -13,13 +13,14 @@
 # all copies or substantial portions of the Software.
 
 from fusion.criterion.loss import ABaseLoss
+from fusion.criterion.misc.utils import total_loss_summation
 from fusion.model.misc import ModelOutput
 
 import torch
 import torch.nn as nn
 from torch import Tensor
 
-from typing import Optional
+from typing import Optional, Tuple, Any, Dict
 
 
 class CanonicalCorrelation(ABaseLoss):
@@ -60,7 +61,11 @@ class CanonicalCorrelation(ABaseLoss):
             assert self._num_canonical_components > 0
         self._num_canonical_components = num_top_canonical_components
 
-    def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -> Tensor:
+    def forward(
+        self,
+        preds: ModelOutput,
+        target: Optional[Tensor] = None
+    ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward pass for the loss.
 
@@ -80,7 +85,7 @@ class CanonicalCorrelation(ABaseLoss):
                     name = f'CCA_{source_id_one}:{source_id_two}'
                     loss = self._linear_cca(z_one, z_two)
                     raw_losses[name] = loss.item()
-                    total_loss = total_loss + loss if total_loss is not None else loss
+                    total_loss = total_loss_summation(total_loss, loss)
         return total_loss, raw_losses
 
     def _linear_cca(self, h1, h2):
