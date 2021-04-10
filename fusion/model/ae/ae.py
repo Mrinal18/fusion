@@ -44,9 +44,11 @@ class AE(ABaseModel):
         ret = ModelOutput(z={}, attrs={})
         ret.attrs['x'] = {}
         ret.attrs['x_hat'] = {}
+        ret.attrs['latents'] = {}
         for source_id, _ in self._encoder.items():
-            ret.attrs['x'] = x[int(source_id)]
             z, x_hat = self._source_forward(source_id, x)
-            ret.z[source_id] = z
-            ret.attrs['x_hat'] = x_hat
+            ret.z[int(source_id)] = z
+            ret.attrs['latents'][int(source_id)] = {1: z}
+            ret.attrs['x'][int(source_id)] = x[int(source_id)]
+            ret.attrs['x_hat'][int(source_id)] = x_hat
         return ret

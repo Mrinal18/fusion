@@ -1,11 +1,13 @@
-from typing import Optional
+from typing import Optional, Tuple, Any, Dict
 
+from fusion.criterion.misc.utils import total_loss_summation
 from fusion.model.misc import ModelOutput
 
 import torch.nn as nn
 from torch import Tensor
 
 from . import ABaseLoss
+
 
 class CustomCrossEntropyLoss(ABaseLoss):
     def __init__(self, **kwargs):
@@ -19,7 +21,11 @@ class CustomCrossEntropyLoss(ABaseLoss):
         super().__init__()
         self._loss = nn.CrossEntropyLoss(**kwargs)
 
-    def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -> Tensor:
+    def forward(
+        self,
+        preds: ModelOutput,
+        target: Optional[Tensor] = None
+    ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward method of class Cross Entropy Loss
         Args:
@@ -33,7 +39,7 @@ class CustomCrossEntropyLoss(ABaseLoss):
         raw_losses = {}
         for source_id, z in preds.z.items():
             loss = self._loss(z, target)
-            total_loss = total_loss + loss if total_loss is not None else loss
+            total_loss = total_loss_summation(total_loss, loss)
             raw_losses[f"CE{source_id}"] = loss
         return total_loss, raw_losses
 
@@ -51,7 +57,11 @@ class MSELoss(ABaseLoss):
         super().__init__()
         self._loss = nn.MSELoss(**kwargs)
 
-    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
+    def forward(
+        self,
+        preds: Tensor,
+        target: Optional[Tensor] = None
+    ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward method of class MSE Loss
         Args:
@@ -78,7 +88,11 @@ class BCEWithLogitsLoss(ABaseLoss):
         super().__init__()
         self._loss = nn.BCEWithLogitsLoss(**kwargs)
 
-    def forward(self, preds: Tensor, target: Optional[Tensor] = None) -> Tensor:
+    def forward(
+        self,
+        preds: Tensor,
+        target: Optional[Tensor] = None
+    ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward method of class Binary Cross Entropy with
          logits loss
@@ -95,6 +109,6 @@ class BCEWithLogitsLoss(ABaseLoss):
         raw_losses = {}
         for source_id, z in preds.z.items():
             loss = self._loss(z.squeeze(1), target)
-            total_loss = total_loss + loss if total_loss is not None else loss
+            total_loss = total_loss_summation(total_loss, loss)
             raw_losses[f"CE{source_id}"] = loss
         return total_loss, raw_losses

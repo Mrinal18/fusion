@@ -25,7 +25,7 @@ SOFTWARE.
 
 import abc
 from collections import namedtuple
-from typing import Dict, List, Optional
+from typing import Optional, Tuple, Any, Dict, List
 
 import numpy as np
 import torch
@@ -37,6 +37,7 @@ from fusion.criterion.loss.dim import dim_mode_provider
 from fusion.criterion.loss.dim import CR_MODE, RR_MODE, \
     CC_MODE, XX_MODE
 from fusion.criterion.mi_estimator import mi_estimator_provider
+from fusion.criterion.misc.utils import total_loss_summation
 from fusion.model.misc import ModelOutput
 from fusion.utils import Setting
 
@@ -69,9 +70,8 @@ class MultiDim(ABaseLoss):
                 mode, **dim_mode_args
             )
 
-    @abc.abstractmethod
     def _create_masks(self) -> Dict[int, nn.parameter.Parameter]:
-        pass
+        self._masks = {}
 
     @staticmethod
     def _reshape_target(target: Tensor) -> Tensor:
@@ -120,7 +120,11 @@ class MultiDim(ABaseLoss):
                     assert conv_latent_size < 0
         return reps, convs
 
-    def forward(self, preds: ModelOutput, target: Optional[Tensor] = None):
+    def forward(
+        self,
+        preds: ModelOutput,
+        target: Optional[Tensor] = None
+    ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         del target
         # prepare sources and targets
         latents = preds.attrs['latents']
@@ -130,7 +134,7 @@ class MultiDim(ABaseLoss):
         raw_losses = {}
         for _, objective in self._objectives.items():
             loss, raw = objective(reps, convs)
-            total_loss = total_loss + loss if total_loss is not None else loss
+            total_loss = total_loss_summation(total_loss, loss)
             raw_losses.update(raw)
         return total_loss, raw_losses
 

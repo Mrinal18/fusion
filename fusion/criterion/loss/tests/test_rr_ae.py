@@ -1,10 +1,9 @@
 import torch
 import unittest
 
-from fusion.model import Dim
+from fusion.model import AE
 from fusion.utils import Setting
-from fusion.criterion.loss import SpatialMultiDim
-from fusion.criterion.loss.dim import CR_MODE, XX_MODE, RR_MODE, CC_MODE
+from fusion.criterion.loss import RR_AE
 
 
 class TestSpatialMultiDim(unittest.TestCase):
@@ -13,20 +12,19 @@ class TestSpatialMultiDim(unittest.TestCase):
         torch.manual_seed(42)
         dim_in = 1
         dim_l = 64
-        dim_cls = [8]
         input_size = 32
-        architecture = 'DcganEncoder'
+        architecture = 'DcganAutoEncoder'
         architecture_params = dict(
             input_size=input_size,
             dim_in=[dim_in, dim_in],
             dim_h=2,
             dim_l=dim_l,
-            dim_cls=dim_cls
+            dim_cls=[]
         )
         sources = [0, 1]
         batch_size = 8
         # create model
-        model = Dim(sources, architecture, architecture_params)
+        model = AE(sources, architecture, architecture_params)
         # create input
         x = []
         for _ in sources:
@@ -44,25 +42,21 @@ class TestSpatialMultiDim(unittest.TestCase):
                 'penalty_setting': penalty_setting
             }
         )
-        return output, dim_cls, estimator_setting
+        return output, estimator_setting
 
-    def test_spatial_multi_dim(self):
-        output, dim_cls, estimator_setting = self._generate_output()
-        criterion = SpatialMultiDim(
-            dim_cls=dim_cls,
+    def test_rr_ae(self):
+        output, estimator_setting = self._generate_output()
+        criterion = RR_AE(
             estimator_setting=estimator_setting,
-            modes=[CR_MODE, XX_MODE, CC_MODE, RR_MODE],
-            weights=[1., 1., 1., 1.]
         )
         total_loss, raw_losses = criterion(output)
-        losses = [
-            6.1393, 0.0019, 9.5305, 0.5373, # CR
-            6.1271, 0.0017, 11.8385, 1.0670, # XX
-            11.5989, 1.8206, 12.1579, 2.2010, # CC
-            2.0436, 7.1816e-05, 0.2619, 2.9756 # RR
-        ]
-        for i, (_, loss) in enumerate(raw_losses.items()):
-            self.assertAlmostEqual(loss, losses[i], places=3)
+        self.assertAlmostEqual(total_loss.item(), 4.4976, places=3)
+        self.assertAlmostEqual(raw_losses['AE_0'], 0.5844, places=3)
+        self.assertAlmostEqual(raw_losses['AE_1'], 0.5333, places=3)
+        self.assertAlmostEqual(raw_losses['RR1_0_1_loss'], 0.0499, places=3)
+        self.assertAlmostEqual(raw_losses['RR1_0_1_penalty'], 1.6309, places=3)
+        self.assertAlmostEqual(raw_losses['RR1_1_0_loss'], 0.1307, places=3)
+        self.assertAlmostEqual(raw_losses['RR1_1_0_penalty'], 1.5682, places=3)
 
 
 if __name__ == '__main__':

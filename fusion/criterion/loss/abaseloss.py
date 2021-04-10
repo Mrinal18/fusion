@@ -1,6 +1,6 @@
 import abc
 
-from typing import Optional
+from typing import Optional, Tuple, Any, Dict
 
 import torch.nn as nn
 from torch import Tensor
@@ -13,5 +13,9 @@ class ABaseLoss(abc.ABC, nn.Module):
     def __init__(self):
         super().__init__()
 
-    def forward(self, preds: ModelOutput, target: Optional[Tensor] = None) -> Tensor:
+    def forward(
+        self,
+        preds: ModelOutput,
+        target: Optional[Tensor] = None
+    ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         pass

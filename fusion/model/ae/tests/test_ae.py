@@ -27,8 +27,8 @@ class TestAE(unittest.TestCase):
         # check outputs
         for _, z in output.z.items():
             self.assertEqual(z.size(1), dim_l)
-        self.assertEqual(output.attrs['x'].size(), x[0].size())
-        self.assertEqual(output.attrs['x_hat'].size(), x[0].size())
+        self.assertEqual(output.attrs['x'][0].size(), x[0].size())
+        self.assertEqual(output.attrs['x_hat'][0].size(), x[0].size())
 
 
 if __name__ == '__main__':
