@@ -1,6 +1,5 @@
-name: SpatialMultiDim
+name: RR_AE
 args:
-  dim_cls: ${experiment.dim_cls}
   estimator_setting:
     class_type: InfoNceEstimator
     args:
@@ -14,5 +13,3 @@ args:
       penalty_setting:
         class_type: L2Penalty
         args:
-  modes: [CR]
-  weights: [1.]

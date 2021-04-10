@@ -14,8 +14,7 @@ logdir: ./0/
 pretrained_checkpoint: ${work_dir}/${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/PretrainingTask/${experiment.logdir}/best.pth
 defaults:
   - dataset: two_view_mnist
-  - architecture: dcgan_encoder
-  - model: dim
+  - model: supervised
   - criterion: cce
   - task: linear_evaluation
   - optimizer: radam

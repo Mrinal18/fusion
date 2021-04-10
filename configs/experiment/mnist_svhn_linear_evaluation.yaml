@@ -14,7 +14,6 @@ logdir: ./
 pretrained_checkpoint: ${work_dir}/${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/PretrainingTask/best.pth
 defaults:
   - dataset: mnist_svhn
-  - architecture: dcgan_encoder
   - model: dim
   - criterion: cce
   - task: linear_evaluation

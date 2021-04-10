@@ -14,7 +14,6 @@ logdir: ./1/
 pretrained_checkpoint:
 defaults:
   - dataset: mnist_svhn
-  - architecture: dcgan_encoder
   - model: supervised
   - criterion: cce
   - task: pretraining

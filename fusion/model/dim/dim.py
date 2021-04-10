@@ -59,6 +59,8 @@ class Dim(ABaseModel):
 
     def _source_forward(self, source_id: int, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
         source_id_s = str(source_id)
+        if len(self._sources) == 1:
+            source_id = 0
         z, latents = self._encoder[source_id_s](x[int(source_id)])
         # pass latents through projection heads
         for conv_latent_size, conv_latent in latents.items():
