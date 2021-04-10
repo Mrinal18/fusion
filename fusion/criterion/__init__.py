@@ -4,6 +4,7 @@ from .loss import AE
 from .loss import SpatialMultiDim, VolumetricMultiDim
 from .loss import RR_AE
 from .loss import CR_CCA
+from .loss import DCCAE
 from .misc import CanonicalCorrelation
 import torch.nn as nn
 from fusion.utils import ObjectProvider
@@ -19,6 +20,7 @@ criterion_provider.register_object('VolumetricMultiDim', VolumetricMultiDim)
 criterion_provider.register_object('CanonicalCorrelation', CanonicalCorrelation)
 criterion_provider.register_object('RR_AE', RR_AE)
 criterion_provider.register_object('CR_CCA', CR_CCA)
+criterion_provider.register_object('DCCAE', DCCAE)
 
 
 __all__ = [

@@ -53,7 +53,7 @@ class TestSpatialMultiDim(unittest.TestCase):
             dim_cls=dim_cls,
             input_dim=2,
             estimator_setting=estimator_setting,
-            cca_setting=Setting(class_type=CanonicalCorrelation, args={})
+            cca_args={}
         )
         total_loss, raw_losses = criterion(output)
         self.assertAlmostEqual(total_loss.item(), 10.9177, places=3)
