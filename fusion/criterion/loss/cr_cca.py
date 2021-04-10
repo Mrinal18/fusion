@@ -4,6 +4,7 @@ from fusion.criterion.loss import ABaseLoss
 from fusion.criterion.loss.dim import CR_MODE
 from fusion.criterion.loss.multi_dim import SpatialMultiDim, VolumetricMultiDim
 from fusion.criterion.misc.utils import total_loss_summation
+from fusion.criterion.misc import CanonicalCorrelation
 from fusion.model.misc import ModelOutput
 from fusion.utils import Setting
 
@@ -32,7 +33,7 @@ class CR_CCA(ABaseLoss):
         self,
         dim_cls: List[int],
         estimator_setting: Setting,
-        cca_setting: Setting,
+        cca_args: Dict[str, Any] = {},
         input_dim: int = 2,
     ):
         # ToDo: Add references to CanonicalCorrelation
@@ -43,7 +44,7 @@ class CR_CCA(ABaseLoss):
             dim_cls: A list of scalars, where each number should correspond to the output width for one of the convolutional layers.
                             The information between latent variable z and the convolutional feature maps width widths in dim_cls are maximized.
             estimator_setting: Setting for Mutual Information estimator. See ABaseMIEstimator for details.
-            cca_setting: See CanonicalCorrelation
+            cca_args: See CanonicalCorrelation
             input_dim: The number of input dimensions, e.g. an image is 2-dimensional (input_dim=2) and a volume is 3-dimensional (input_dim=3), default=2
         Returns:
             Instance of CR_CCA
@@ -56,7 +57,7 @@ class CR_CCA(ABaseLoss):
             modes=[CR_MODE],
             weights=[1.]
         )
-        self._cca_loss = cca_setting.class_type(**cca_setting.args)
+        self._cca_loss = CanonicalCorrelation(**cca_args)
 
     def forward(
         self,
