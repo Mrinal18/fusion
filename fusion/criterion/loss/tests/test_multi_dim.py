@@ -59,8 +59,9 @@ class TestSpatialMultiDim(unittest.TestCase):
             6.1393, 0.0019, 9.5305, 0.5373, # CR
             6.1271, 0.0017, 11.8385, 1.0670, # XX
             11.5989, 1.8206, 12.1579, 2.2010, # CC
-            2.0436, 7.1816e-05, 0.2619, 2.9756 # RR
+            2.0716, 0.0006, 2.07499, 0.0006 # RR
         ]
+        self.assertAlmostEqual(total_loss.item(), 67.1699, places=3)
         for i, (_, loss) in enumerate(raw_losses.items()):
             self.assertAlmostEqual(loss, losses[i], places=3)
 
