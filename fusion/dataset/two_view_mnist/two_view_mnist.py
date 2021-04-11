@@ -70,7 +70,7 @@ class TwoViewMnist(ABaseDataset):
         for set_id in [SetId.TRAIN, SetId.TEST]:
             train = True if set_id == SetId.TRAIN else False
             transforms = self._prepare_transforms(set_id)
-            download=True
+            download = True
             if os.path.exists(self._dataset_dir):
                 download = False
             dataset = torchvision.datasets.MNIST(
