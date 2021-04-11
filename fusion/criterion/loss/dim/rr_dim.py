@@ -20,7 +20,7 @@ class RrDim(BaseDim):
                         rep_source_id_one, rep_source_id_two, dim_conv_latent
                     )
                     loss, penalty = self._estimator(
-                        rep_one[dim_conv_latent], rep_one[dim_conv_latent]
+                        rep_one[dim_conv_latent], rep_two[dim_conv_latent]
                     )
                     total_loss, raw_losses = self._update_loss(
                         name, total_loss, raw_losses, loss, penalty

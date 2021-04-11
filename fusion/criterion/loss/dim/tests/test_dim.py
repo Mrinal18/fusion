@@ -73,11 +73,12 @@ class TestDim(unittest.TestCase):
         objective = RrDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
-        self.assertAlmostEqual(raw_losses[raw_keys[0]], 1.7178, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[1]], 12.3758, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[2]], 1.6673, places=3)
-        self.assertAlmostEqual(raw_losses[raw_keys[3]], 11.3357, places=3)
-        self.assertAlmostEqual(loss.item(), 27.0966, places=3)
+        print (loss, raw_losses)
+        self.assertAlmostEqual(raw_losses[raw_keys[0]], 2.0777, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[1]], 10.9743, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[2]], 2.0887, places=3)
+        self.assertAlmostEqual(raw_losses[raw_keys[3]], 10.9743, places=3)
+        self.assertAlmostEqual(loss.item(), 26.1152, places=3)
 
 
 if __name__ == '__main__':
