@@ -50,13 +50,14 @@ class TestSpatialMultiDim(unittest.TestCase):
             estimator_setting=estimator_setting,
         )
         total_loss, raw_losses = criterion(output)
-        self.assertAlmostEqual(total_loss.item(), 4.4976, places=3)
+        print(total_loss, raw_losses)
+        self.assertAlmostEqual(total_loss.item(), 8.2415, places=3)
         self.assertAlmostEqual(raw_losses['AE_0'], 0.5844, places=3)
         self.assertAlmostEqual(raw_losses['AE_1'], 0.5333, places=3)
-        self.assertAlmostEqual(raw_losses['RR1_0_1_loss'], 0.0499, places=3)
-        self.assertAlmostEqual(raw_losses['RR1_0_1_penalty'], 1.6309, places=3)
-        self.assertAlmostEqual(raw_losses['RR1_1_0_loss'], 0.1307, places=3)
-        self.assertAlmostEqual(raw_losses['RR1_1_0_penalty'], 1.5682, places=3)
+        self.assertAlmostEqual(raw_losses['RR1_0_1_loss'], 3.3395, places=3)
+        self.assertAlmostEqual(raw_losses['RR1_0_1_penalty'], 0.1808, places=3)
+        self.assertAlmostEqual(raw_losses['RR1_1_0_loss'], 3.4225, places=3)
+        self.assertAlmostEqual(raw_losses['RR1_1_0_penalty'], 0.1808, places=3)
 
 
 if __name__ == '__main__':
