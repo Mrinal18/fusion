@@ -1,20 +1,18 @@
 import abc
-from dataclasses import dataclass
-
-
+from enum import auto
 from typing import Dict, List, Optional
+
+from strenum import LowercaseStrEnum
 
 import torch
 from torch.utils.data import DataLoader
 
 
-@dataclass
-class SetId():
-    TRAIN = 'train'
-    TEST = 'test'
-    VALID = 'valid'
-    INFER = 'infer'
-
+class SetId(LowercaseStrEnum):
+    TRAIN: 'SetId' = auto()  # type: ignore
+    TEST: 'SetId' = auto()  # type: ignore
+    VALID: 'SetId' = auto()  # type: ignore
+    INFER: 'SetId' = auto()  # type: ignore
 
 
 class ABaseDataset(abc.ABC):
