@@ -14,11 +14,12 @@ class TestDcganDecoder(unittest.TestCase):
         dim_l = 4
         batch_size = 2
         # create encoder
-        encoder = DcganDecoder(dim_in, dim_h, dim_l, input_size=input_size)
+        decoder = DcganDecoder(dim_in, dim_h, dim_l,
+                               input_size=input_size)
         # create input
         z = torch.rand(batch_size, dim_l)
         # forward pass
-        output = encoder(z)
+        output = decoder(z)
         self.assertEqual(len(output), 2)
         x, latents = output
         # check outputs
