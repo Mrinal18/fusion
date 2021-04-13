@@ -44,13 +44,19 @@ class AMultiSourceModel(BaseModel):
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
     def get_encoder_list(self):
         return self._encoder
 
 =======
 >>>>>>> Refactor _model to _encoder
+<<<<<<< HEAD
 =======
 >>>>>>> Refactor _model to _encoder
+=======
+>>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
 
 class AUniSourceModel(BaseModel):
     @abc.abstractmethod
@@ -74,4 +80,8 @@ class AUniSourceModel(BaseModel):
 >>>>>>> Fix the hybrid config and add some fixes to make code run
 =======
 
+<<<<<<< HEAD
 >>>>>>> Fix the hybrid config and add some fixes to make code run
+=======
+>>>>>>> 79e50b21987b2c53682c9e251827af18f6a8eaeb
+>>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
