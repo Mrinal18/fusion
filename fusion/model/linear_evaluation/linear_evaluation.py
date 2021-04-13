@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 from fusion.architecture.base_block import Flatten
 =======
 from fusion.utils.utils import Flatten
@@ -7,6 +8,9 @@ from fusion.utils.utils import Flatten
 =======
 from fusion.architecture.base_block import Flatten
 >>>>>>> Merge
+=======
+from fusion.architecture.base_block import Flatten
+>>>>>>> 79e50b21987b2c53682c9e251827af18f6a8eaeb
 import torch
 import torch.nn as nn
 
