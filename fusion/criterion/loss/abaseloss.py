@@ -1,13 +1,21 @@
 import abc
+
+from typing import Optional, Tuple, Any, Dict
+
 import torch.nn as nn
+from torch import Tensor
+
+from fusion.model.misc import ModelOutput
 
 
 class ABaseLoss(abc.ABC, nn.Module):
-    _loss = None
-
     @abc.abstractmethod
     def __init__(self):
-        super(ABaseLoss, self).__init__()
+        super().__init__()
 
-    def forward(self, input, target):
+    def forward(
+        self,
+        preds: ModelOutput,
+        target: Optional[Tensor] = None
+    ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         pass

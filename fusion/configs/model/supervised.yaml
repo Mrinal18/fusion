@@ -1,8 +1,0 @@
-# @package _group_
-name: "Supervised"
-args:
-  dim_l: ${global.dim_l}
-  num_classes: ???
-  architecture: ${architecture.name}
-  architecture_params: ${architecture.args}
-  pretrained_checkpoint: ${global.pretrained_checkpoint}

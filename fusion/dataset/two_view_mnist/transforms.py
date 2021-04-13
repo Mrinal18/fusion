@@ -1,33 +1,72 @@
 import torch
+from torch import Tensor
 from torchvision import transforms
 
+from fusion.dataset.abasetransform import ABaseTransform
 
-class UnitIntervalScale(object):
+
+class UnitIntervalScale(ABaseTransform):
     def __call__(self, x):
+        """
+        Make  Unit Interval Scale transform
+        Args:
+            x: Input tensor
+        Return:
+            Transform tensor
+        """
+
         x = (x - x.min()) / (x.max() - x.min())
         return x
 
 
-class RandomRotation(object):
-    def __init__(self, degrees=45):
+class RandomRotation(ABaseTransform):
+    def __init__(self, degrees : int = 45):
+        """
+        Initialization  Class Random Rotation transform
+        Args:
+            degrees: Max angle
+        Return:
+            Class Random Rotation transform
+        """
         self.random_rotation = transforms.RandomRotation(degrees, fill=(0,))
 
     def __call__(self, x):
+        """
+        Make  Random Rotation transform
+        Args:
+            x: Input tensor
+        Return:
+            Transform tensor
+        """
         x = self.random_rotation(x)
         x = transforms.ToTensor()(x)
         return x
 
 
-class UniformNoise(object):
-    def __call__(self, x):
+class UniformNoise(ABaseTransform):
+    def __call__(self, x) -> Tensor:
+        """
+        Make  Uniform Noise transform
+        Args:
+            x: Input tensor
+        Return:
+            Transform tensor
+        """
         x = transforms.ToTensor()(x)
         x = x + torch.rand(x.size())
         x = torch.clamp(x, min=0., max=1.)
         return x
 
 
-class TwoViewMnistTransform(object):
+class TwoViewMnistTransform(ABaseTransform):
     def __call__(self, x):
+        """
+        Make  Two View Mnist transform
+        Args:
+            x: Input tensor
+        Return:
+            Transform tensor
+        """
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)
         x = transforms.ToPILImage()(x)
@@ -37,8 +76,15 @@ class TwoViewMnistTransform(object):
         return (v1, v2)
 
 
-class RandomRotationTransform(object):
+class RandomRotationTransform(ABaseTransform):
     def __call__(self, x):
+        """
+        Make  Random Rotation transform
+        Args:
+            x: Input tensor
+        Return:
+             Transform tensor
+        """
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)
         x = transforms.ToPILImage()(x)
@@ -47,8 +93,15 @@ class RandomRotationTransform(object):
         return (x,)
 
 
-class UniformNoiseTransform(object):
+class UniformNoiseTransform(ABaseTransform):
     def __call__(self, x):
+        """
+        Make  Uniform Noise transform
+        Args:
+            x: Input tensor
+        Return:
+             Transform tensor
+        """
         x = transforms.ToTensor()(x)
         x = UnitIntervalScale()(x)
         x = transforms.ToPILImage()(x)

@@ -1,0 +1,12 @@
+name: default
+dir: out
+hydra:
+    run:
+        dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${experiment.task.name}/${experiment.logdir}
+    sweep:
+        dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${experiment.task.name}/${experiment.logdir}
+        subdir: ${hydra.job.num}
+work_dir: ${hydra:runtime.cwd}
+data_dir: ${work_dir}/data/
+defaults:
+  - experiment: two_view_mnist_pretraining

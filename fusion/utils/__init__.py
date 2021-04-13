@@ -1,4 +1,14 @@
 from .object_provider import ObjectProvider
+from collections import namedtuple
 
 
-__all__ = ['ObjectProvider']
+Setting = namedtuple(
+    'Setting',
+    ['class_type', 'args']
+)
+
+
+__all__ = [
+    'ObjectProvider',
+    'Setting'
+]
