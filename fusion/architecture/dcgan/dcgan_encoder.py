@@ -20,6 +20,7 @@ class DcganEncoder(ABaseArchitecture):
         norm_layer_class: TNorm = nn.BatchNorm2d,
         activation_class: TActivation = nn.LeakyReLU,
         weights_initialization_type: str = 'xavier_uniform',
+        use_last_layer: bool = False
     ):
         """
         The DCGAN Encoder class
@@ -35,6 +36,10 @@ class DcganEncoder(ABaseArchitecture):
             norm_layer_class: he type of normalization layer to use, default=nn.BatchNorm2d
             activation_class: The type of non-linear activation function to use, default=nn.LeakyReLU
             weights_initialization_type: The weight initialization type to use, default='xavier_uniform'
+            use_last_later: A boolean variable that determines whether the last convolutional layer is used.
+                            The last convolutional layer results in a flat vector, instead of a spatial feature map.
+                            VAEs are a usecase of this option, because they often use spatial feature maps as input
+                            for their mean and logvar layers.
         """
         super().__init__(
             conv_layer_class=conv_layer_class,
@@ -49,6 +54,7 @@ class DcganEncoder(ABaseArchitecture):
         self._input_size = input_size
         self._flatten = Flatten()
         self._layers: nn.ModuleList
+        self._use_last_layer = use_last_layer
 
         self._construct()
         self.init_weights()
@@ -104,23 +110,25 @@ class DcganEncoder(ABaseArchitecture):
                     }
                 )
             )
-            self._layers.append(
-                BaseConvLayer(
-                    self._conv_layer_class, {
-                        'in_channels': 8 * self._dim_h, 'out_channels': self._dim_l,
-                        'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
-                    },
-                ),
-            )
-        elif self._input_size == 32:
-            self._layers.append(
-                BaseConvLayer(
-                    self._conv_layer_class, {
-                        'in_channels': 4 * self._dim_h, 'out_channels': self._dim_l,
-                        'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
-                    },
+            if self._use_last_layer:
+                self._layers.append(
+                    BaseConvLayer(
+                        self._conv_layer_class, {
+                            'in_channels': 8 * self._dim_h, 'out_channels': self._dim_l,
+                            'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
+                        },
+                    ),
                 )
-            )
+        elif self._input_size == 32:
+            if self._use_last_layer:
+                self._layers.append(
+                    BaseConvLayer(
+                        self._conv_layer_class, {
+                            'in_channels': 4 * self._dim_h, 'out_channels': self._dim_l,
+                            'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
+                        },
+                    )
+                )
         else:
             raise NotImplementedError("DCGAN only supports input square images ' + \
                 'with size 32, 64 in current implementation.")
