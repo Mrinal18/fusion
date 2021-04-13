@@ -1,4 +1,4 @@
-from fusion.architecture.dcgan.vae_encoder import VAEEncoder
+from fusion.architecture.dcgan import VAEEncoder
 import torch
 import unittest
 
@@ -14,7 +14,7 @@ class TestVAEEncoder(unittest.TestCase):
         dim_cls = [8]
         batch_size = 2
         # create encoder
-        encoder = VAEEncoder(dim_in, dim_h, dim_l, dim_cls, 
+        encoder = VAEEncoder(dim_in, dim_h, dim_l, dim_cls,
                              input_size=input_size)
         # create input
         x = torch.rand(batch_size, dim_in, input_size, input_size)

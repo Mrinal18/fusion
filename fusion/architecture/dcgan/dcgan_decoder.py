@@ -7,8 +7,6 @@ from fusion.architecture import ABaseArchitecture
 from fusion.architecture.base_block import BaseConvLayer, Unflatten
 
 
-
-
 class DcganDecoder(ABaseArchitecture):
     def __init__(
         self,
@@ -22,6 +20,7 @@ class DcganDecoder(ABaseArchitecture):
         norm_layer_class: Type[nn.modules.batchnorm._BatchNorm] = nn.BatchNorm2d,
         activation_class: Type[nn.Module] = nn.ReLU,
         weights_initialization_type: str = 'xavier_uniform',
+        use_first_layer: bool = True
     ):
         """
         Class of DCGAN Decoder
@@ -39,6 +38,9 @@ class DcganDecoder(ABaseArchitecture):
             norm_layer_class: The type of normalization layer to use, default=nn.BatchNorm2d
             activation_class: The type of non-linear activation function to use, default=nn.ReLU
             weights_initialization_type: The weight initialization type to use, default='xavier_uniform'
+            use_first_layer: Whether to use the first convolutional layer in the model.
+                             An important usecase is for VAEs, where the first layer is sometimes replaced
+                             by a Linear layer.
         Return:
             Class of DCGAN decoder model
             """
@@ -53,26 +55,32 @@ class DcganDecoder(ABaseArchitecture):
         self._dim_l = dim_l
         self._dim_cls = dim_cls
         self._input_size = input_size
+        self._use_first_layer = use_first_layer
         self._unflatten = Unflatten(input_dim=input_dim)
         self._layers: nn.ModuleList = nn.ModuleList([])
         self._construct()
 
+    @property
+    def num_layers(self):
+        return len(self._layers)
+
     def _construct(self):
         if self._input_size == 64:
-            self._layers.append(
-                BaseConvLayer(
-                    self._conv_layer_class, {
-                        'in_channels':  self._dim_l, 'out_channels': 8 *  self._dim_h,
-                        'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
-                    },
-                    norm_layer_class= self._norm_layer_class, norm_layer_args={
-                        'num_features': 8 * self._dim_h
-                    },
-                    activation_class= self._activation_class, activation_args={
-                        'inplace': True
-                    }
+            if self._use_first_layer:
+                self._layers.append(
+                    BaseConvLayer(
+                        self._conv_layer_class, {
+                            'in_channels':  self._dim_l, 'out_channels': 8 *  self._dim_h,
+                            'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
+                        },
+                        norm_layer_class= self._norm_layer_class, norm_layer_args={
+                            'num_features': 8 * self._dim_h
+                        },
+                        activation_class= self._activation_class, activation_args={
+                            'inplace': True
+                        }
+                    )
                 )
-            )
             self._layers.append(
                 BaseConvLayer(
                     self._conv_layer_class, {
@@ -88,20 +96,21 @@ class DcganDecoder(ABaseArchitecture):
                 )
             )
         elif self._input_size == 32:
-            self._layers.append(
-                BaseConvLayer(
-                    self._conv_layer_class, {
-                        'in_channels': self._dim_l, 'out_channels': 4 * self._dim_h,
-                        'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
-                    },
-                    norm_layer_class=self._norm_layer_class, norm_layer_args={
-                        'num_features': 4 * self._dim_h
-                    },
-                    activation_class=self._activation_class, activation_args={
-                        'inplace': True
-                    }
+            if self._use_first_layer:
+                self._layers.append(
+                    BaseConvLayer(
+                        self._conv_layer_class, {
+                            'in_channels': self._dim_l, 'out_channels': 4 * self._dim_h,
+                            'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
+                        },
+                        norm_layer_class=self._norm_layer_class, norm_layer_args={
+                            'num_features': 4 * self._dim_h
+                        },
+                        activation_class=self._activation_class, activation_args={
+                            'inplace': True
+                        }
+                    )
                 )
-            )
         else:
             raise NotImplementedError("DCGAN only supports input square images ' + \
                 'with size 32, 64 in current implementation.")
@@ -153,7 +162,11 @@ class DcganDecoder(ABaseArchitecture):
             x_hat: A reconstruction of the original input tensor
             latents: The convolutional feature maps, with widths specified by self._dim_cls
         """
-        x_hat = self._unflatten(x)
+        if self._use_first_layer:
+            x_hat = self._unflatten(x)
+        else:
+            x_hat = x
+
         latents = None
         # Adds latent
         if self._dim_cls is not None:

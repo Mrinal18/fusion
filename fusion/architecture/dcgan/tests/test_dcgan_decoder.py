@@ -8,7 +8,7 @@ class TestDcganDecoder(unittest.TestCase):
 
     def test_forward(self):
         # define parameters
-        input_size = 64
+        input_size = 32
         dim_in = 1
         dim_h = 2
         dim_l = 4

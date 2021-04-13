@@ -3,10 +3,9 @@ from .dcgan_decoder import DcganDecoder
 from fusion.architecture import ABaseArchitecture
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 
-class VAE(ABaseArchitecture):
+
+class VAEAutoencoder(ABaseArchitecture):
     def __init__(
         self,
         prior_dist,
@@ -37,7 +36,7 @@ class VAE(ABaseArchitecture):
         return self._qz_x_params
 
     def forward(self, x, K=1):
-        self._qz_x_params = self.enc(x)
+        self._qz_x_params, latents = self.enc(x)
         qz_x = self.qz_x(*self._qz_x_params)
         zs = qz_x.rsample(torch.Size([K]))
         px_z = self.px_z(*self.dec(zs))
