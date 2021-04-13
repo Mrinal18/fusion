@@ -19,46 +19,6 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
     def add_model(self, model_config):
         model_config.args['num_classes'] = self._task.dataset._num_classes
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
-=======
->>>>>>> Fix the hybrid config and add some fixes to make code run
-        model_args = {**model_config.args}
-        model_args.pop('pretrained_checkpoint')
-=======
->>>>>>> Fix the hybrid config and add some fixes to make code run
-<<<<<<< HEAD
-=======
-=======
->>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
-        model_args = {**model_config.args}
-        model_args.pop('pretrained_checkpoint')
->>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
-=======
->>>>>>> Fix the hybrid config and add some fixes to make code run
-=======
-        model_args = {**model_config.args}
-        model_args.pop('pretrained_checkpoint')
->>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
-=======
-<<<<<<< HEAD
->>>>>>> Fix the hybrid config and add some fixes to make code run
-=======
-        model_args = {**model_config.args}
-        model_args.pop('pretrained_checkpoint')
->>>>>>> Latest state. Fixed some bugs with respect hydra. Added pretrained checkpoint
-=======
-        model_args = {**model_config.args}
-        model_args.pop('pretrained_checkpoint')
->>>>>>> 79e50b21987b2c53682c9e251827af18f6a8eaeb
->>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
         self._task.model = model_provider.get(
             model_config.name, **model_args
         )
@@ -71,31 +31,7 @@ class PretrainingTaskBuilder(ATaskBuilder):
     def add_runner(self, runner_config):
         runner_args = {} if runner_config.args is None else runner_config.args
         self._task.runner = runner_provider.get(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
             runner_config.name, **runner_args
-=======
-            runner_config.name, **runner_config.args
->>>>>>> 1) Add linear_evaluation
-=======
-            runner_config.name, **runner_args
->>>>>>> Fix the hybrid config and add some fixes to make code run
-=======
-<<<<<<< HEAD
-            runner_config.name, **runner_config.args
->>>>>>> 1) Add linear_evaluation
-=======
-            runner_config.name, **runner_args
->>>>>>> Fix the hybrid config and add some fixes to make code run
-=======
-            runner_config.name, **runner_args
->>>>>>> 79e50b21987b2c53682c9e251827af18f6a8eaeb
->>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
         )
 
     def add_optimizer(self, optimizer_config):

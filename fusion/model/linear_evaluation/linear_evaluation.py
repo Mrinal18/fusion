@@ -1,28 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
-from fusion.architecture.base_block import Flatten
-=======
 from fusion.utils.utils import Flatten
->>>>>>> 1) Add linear_evaluation
-=======
-from fusion.architecture.base_block import Flatten
->>>>>>> Merge
-=======
-<<<<<<< HEAD
-from fusion.utils.utils import Flatten
->>>>>>> 1) Add linear_evaluation
-=======
-from fusion.architecture.base_block import Flatten
->>>>>>> Merge
-=======
-from fusion.architecture.base_block import Flatten
->>>>>>> 79e50b21987b2c53682c9e251827af18f6a8eaeb
->>>>>>> e5cf134a95eaa2a6953022de8c3bba92126a0633
 import torch
 import torch.nn as nn
 
