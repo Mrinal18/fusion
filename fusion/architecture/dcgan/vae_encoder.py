@@ -2,7 +2,9 @@ from fusion.architecture import ABaseArchitecture
 from fusion.architecture.dcgan import DcganEncoder
 import torch
 import torch.nn as nn
+from torch.nn import functional as F
 
+ETA = 1e-8
 
 class VAEEncoder(ABaseArchitecture):
     def __init__(
@@ -87,8 +89,9 @@ class VAEEncoder(ABaseArchitecture):
         latent, latents = self._dcgan_encoder(x)
         mean = self._mean_layer(latent)
         logvar = self._logvar_layer(latent)
+        scale = F.softmax(logvar, dim=-1) * logvar.size(-1) + ETA
 
-        return (mean, logvar), latents
+        return (mean, scale), latents
 
     def init_weights(self):
         """

@@ -15,11 +15,12 @@ class TestDcganAutoEncoder(unittest.TestCase):
         dim_cls = [8]
         batch_size = 2
         # create encoder
-        encoder = DcganAutoEncoder(dim_in, dim_h, dim_l, dim_cls, input_size=input_size)
+        autoencoder = DcganAutoEncoder(dim_in, dim_h, dim_l,
+                                       dim_cls, input_size=input_size)
         # create input
         x = torch.rand(batch_size, dim_in, input_size, input_size)
         # forward pass
-        output = encoder(x)
+        output = autoencoder(x)
         # check outputs
         self.assertEqual(len(output), 2)
         z, x_hat = output
