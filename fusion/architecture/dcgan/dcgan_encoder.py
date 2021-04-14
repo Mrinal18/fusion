@@ -20,7 +20,7 @@ class DcganEncoder(ABaseArchitecture):
         norm_layer_class: TNorm = nn.BatchNorm2d,
         activation_class: TActivation = nn.LeakyReLU,
         weights_initialization_type: str = 'xavier_uniform',
-        use_last_layer: bool = False
+        use_last_layer: bool = True
     ):
         """
         The DCGAN Encoder class
@@ -132,7 +132,6 @@ class DcganEncoder(ABaseArchitecture):
         else:
             raise NotImplementedError("DCGAN only supports input square images ' + \
                 'with size 32, 64 in current implementation.")
-
 
     def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
         """
