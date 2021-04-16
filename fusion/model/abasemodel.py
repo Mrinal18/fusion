@@ -17,6 +17,8 @@ class ABaseModel(abc.ABC, nn.Module):
          architecture_params:
          """
         super().__init__()
+        self._architecture = architecture
+        self._architecture_params = architecture_params
         self._sources = sources
         self._encoder = nn.ModuleDict({})
         for i, source_id in enumerate(self._sources):
