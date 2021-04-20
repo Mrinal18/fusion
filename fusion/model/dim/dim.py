@@ -121,9 +121,11 @@ class Dim(ABaseModel):
 
     def _find_dim_in(self, conv_latent_size, source_id):
         dim_conv = None
+        dim_in = self._architecture_params['dim_in']
         with torch.no_grad():
             batch_size = 2
-            dim_in = 1
+            source_id_int = 0 if len(dim_in) == 1 else int(source_id)
+            dim_in = self._architecture_params['dim_in'][source_id_int]
             dummy_encoder = self._encoder[source_id].eval()
             if self._conv_layer_class is nn.Conv2d:
                 dummy_batch = torch.FloatTensor(
