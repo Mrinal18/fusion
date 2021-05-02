@@ -36,7 +36,7 @@ The experiments are defined using the Hydra configs (https://hydra.cc/docs/next/
 
 The training pipeline is based on the Catalyst framework (https://catalyst-team.github.io/catalyst/).
 
-### Benchmarks on Two-View Mnist
+### Benchmarks on Two-View MNIST
 
 ![](https://github.com/Entodi/fusion/blob/main/figures/TwoViewMnist_ACC.png?raw=true)
 
