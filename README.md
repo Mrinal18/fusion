@@ -38,8 +38,10 @@ The training pipeline is based on the Catalyst framework (https://catalyst-team.
 
 ### Benchmarks on Two-View Mnist
 
-<img src = “figures/TwoViewMnist_ACC.png”>
-<img src = “figures/MNIST-SVHN_ACC.png”>
+![](https://github.com/Entodi/fusion/blob/main/figures/TwoViewMnist_ACC.png?raw=true)
+
+### Benchmarks on MNIST-SVHN
+![](https://github.com/Entodi/fusion/blob/main/figures/MNIST-SVHN_ACC.png?raw=true)
 
 ---
 ## Questions
