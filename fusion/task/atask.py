@@ -1,8 +1,6 @@
 import abc
-from typing import Optional
-
 from omegaconf import DictConfig
-
+from typing import Optional
 
 
 class ATask(abc.ABC):

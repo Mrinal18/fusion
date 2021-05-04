@@ -1,6 +1,5 @@
 import os
 import copy
-from typing import Dict, List, Optional
 
 from catalyst.data.loader import BatchPrefetchLoaderWrapper
 
@@ -18,50 +17,6 @@ from fusion.dataset.utils import seed_worker
 
 
 class TwoViewMnist(ABaseDataset):
-    def __init__(
-            self,
-            dataset_dir: str,
-            fold: int = 0,
-            num_folds: int = 5,
-            sources: List[int] = [0],
-            batch_size: int = 2,
-            shuffle: bool = False,
-            drop_last: bool = False,
-            num_workers: int = 0,
-            seed: int = 343,
-            prefetch_factor: int = 2,
-            pin_memory: bool = False,
-            persistent_workers: bool = False,
-            num_prefetches: Optional[int] = None,
-    ):
-        """
-
-        dataset_dir:
-        fold:
-        num_folds:
-        sources:
-        batch_size:
-        shuffle:
-        drop_last:
-        num_workers:
-        seed:
-        """
-        super().__init__(
-            dataset_dir,
-            fold=fold,
-            num_folds=num_folds,
-            sources=sources,
-            batch_size=batch_size,
-            shuffle=shuffle,
-            drop_last=drop_last,
-            num_workers=num_workers,
-            seed=seed,
-            prefetch_factor=prefetch_factor,
-            pin_memory=pin_memory,
-            persistent_workers=persistent_workers,
-            num_prefetches=num_prefetches
-        )
-
     def load(self):
         """
 
@@ -88,11 +43,13 @@ class TwoViewMnist(ABaseDataset):
                 self._set_dataloader(dataset, set_id)
 
     def _set_dataloader(self, dataset: Dataset, set_id: SetId):
+        drop_last = True if set_id == SetId.TRAIN else self._drop_last
+        shuffle = True if set_id == SetId.TRAIN else self._shuffle
         data_loader = DataLoader(
             dataset,
             batch_size=self._batch_size,
-            shuffle=self._shuffle,
-            drop_last=self._drop_last,
+            shuffle=shuffle,
+            drop_last=drop_last,
             num_workers=self._num_workers,
             worker_init_fn=seed_worker,
             prefetch_factor=self._prefetch_factor,
@@ -149,12 +106,3 @@ class TwoViewMnist(ABaseDataset):
         else:
             raise NotImplementedError
         return transforms
-
-    def get_all_loaders(self) -> Dict[SetId, DataLoader]:
-        return super().get_all_loaders()
-
-    def get_cv_loaders(self) -> Dict[SetId, DataLoader]:
-        return super().get_cv_loaders()
-
-    def get_loader(self, set_id) -> DataLoader:
-        return super().get_loader(set_id)

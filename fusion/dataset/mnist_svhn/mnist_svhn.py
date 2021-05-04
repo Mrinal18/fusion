@@ -1,5 +1,4 @@
 from catalyst.data.loader import BatchPrefetchLoaderWrapper
-import copy
 import os
 from typing import Any, Dict, List, Union, Optional
 
@@ -63,7 +62,6 @@ class MnistSvhn(ABaseDataset):
             persistent_workers=persistent_workers,
             num_prefetches=num_prefetches
         )
-        self._sources = sources
         self._indexes: Dict[str, Dict[str, Any]] = {}
         self._mnist_dataset_dir = self._dataset_dir + '/MNIST/'
         self._svhn_dataset_dir = self._dataset_dir + '/SVHN/'
@@ -95,8 +93,8 @@ class MnistSvhn(ABaseDataset):
             sampler_mnist = samplers['mnist'][set_id]
             sampler_svhn = samplers['svhn'][set_id]
             if len(self._sources) == 2:
-                dataset_mnist, indexes_mnist = self._load(set_id, 'mnist')
-                dataset_svhn, indexes_svhn = self._load(set_id, 'svhn')
+                dataset_mnist, indexes_mnist = self._load_subset_dataset(set_id, 'mnist')
+                dataset_svhn, indexes_svhn = self._load_subset_dataset(set_id, 'svhn')
                 self._indexes[set_id] = {}
                 self._indexes[set_id]['mnist'] = indexes_mnist
                 self._indexes[set_id]['svhn'] = indexes_svhn
@@ -115,7 +113,7 @@ class MnistSvhn(ABaseDataset):
                 # collate_fn or tensor dataset with transforms
             else:
                 if self._sources[0] == 0:
-                    dataset_mnist, indexes_mnist = self._load(set_id, 'mnist')
+                    dataset_mnist, indexes_mnist = self._load_subset_dataset(set_id, 'mnist')
                     self._indexes[set_id] = {}
                     self._indexes[set_id]['mnist'] = indexes_mnist
                     dataset = TensorDataset([
@@ -127,7 +125,7 @@ class MnistSvhn(ABaseDataset):
                     ])
                 elif self._sources[0] == 1:
                     self._indexes[set_id] = {}
-                    dataset_svhn, indexes_svhn = self._load(set_id, 'svhn')
+                    dataset_svhn, indexes_svhn = self._load_subset_dataset(set_id, 'svhn')
                     self._indexes[set_id]['svhn'] = indexes_svhn
                     dataset = TensorDataset([
                         ResampleDataset(
@@ -138,8 +136,7 @@ class MnistSvhn(ABaseDataset):
                     ])
             self._set_dataloader(dataset, set_id)
 
-
-    def _load(self, set_id: SetId, dataset_name: str):
+    def _load_subset_dataset(self, set_id: SetId, dataset_name: str):
         # define filename for pair indexes
         if set_id != SetId.TEST:
             filename = f"{set_id}-ms-{dataset_name}-idx-{self._fold}.pt"
@@ -185,11 +182,13 @@ class MnistSvhn(ABaseDataset):
         return dataset, indexes
 
     def _set_dataloader(self, dataset: Dataset, set_id: SetId):
+        drop_last = True if set_id == SetId.TRAIN else self._drop_last
+        shuffle = True if set_id == SetId.TRAIN else self._shuffle
         data_loader = DataLoader(
             dataset,
             batch_size=self._batch_size,
-            shuffle=self._shuffle,
-            drop_last=self._drop_last,
+            shuffle=shuffle,
+            drop_last=drop_last,
             num_workers=self._num_workers,
             worker_init_fn=seed_worker,
             prefetch_factor=self._prefetch_factor,
@@ -224,28 +223,6 @@ class MnistSvhn(ABaseDataset):
         for _ in range(1, self._fold): next(kf_g)
         train_index, valid_index = next(kf.split(X, y))
         return train_index, valid_index
-
-    def get_all_loaders(self):
-        """
-        Return all loaders
-        """
-        return super().get_all_loaders()
-
-    def get_cv_loaders(self):
-        """
-        Return all cross-validation loaders
-        """
-        return super().get_cv_loaders()
-
-    def get_loader(self, set_id: SetId):
-        """
-        Get loader by set_id
-        Args:
-            set_id:
-        Return:
-            Loader by set_id
-        """
-        return super().get_loader(set_id)
 
     @staticmethod
     def _rand_match_on_idx(l1, idx1, l2, idx2, max_d: int = 10000, dm: int = 10):

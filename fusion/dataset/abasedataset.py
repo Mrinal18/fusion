@@ -18,7 +18,6 @@ class SetId():
 
 
 class ABaseDataset(abc.ABC):
-    @abc.abstractmethod
     def __init__(
         self,
         dataset_dir: str,
@@ -58,19 +57,16 @@ class ABaseDataset(abc.ABC):
         """
         pass
 
-    @abc.abstractmethod
     def get_all_loaders(self) -> Dict[SetId, DataLoader]:
         """Returns dictionary with data loaders
         """
         return self._data_loaders
 
-    @abc.abstractmethod
     def get_cv_loaders(self) -> Dict[SetId, DataLoader]:
         """Returns dictionary with cross-validation loaders
         """
         return {set_id: self._data_loaders[set_id] for set_id in [SetId.TRAIN, SetId.VALID]}
 
-    @abc.abstractmethod
     def get_loader(self, set_id: SetId) -> DataLoader:
         """Returns loader with specific set
 
