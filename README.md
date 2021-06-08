@@ -103,11 +103,13 @@ For taxonomy and natural images please cite:
 
 For Neuroimaging please cite:
 ```
-@article{fedorov2020self,
-  title={On self-supervised multi-modal representation learning: An application to Alzheimer's disease},
+@inproceedings{fedorov2021self,
+  title={On Self-Supervised Multimodal Representation Learning: An Application To Alzheimer’s Disease},
   author={Fedorov, Alex and Wu, Lei and Sylvain, Tristan and Luck, Margaux and DeRamus, Thomas P and Bleklov, Dmitry and Plis, Sergey M and Calhoun, Vince D},
-  journal={arXiv preprint arXiv:2012.13619},
-  year={2020}
+  booktitle={2021 IEEE 18th International Symposium on Biomedical Imaging (ISBI)},
+  pages={1548--1552},
+  year={2021},
+  organization={IEEE}
 }
 ```
 
