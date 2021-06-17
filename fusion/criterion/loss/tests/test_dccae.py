@@ -1,7 +1,7 @@
 import torch
 import unittest
 
-from fusion.model import AE
+from fusion.model.ae import AE
 from fusion.criterion.loss import DCCAE
 
 

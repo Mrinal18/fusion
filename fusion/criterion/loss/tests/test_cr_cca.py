@@ -1,7 +1,7 @@
 import torch
 import unittest
 
-from fusion.model import Dim
+from fusion.model.dim import Dim
 from fusion.utils import Setting
 from fusion.criterion.loss import CR_CCA
 

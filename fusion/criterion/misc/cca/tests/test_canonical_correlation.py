@@ -1,4 +1,4 @@
-from fusion.criterion import CanonicalCorrelation
+from fusion.criterion.misc.cca import CanonicalCorrelation
 from fusion.model.misc import ModelOutput
 import torch
 import unittest

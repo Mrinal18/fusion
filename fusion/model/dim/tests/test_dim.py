@@ -1,4 +1,4 @@
-from fusion.model import Dim
+from fusion.model.dim import Dim
 import torch
 import unittest
 
