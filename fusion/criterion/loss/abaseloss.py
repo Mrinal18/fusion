@@ -14,8 +14,6 @@ class ABaseLoss(abc.ABC, nn.Module):
         super().__init__()
 
     def forward(
-        self,
-        preds: ModelOutput,
-        target: Optional[Tensor] = None
+        self, preds: ModelOutput, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         pass

@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) [2019] [Philip Bachman]
@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-'''
+"""
 # Modified work Copyright 2020 Alex Fedorov
 
 
@@ -53,12 +53,11 @@ class ScaledDotProduct(SeparableCritic):
 
 
 class CosineSimilarity(SeparableCritic):
-    def __init__(self, temperature: float = 1.):
+    def __init__(self, temperature: float = 1.0):
         self._temperature = temperature
 
     def __call__(self, x: Tensor, y: Tensor) -> Tensor:
         s = super().__call__(x, y)
-        dim_l = x.size(1)
         x_norm = torch.norm(x, dim=1)
         y_norm = torch.norm(y, dim=1)
         s = s / x_norm

@@ -3,8 +3,4 @@ from .dcgan_decoder import DcganDecoder
 from .dcgan_autoencoder import DcganAutoEncoder
 
 
-__all__ = [
-    'DcganEncoder',
-    'DcganDecoder',
-    'DcganAutoEncoder'
-]
+__all__ = ["DcganEncoder", "DcganDecoder", "DcganAutoEncoder"]

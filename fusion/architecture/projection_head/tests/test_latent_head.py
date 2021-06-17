@@ -1,12 +1,11 @@
 import os
 import torch
-import torch.nn as nn
 import unittest
 
 from fusion.architecture.projection_head import LatentHead
 
 
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
+os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 
 class TestLatentHead(unittest.TestCase):
@@ -19,5 +18,5 @@ class TestLatentHead(unittest.TestCase):
         self.assertEqual(y.size()[1], dim_l)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

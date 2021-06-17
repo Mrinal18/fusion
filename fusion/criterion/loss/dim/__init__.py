@@ -14,14 +14,14 @@ dim_mode_provider.register_object(CC_MODE, CcDim)
 
 
 __all__ = [
-    'BaseDim',
-    'CrDim',
-    'XxDim',
-    'CcDim',
-    'RrDim',
-    'CR_MODE',
-    'RR_MODE',
-    'CC_MODE',
-    'XX_MODE',
-    'dim_mode_provider'
+    "BaseDim",
+    "CrDim",
+    "XxDim",
+    "CcDim",
+    "RrDim",
+    "CR_MODE",
+    "RR_MODE",
+    "CC_MODE",
+    "XX_MODE",
+    "dim_mode_provider",
 ]

@@ -1,4 +1,4 @@
-'''
+"""
 BSD 3-Clause License
 
 Copyright (c) 2018, Devon Hjelm
@@ -28,7 +28,7 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-'''
+"""
 # Modified work Copyright 2020 Alex Fedorov
 
 import torch
@@ -40,12 +40,10 @@ from fusion.criterion.mi_estimator.measure import measure_provider
 
 
 class FenchelDualEstimator(ABaseMIEstimator):
-    def __init__(self, critic_setting, clip_setting=None, penalty_setting=None, measure='JSD'):
-        super().__init__(
-            critic_setting,
-            clip_setting,
-            penalty_setting=penalty_setting
-        )
+    def __init__(
+        self, critic_setting, clip_setting=None, penalty_setting=None, measure="JSD"
+    ):
+        super().__init__(critic_setting, clip_setting, penalty_setting=penalty_setting)
         self._measure = measure_provider.get(measure, **{})
 
     def __call__(self, x: Tensor, y: Tensor):

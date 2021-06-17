@@ -29,13 +29,11 @@ class RR_AE(ABaseLoss):
             dim_cls=[],
             estimator_setting=estimator_setting,
             modes=[RR_MODE],
-            weights=[1.]
+            weights=[1.0],
         )
 
     def forward(
-        self,
-        preds: ModelOutput,
-        target: Optional[Tensor] = None
+        self, preds: ModelOutput, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward pass for the loss.

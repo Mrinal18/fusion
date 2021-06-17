@@ -20,7 +20,7 @@ class UnitIntervalScale(ABaseTransform):
 
 
 class RandomRotation(ABaseTransform):
-    def __init__(self, degrees : int = 45):
+    def __init__(self, degrees: int = 45):
         """
         Initialization  Class Random Rotation transform
         Args:
@@ -54,7 +54,7 @@ class UniformNoise(ABaseTransform):
         """
         x = transforms.ToTensor()(x)
         x = x + torch.rand(x.size())
-        x = torch.clamp(x, min=0., max=1.)
+        x = torch.clamp(x, min=0.0, max=1.0)
         return x
 
 

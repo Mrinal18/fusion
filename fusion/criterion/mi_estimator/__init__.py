@@ -5,13 +5,13 @@ from fusion.utils import ObjectProvider
 
 
 mi_estimator_provider = ObjectProvider()
-mi_estimator_provider.register_object('FenchelDualEstimator', FenchelDualEstimator)
-mi_estimator_provider.register_object('InfoNceEstimator', InfoNceEstimator)
+mi_estimator_provider.register_object("FenchelDualEstimator", FenchelDualEstimator)
+mi_estimator_provider.register_object("InfoNceEstimator", InfoNceEstimator)
 
 
 __all__ = [
-    'mi_estimator_provider',
-    'ABaseMIEstimator',
-    'FenchelDualEstimator',
-    'InfoNceEstimator',
+    "mi_estimator_provider",
+    "ABaseMIEstimator",
+    "FenchelDualEstimator",
+    "InfoNceEstimator",
 ]

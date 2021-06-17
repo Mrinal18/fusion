@@ -1,11 +1,6 @@
 from collections import namedtuple
 
 
-ModelOutput = namedtuple(
-    'ModelOutput',
-    ['z', 'attrs']
-)
+ModelOutput = namedtuple("ModelOutput", ["z", "attrs"])
 
-__all__ = [
-    'ModelOutput'
-]
+__all__ = ["ModelOutput"]

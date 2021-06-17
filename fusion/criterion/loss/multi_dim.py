@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) [2019] [Philip Bachman]
@@ -20,11 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
-
-
-import abc
-from collections import namedtuple
+"""
 from typing import Optional, Tuple, Any, Dict, List
 
 import numpy as np
@@ -34,13 +30,11 @@ from torch import Tensor
 
 from fusion.criterion.loss import ABaseLoss
 from fusion.criterion.loss.dim import dim_mode_provider
-from fusion.criterion.loss.dim import CR_MODE, RR_MODE, \
-    CC_MODE, XX_MODE
+from fusion.criterion.loss.dim import CR_MODE, RR_MODE, CC_MODE, XX_MODE
 from fusion.criterion.mi_estimator import mi_estimator_provider
 from fusion.criterion.misc.utils import total_loss_summation
 from fusion.model.misc import ModelOutput
 from fusion.utils import Setting
-
 
 
 class MultiDim(ABaseLoss):
@@ -49,7 +43,7 @@ class MultiDim(ABaseLoss):
         dim_cls: List[int],
         estimator_setting: Setting,
         modes: List[str] = [CR_MODE, XX_MODE, CC_MODE, RR_MODE],
-        weights: List[float] = [1., 1., 1., 1.],
+        weights: List[float] = [1.0, 1.0, 1.0, 1.0],
     ):
         super().__init__()
         assert len(modes) == len(weights)
@@ -57,18 +51,15 @@ class MultiDim(ABaseLoss):
         self._modes = modes
         self._masks = self._create_masks()
         self._estimator = mi_estimator_provider.get(
-            estimator_setting.class_type,
-            **estimator_setting.args
+            estimator_setting.class_type, **estimator_setting.args
         )
         self._objectives = {}
         for i, mode in enumerate(modes):
             dim_mode_args = {
-                'estimator': self._estimator,
-                'weight': weights[i],
+                "estimator": self._estimator,
+                "weight": weights[i],
             }
-            self._objectives[mode] = dim_mode_provider.get(
-                mode, **dim_mode_args
-            )
+            self._objectives[mode] = dim_mode_provider.get(mode, **dim_mode_args)
 
     def _create_masks(self) -> Dict[int, nn.parameter.Parameter]:
         self._masks = {}
@@ -78,8 +69,9 @@ class MultiDim(ABaseLoss):
         return target.reshape(target.size(0), target.size(1), -1)
 
     @staticmethod
-    def _sample_location(conv_latents: Tensor,
-                         mask: Optional[nn.parameter.Parameter]) -> Tensor:
+    def _sample_location(
+        conv_latents: Tensor, mask: Optional[nn.parameter.Parameter]
+    ) -> Tensor:
         n_batch = conv_latents.size(0)
         n_channels = conv_latents.size(1)
         if mask is not None:
@@ -102,32 +94,27 @@ class MultiDim(ABaseLoss):
             for conv_latent_size in latents[source_id].keys():
                 if conv_latent_size == 1:
                     source = self._sample_location(
-                        latents[source_id][conv_latent_size],
-                        mask=None
+                        latents[source_id][conv_latent_size], mask=None
                     )
                     reps[source_id][conv_latent_size] = source
                 elif conv_latent_size > 1:
                     source = self._sample_location(
                         latents[source_id][conv_latent_size],
-                        mask=self._masks[conv_latent_size]
+                        mask=self._masks[conv_latent_size],
                     )
                     reps[source_id][conv_latent_size] = source
-                    target = self._reshape_target(
-                        latents[source_id][conv_latent_size]
-                    )
+                    target = self._reshape_target(latents[source_id][conv_latent_size])
                     convs[source_id][conv_latent_size] = target
                 else:
                     assert conv_latent_size < 0
         return reps, convs
 
     def forward(
-        self,
-        preds: ModelOutput,
-        target: Optional[Tensor] = None
+        self, preds: ModelOutput, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         del target
         # prepare sources and targets
-        latents = preds.attrs['latents']
+        latents = preds.attrs["latents"]
         reps, convs = self._prepare_reps_convs(latents)
         # compute losses
         total_loss = None
@@ -168,4 +155,3 @@ class VolumetricMultiDim(MultiDim):
             mask = mask.reshape(-1, 1, dim_cl, dim_cl, dim_cl)
             masks[dim_cl] = nn.Parameter(mask, requires_grad=False)
         return masks
-

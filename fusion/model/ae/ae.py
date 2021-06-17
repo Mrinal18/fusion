@@ -7,7 +7,9 @@ from fusion.model.misc import ModelOutput
 
 
 class AE(ABaseModel):
-    def __init__(self, sources: List[int], architecture: str, architecture_params: Dict[str, Any]):
+    def __init__(
+        self, sources: List[int], architecture: str, architecture_params: Dict[str, Any]
+    ):
         """
         Initialization class of autoencoder model
 
@@ -21,7 +23,9 @@ class AE(ABaseModel):
         """
         super().__init__(sources, architecture, architecture_params)
 
-    def _source_forward(self, source_id: int, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
+    def _source_forward(
+        self, source_id: int, x: Tensor
+    ) -> Tuple[Tensor, Dict[int, Tensor]]:
         """
 
         source_id:
@@ -46,16 +50,16 @@ class AE(ABaseModel):
 
         """
         ret = ModelOutput(z={}, attrs={})
-        ret.attrs['x'] = {}
-        ret.attrs['x_hat'] = {}
-        ret.attrs['latents'] = {}
+        ret.attrs["x"] = {}
+        ret.attrs["x_hat"] = {}
+        ret.attrs["latents"] = {}
         for source_id, _ in self._encoder.items():
             source_id_int = int(source_id)
             if len(self._sources) == 1:
                 source_id_int = 0
             z, x_hat = self._source_forward(source_id, x)
             ret.z[int(source_id)] = z
-            ret.attrs['latents'][int(source_id)] = {1: z}
-            ret.attrs['x'][int(source_id)] = x[source_id_int]
-            ret.attrs['x_hat'][int(source_id)] = x_hat
+            ret.attrs["latents"][int(source_id)] = {1: z}
+            ret.attrs["x"][int(source_id)] = x[source_id_int]
+            ret.attrs["x_hat"][int(source_id)] = x_hat
         return ret

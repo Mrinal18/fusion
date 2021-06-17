@@ -18,7 +18,7 @@ class ABaseArchitecture(abc.ABC, nn.Module):
         norm_layer_class: TNorm = None,
         dp_layer_class: Optional[TDropout] = None,
         activation_class: Optional[TActivation] = None,
-        weights_initialization_type: Optional[str] = None
+        weights_initialization_type: Optional[str] = None,
     ):
         """
 
@@ -38,8 +38,7 @@ class ABaseArchitecture(abc.ABC, nn.Module):
 
     @abc.abstractmethod
     def init_weights(self):
-        """Weight initialization
-        """
+        """Weight initialization"""
         pass
 
     def get_layers(self):

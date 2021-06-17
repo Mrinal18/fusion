@@ -14,7 +14,7 @@ class Supervised(ABaseModel):
         num_classes: int,
         sources: List[int],
         architecture: str,
-        architecture_params: Dict[str, Any]
+        architecture_params: Dict[str, Any],
     ):
         """
 

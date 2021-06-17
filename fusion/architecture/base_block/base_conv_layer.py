@@ -1,10 +1,15 @@
-from typing import Any, Dict, Optional, Tuple, Type
+from typing import Any, Dict, Optional, Tuple
 
 import torch.nn as nn
 from torch import Tensor
 
-from fusion.architecture.abasearchitecture import ABaseArchitecture, \
-    TActivation, TDropout, TConv, TNorm
+from fusion.architecture.abasearchitecture import (
+    ABaseArchitecture,
+    TActivation,
+    TDropout,
+    TConv,
+    TNorm,
+)
 
 
 class BaseConvLayer(ABaseArchitecture):
@@ -14,11 +19,11 @@ class BaseConvLayer(ABaseArchitecture):
         conv_layer_args: Dict[str, Any],
         norm_layer_class: Optional[TNorm] = None,
         norm_layer_args: Dict[str, Any] = {},
-        dp_layer_class: Optional[TDropout] =None,
+        dp_layer_class: Optional[TDropout] = None,
         dp_layer_args: Dict[str, Any] = {},
         activation_class: Optional[TActivation] = None,
         activation_args: Dict[str, Any] = {},
-        weights_initialization_type: str = 'xavier_uniform'
+        weights_initialization_type: str = "xavier_uniform",
     ):
         """
         Base class of the convolution layer, this class allows the specification of the following sub-layers in order of appearing in the forward function:
@@ -48,24 +53,17 @@ class BaseConvLayer(ABaseArchitecture):
             norm_layer_class=norm_layer_class,
             dp_layer_class=dp_layer_class,
             activation_class=activation_class,
-            weights_initialization_type=weights_initialization_type
+            weights_initialization_type=weights_initialization_type,
         )
         self._layer = nn.ModuleList()
-        #print (conv_layer_args)
-        self._layer.append(
-            self._conv_layer_class(**conv_layer_args))
+        # print (conv_layer_args)
+        self._layer.append(self._conv_layer_class(**conv_layer_args))
         if self._norm_layer_class:
-            self._layer.append(
-                self._norm_layer_class(**norm_layer_args)
-            )
+            self._layer.append(self._norm_layer_class(**norm_layer_args))
         if self._dp_layer_class:
-            self._layer.append(
-                self._dp_layer_class(**dp_layer_args)
-            )
+            self._layer.append(self._dp_layer_class(**dp_layer_args))
         if self._activation_class:
-            self._layer.append(
-                self._activation_class(**activation_args)
-            )
+            self._layer.append(self._activation_class(**activation_args))
         self.init_weights()
 
     def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
@@ -84,21 +82,20 @@ class BaseConvLayer(ABaseArchitecture):
             x = layer(x)
         return x, conv_latent
 
-    def init_weights(self, gain_type: str = 'relu'):
+    def init_weights(self, gain_type: str = "relu"):
         """
         Method for initialization weights
         Returns:
             Layer with initialization weights
 
         """
-        if self._weights_initialization_type == 'xavier_uniform':
+        if self._weights_initialization_type == "xavier_uniform":
             nn.init.xavier_uniform_(
                 self._layer[0].weight, gain=nn.init.calculate_gain(gain_type)
-
             )
             if not isinstance(self._layer[0].bias, type(None)):
                 nn.init.constant_(self._layer[0].bias, 0)
-        elif self._weights_initialization_type == 'skip':
+        elif self._weights_initialization_type == "skip":
             pass
         else:
             raise NotImplementedError

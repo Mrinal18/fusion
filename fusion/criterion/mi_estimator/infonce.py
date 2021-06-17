@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) [2019] [Philip Bachman]
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 # Modified work Copyright 2020 Alex Fedorov
 
 
@@ -55,23 +55,24 @@ class InfoNceEstimator(ABaseMIEstimator):
         pos_mask = pos_mask.to(x.device)
 
         # bs x bs x x_locs x y_locs
-        pos_scores = (pos_mask * scores)
+        pos_scores = pos_mask * scores
         pos_scores = pos_scores.reshape(bs, bs, -1)
 
         pos_scores = pos_scores.sum(1)
 
         neg_mask = 1 - pos_mask
         # bs x bs x x_locs x y_locs
-        neg_scores = (neg_mask * scores)
+        neg_scores = neg_mask * scores
         # mask self-examples
-        #neg_scores -= 10 * pos_mask
+        # neg_scores -= 10 * pos_mask
         neg_scores -= self._clip.clip_value * pos_mask
         neg_scores = neg_scores.reshape(bs, -1)
         neg_mask = neg_mask.reshape(bs, -1)
         neg_maxes = torch.max(neg_scores, dim=1, keepdim=True)[0]
-        neg_sumexp = (neg_mask * torch.exp(neg_scores - neg_maxes)).sum(dim=1, keepdim=True)
-        all_logsumexp = torch.log(
-            torch.exp(pos_scores - neg_maxes) + neg_sumexp)
+        neg_sumexp = (neg_mask * torch.exp(neg_scores - neg_maxes)).sum(
+            dim=1, keepdim=True
+        )
+        all_logsumexp = torch.log(torch.exp(pos_scores - neg_maxes) + neg_sumexp)
         pos_shiftexp = pos_scores - neg_maxes
         nce_scores = pos_shiftexp - all_logsumexp
         nce_scores = -nce_scores.mean()

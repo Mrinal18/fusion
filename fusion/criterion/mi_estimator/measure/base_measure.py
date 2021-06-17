@@ -1,4 +1,4 @@
-'''
+"""
 BSD 3-Clause License
 
 Copyright (c) 2018, Devon Hjelm
@@ -28,7 +28,7 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-'''
+"""
 # Modified work Copyright 2020 Alex Fedorov
 
 import abc
@@ -53,7 +53,7 @@ def log_sum_exp(x: Tensor, axis: int = 0):
 
 
 class ABaseMeasure(abc.ABC):
-    def __init__(self, average: bool =False):
+    def __init__(self, average: bool = False):
         self._average = average
 
     @abc.abstractmethod
@@ -80,11 +80,11 @@ class GanMeasure(ABaseMeasure):
 
 class JsdMeasure(ABaseMeasure):
     def get_positive_expectation(self, p: Tensor) -> Tensor:
-        Ep = math.log(2.) - F.softplus(-p)
+        Ep = math.log(2.0) - F.softplus(-p)
         return self._if_average(Ep)
 
     def get_negative_expectation(self, q: Tensor) -> Tensor:
-        Eq = F.softplus(-q) + q - math.log(2.)
+        Eq = F.softplus(-q) + q - math.log(2.0)
         return self._if_average(Eq)
 
 
@@ -94,7 +94,7 @@ class X2Measure(ABaseMeasure):
         return self._if_average(Ep)
 
     def get_negative_expectation(self, q: Tensor) -> Tensor:
-        Eq = -0.5 * ((torch.sqrt(q ** 2) + 1.) ** 2)
+        Eq = -0.5 * ((torch.sqrt(q ** 2) + 1.0) ** 2)
         return self._if_average(Eq)
 
 
@@ -104,7 +104,7 @@ class KLMeasure(ABaseMeasure):
         return self._if_average(Ep)
 
     def get_negative_expectation(self, q: Tensor) -> Tensor:
-        Eq = torch.exp(q - 1.)
+        Eq = torch.exp(q - 1.0)
         return self._if_average(Eq)
 
 
@@ -114,7 +114,7 @@ class RKLMeasure(ABaseMeasure):
         return self._if_average(Ep)
 
     def get_negative_expectation(self, q: Tensor) -> Tensor:
-        Eq = q - 1.
+        Eq = q - 1.0
         return self._if_average(Eq)
 
 
@@ -130,11 +130,11 @@ class DVMeasure(ABaseMeasure):
 
 class H2Measure(ABaseMeasure):
     def get_positive_expectation(self, p: Tensor) -> Tensor:
-        Ep = 1. - torch.exp(-p)
+        Ep = 1.0 - torch.exp(-p)
         return self._if_average(Ep)
 
     def get_negative_expectation(self, q: Tensor) -> Tensor:
-        Eq = torch.exp(q) - 1.
+        Eq = torch.exp(q) - 1.0
         return self._if_average(Eq)
 
 

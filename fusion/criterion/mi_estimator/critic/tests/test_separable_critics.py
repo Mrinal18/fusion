@@ -27,5 +27,5 @@ class TestSeparableCritics(unittest.TestCase):
         self.assertAlmostEqual(score, 2.8963, places=4)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -1,12 +1,11 @@
 import os
 import torch
-import torch.nn as nn
 import unittest
 
 from fusion.architecture.projection_head import ConvHead
 
 
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
+os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 
 class TestConvHead(unittest.TestCase):
@@ -20,5 +19,5 @@ class TestConvHead(unittest.TestCase):
         self.assertEqual(y.size()[1], dim_l)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

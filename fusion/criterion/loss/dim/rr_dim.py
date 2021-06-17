@@ -1,7 +1,7 @@
 from fusion.criterion.loss.dim import BaseDim
 
 
-RR_MODE = 'RR'
+RR_MODE = "RR"
 
 
 class RrDim(BaseDim):
@@ -28,5 +28,4 @@ class RrDim(BaseDim):
         return total_loss, raw_losses
 
     def _name_it(self, rep_source_id, conv_source_id, dim_conv):
-        return f"{self._name}{dim_conv}_" \
-               f"{rep_source_id}_{conv_source_id}"
+        return f"{self._name}{dim_conv}_" f"{rep_source_id}_{conv_source_id}"

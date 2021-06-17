@@ -29,10 +29,7 @@ class TwoViewMnist(ABaseDataset):
             if os.path.exists(self._dataset_dir):
                 download = False
             dataset = torchvision.datasets.MNIST(
-                self._dataset_dir,
-                train=train,
-                download=download,
-                transform=transforms
+                self._dataset_dir, train=train, download=download, transform=transforms
             )
             if set_id == SetId.TRAIN:
                 self._set_num_classes(dataset.targets)
@@ -54,7 +51,7 @@ class TwoViewMnist(ABaseDataset):
             worker_init_fn=seed_worker,
             prefetch_factor=self._prefetch_factor,
             persistent_workers=self._persistent_workers,
-            pin_memory=self._pin_memory
+            pin_memory=self._pin_memory,
         )
         set_id = SetId.INFER if set_id == SetId.TEST else set_id
         if torch.cuda.is_available() and self._num_prefetches is not None:
@@ -68,13 +65,12 @@ class TwoViewMnist(ABaseDataset):
 
     def _prepare_fold(self, dataset: torchvision.datasets.MNIST):
         kf = StratifiedKFold(
-            n_splits=self._num_folds,
-            shuffle=True,
-            random_state=self._seed
+            n_splits=self._num_folds, shuffle=True, random_state=self._seed
         )
         X, y = dataset.data, dataset.targets
         kf_g = kf.split(X, y)
-        for _ in range(1, self._fold): next(kf_g)
+        for _ in range(1, self._fold):
+            next(kf_g)
         train_index, valid_index = next(kf.split(X, y))
         valid_dataset = copy.deepcopy(dataset)
         valid_dataset.data = dataset.data[valid_index]
@@ -86,10 +82,7 @@ class TwoViewMnist(ABaseDataset):
         train_dataset.targets = dataset.targets[train_index]
         assert train_dataset.data.size(0) == len(train_index)
         assert train_dataset.targets.size(0) == len(train_index)
-        return {
-            SetId.TRAIN: train_dataset,
-            SetId.VALID: valid_dataset
-        }
+        return {SetId.TRAIN: train_dataset, SetId.VALID: valid_dataset}
 
     def _prepare_transforms(self, set_id: SetId) -> ABaseTransform:
         transforms: ABaseTransform

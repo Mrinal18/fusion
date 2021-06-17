@@ -19,7 +19,7 @@ class DcganEncoder(ABaseArchitecture):
         conv_layer_class: TConv = nn.Conv2d,
         norm_layer_class: TNorm = nn.BatchNorm2d,
         activation_class: TActivation = nn.LeakyReLU,
-        weights_initialization_type: str = 'xavier_uniform',
+        weights_initialization_type: str = "xavier_uniform",
     ):
         """
         The DCGAN Encoder class
@@ -54,77 +54,103 @@ class DcganEncoder(ABaseArchitecture):
         self.init_weights()
 
     def _construct(self):
-        self._layers = nn.ModuleList([
-            BaseConvLayer(
-                self._conv_layer_class, {
-                    'in_channels': self._dim_in, 'out_channels': self._dim_h,
-                    'kernel_size': 4, 'stride': 2, 'padding': 1, 'bias': False
-                },
-                activation_class=self._activation_class, activation_args={
-                    'negative_slope': 0.2, 'inplace': True
-                }
-            ),
-            BaseConvLayer(
-                self._conv_layer_class, {
-                    'in_channels': self._dim_h, 'out_channels': 2 * self._dim_h,
-                    'kernel_size': 4, 'stride': 2, 'padding': 1, 'bias': False
-                },
-                norm_layer_class=self._norm_layer_class, norm_layer_args={
-                    'num_features': 2 * self._dim_h
-                },
-                activation_class=self._activation_class, activation_args={
-                    'negative_slope': 0.2, 'inplace': True
-                }
-            ),
-            BaseConvLayer(
-                self._conv_layer_class, {
-                    'in_channels': 2 * self._dim_h, 'out_channels': 4 * self._dim_h,
-                    'kernel_size': 4, 'stride': 2, 'padding': 1, 'bias': False
-                },
-                norm_layer_class=self._norm_layer_class, norm_layer_args={
-                    'num_features': 4 * self._dim_h
-                },
-                activation_class=self._activation_class, activation_args={
-                    'negative_slope': 0.2, 'inplace': True
-                }
-            ),
-        ])
+        self._layers = nn.ModuleList(
+            [
+                BaseConvLayer(
+                    self._conv_layer_class,
+                    {
+                        "in_channels": self._dim_in,
+                        "out_channels": self._dim_h,
+                        "kernel_size": 4,
+                        "stride": 2,
+                        "padding": 1,
+                        "bias": False,
+                    },
+                    activation_class=self._activation_class,
+                    activation_args={"negative_slope": 0.2, "inplace": True},
+                ),
+                BaseConvLayer(
+                    self._conv_layer_class,
+                    {
+                        "in_channels": self._dim_h,
+                        "out_channels": 2 * self._dim_h,
+                        "kernel_size": 4,
+                        "stride": 2,
+                        "padding": 1,
+                        "bias": False,
+                    },
+                    norm_layer_class=self._norm_layer_class,
+                    norm_layer_args={"num_features": 2 * self._dim_h},
+                    activation_class=self._activation_class,
+                    activation_args={"negative_slope": 0.2, "inplace": True},
+                ),
+                BaseConvLayer(
+                    self._conv_layer_class,
+                    {
+                        "in_channels": 2 * self._dim_h,
+                        "out_channels": 4 * self._dim_h,
+                        "kernel_size": 4,
+                        "stride": 2,
+                        "padding": 1,
+                        "bias": False,
+                    },
+                    norm_layer_class=self._norm_layer_class,
+                    norm_layer_args={"num_features": 4 * self._dim_h},
+                    activation_class=self._activation_class,
+                    activation_args={"negative_slope": 0.2, "inplace": True},
+                ),
+            ]
+        )
         if self._input_size == 64:
             self._layers.append(
                 BaseConvLayer(
-                    self._conv_layer_class, {
-                        'in_channels': 4 * self._dim_h, 'out_channels': 8 * self._dim_h,
-                        'kernel_size': 4, 'stride': 2, 'padding': 1, 'bias': False
+                    self._conv_layer_class,
+                    {
+                        "in_channels": 4 * self._dim_h,
+                        "out_channels": 8 * self._dim_h,
+                        "kernel_size": 4,
+                        "stride": 2,
+                        "padding": 1,
+                        "bias": False,
                     },
-                    norm_layer_class=self._norm_layer_class, norm_layer_args={
-                        'num_features': 8 * self._dim_h
-                    },
-                    activation_class=self._activation_class, activation_args={
-                        'negative_slope': 0.2, 'inplace': True
-                    }
+                    norm_layer_class=self._norm_layer_class,
+                    norm_layer_args={"num_features": 8 * self._dim_h},
+                    activation_class=self._activation_class,
+                    activation_args={"negative_slope": 0.2, "inplace": True},
                 )
             )
             self._layers.append(
                 BaseConvLayer(
-                    self._conv_layer_class, {
-                        'in_channels': 8 * self._dim_h, 'out_channels': self._dim_l,
-                        'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
+                    self._conv_layer_class,
+                    {
+                        "in_channels": 8 * self._dim_h,
+                        "out_channels": self._dim_l,
+                        "kernel_size": 4,
+                        "stride": 2,
+                        "padding": 0,
+                        "bias": False,
                     },
                 ),
             )
         elif self._input_size == 32:
             self._layers.append(
                 BaseConvLayer(
-                    self._conv_layer_class, {
-                        'in_channels': 4 * self._dim_h, 'out_channels': self._dim_l,
-                        'kernel_size': 4, 'stride': 2, 'padding': 0, 'bias': False
+                    self._conv_layer_class,
+                    {
+                        "in_channels": 4 * self._dim_h,
+                        "out_channels": self._dim_l,
+                        "kernel_size": 4,
+                        "stride": 2,
+                        "padding": 0,
+                        "bias": False,
                     },
                 )
             )
         else:
-            raise NotImplementedError("DCGAN only supports input square images ' + \
-                'with size 32, 64 in current implementation.")
-
+            raise NotImplementedError(
+                "DCGAN only supports input square images ' + \
+                'with size 32, 64 in current implementation."
+            )
 
     def forward(self, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
         """
@@ -159,4 +185,4 @@ class DcganEncoder(ABaseArchitecture):
 
         """
         for layer in self._layers:
-            layer.init_weights(gain_type='leaky_relu')
+            layer.init_weights(gain_type="leaky_relu")

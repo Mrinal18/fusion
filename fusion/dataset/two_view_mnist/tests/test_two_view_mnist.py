@@ -8,9 +8,9 @@ class TestTwoViewMnist(unittest.TestCase):
     def test_two_view_mnist(self):
         dataset = TwoViewMnist(
             # TODO: Here hard coded path for the dataset
-            dataset_dir='./data/',
+            dataset_dir="./data/",
             batch_size=1,
-            num_workers=1
+            num_workers=1,
         )
         dataset.load()
         self.assertEqual(dataset.num_classes, 10)
@@ -21,5 +21,5 @@ class TestTwoViewMnist(unittest.TestCase):
         self.assertEqual(len(dataset.get_all_loaders()), 3)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

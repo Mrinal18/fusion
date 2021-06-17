@@ -22,9 +22,7 @@ class CustomCrossEntropyLoss(ABaseLoss):
         self._loss = nn.CrossEntropyLoss(**kwargs)
 
     def forward(
-        self,
-        preds: ModelOutput,
-        target: Optional[Tensor] = None
+        self, preds: ModelOutput, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward method of class Cross Entropy Loss
@@ -58,9 +56,7 @@ class MSELoss(ABaseLoss):
         self._loss = nn.MSELoss(**kwargs)
 
     def forward(
-        self,
-        preds: Tensor,
-        target: Optional[Tensor] = None
+        self, preds: Tensor, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward method of class MSE Loss
@@ -89,9 +85,7 @@ class BCEWithLogitsLoss(ABaseLoss):
         self._loss = nn.BCEWithLogitsLoss(**kwargs)
 
     def forward(
-        self,
-        preds: Tensor,
-        target: Optional[Tensor] = None
+        self, preds: Tensor, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward method of class Binary Cross Entropy with

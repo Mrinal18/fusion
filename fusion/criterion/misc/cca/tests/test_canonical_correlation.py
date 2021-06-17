@@ -27,5 +27,6 @@ class TestCanonicalCorrelation(unittest.TestCase):
         self.assertAlmostEqual(raw_losses[keys[0]], -7.4266, places=3)
         self.assertAlmostEqual(raw_losses[keys[1]], -7.4266, places=3)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

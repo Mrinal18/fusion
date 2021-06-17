@@ -12,7 +12,7 @@ class TestClips(unittest.TestCase):
         return x
 
     def test_tahn_clip(self):
-        clip_value = 10.
+        clip_value = 10.0
         scores = self._generate_data()
         clip = TahnClip(clip_value=clip_value)
         clipped_scores = clip(scores)
@@ -26,5 +26,5 @@ class TestClips(unittest.TestCase):
         self.assertEqual(clipped_score[1].item(), -clip_value)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

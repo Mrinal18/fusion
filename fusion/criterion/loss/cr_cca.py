@@ -28,6 +28,7 @@ def choose_multi_dim(input_dim):
         raise NotImplementedError
     return multi_dim_type
 
+
 class CR_CCA(ABaseLoss):
     def __init__(
         self,
@@ -50,19 +51,14 @@ class CR_CCA(ABaseLoss):
             Instance of CR_CCA
         """
         super().__init__()
-        assert len(dim_cls) > 0, 'CR requires at leas one convolutional feature size'
+        assert len(dim_cls) > 0, "CR requires at leas one convolutional feature size"
         self._cr_loss = choose_multi_dim(input_dim)(
-            dim_cls,
-            estimator_setting=estimator_setting,
-            modes=[CR_MODE],
-            weights=[1.]
+            dim_cls, estimator_setting=estimator_setting, modes=[CR_MODE], weights=[1.0]
         )
         self._cca_loss = CanonicalCorrelation(**cca_args)
 
     def forward(
-        self,
-        preds: ModelOutput,
-        target: Optional[Tensor] = None
+        self, preds: ModelOutput, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward pass for the loss.

@@ -1,6 +1,4 @@
-from fusion.utils import ObjectProvider
-from torch.optim.lr_scheduler import OneCycleLR
+from .scheduler_provider import scheduler_provider
 
 
-scheduler_provider = ObjectProvider()
-scheduler_provider.register_object('OneCycleLR', OneCycleLR)
+__all__ = ["scheduler_provider"]

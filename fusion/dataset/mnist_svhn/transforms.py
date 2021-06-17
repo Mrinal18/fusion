@@ -3,9 +3,8 @@ from torchvision import transforms
 
 
 class SVHNTransform:
-    """
+    """ """
 
-    """
     def __call__(self, x) -> Tensor:
         """
         Make SVHN transform
@@ -19,9 +18,8 @@ class SVHNTransform:
 
 
 class MNISTTransform:
-    """
+    """ """
 
-    """
     def __call__(self, x) -> Tensor:
         """
         Make MNIST transform

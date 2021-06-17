@@ -14,7 +14,7 @@ class LatentHead(ABaseArchitecture):
         use_linear: bool = False,
         use_bias: bool = False,
         use_bn: bool = True,
-        weights_initialization_type: str = 'xavier_uniform',
+        weights_initialization_type: str = "xavier_uniform",
     ):
         """
         Initialization Class of Latent Head model
@@ -39,9 +39,7 @@ class LatentHead(ABaseArchitecture):
         head = nn.ModuleList([])
         if self._use_linear:
             if self._num_h_layers == 0:
-                head.append(
-                    nn.Linear(dim_in, dim_l, bias=use_bias)
-                )
+                head.append(nn.Linear(dim_in, dim_l, bias=use_bias))
             else:
                 assert dim_h != 0
                 # add first hidden layer
@@ -82,6 +80,7 @@ class LatentHead(ABaseArchitecture):
         for layer in self._head:
             if isinstance(layer, nn.Linear):
                 nn.init.xavier_uniform_(
-                    layer.weight, gain=nn.init.calculate_gain('relu'))
+                    layer.weight, gain=nn.init.calculate_gain("relu")
+                )
                 if not isinstance(layer.bias, type(None)):
                     nn.init.constant_(layer.bias, 0)

@@ -1,5 +1,3 @@
-from typing import Optional, Type
-
 import torch
 import torch.nn as nn
 from torch import Tensor
@@ -19,8 +17,8 @@ class ConvHead(ABaseArchitecture):
         conv_layer_class: TConv = nn.Conv2d,
         norm_layer_class: TNorm = nn.BatchNorm2d,
         activation_class: TActivation = nn.ReLU,
-        weights_initialization_type: str = 'xavier_uniform',
-        use_bias: bool = False
+        weights_initialization_type: str = "xavier_uniform",
+        use_bias: bool = False,
     ):
         """
         Initialization of Convolution head model
@@ -42,7 +40,7 @@ class ConvHead(ABaseArchitecture):
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
-            weights_initialization_type=weights_initialization_type
+            weights_initialization_type=weights_initialization_type,
         )
         self._dim_in = dim_in
         self._dim_l = dim_l
@@ -51,52 +49,60 @@ class ConvHead(ABaseArchitecture):
         # add first layer
         self._convolutional_path.append(
             BaseConvLayer(
-                conv_layer_class, {
-                    'in_channels': self._dim_in, 'out_channels': dim_h,
-                    'kernel_size': 1, 'bias': use_bias,
+                conv_layer_class,
+                {
+                    "in_channels": self._dim_in,
+                    "out_channels": dim_h,
+                    "kernel_size": 1,
+                    "bias": use_bias,
                 },
-                norm_layer_class=norm_layer_class, norm_layer_args={
-                    'num_features': dim_h
-                },
-                activation_class=activation_class, activation_args={
-                    'inplace': True
-                },
-                weights_initialization_type=weights_initialization_type
+                norm_layer_class=norm_layer_class,
+                norm_layer_args={"num_features": dim_h},
+                activation_class=activation_class,
+                activation_args={"inplace": True},
+                weights_initialization_type=weights_initialization_type,
             )
         )
         for i in range(1, num_h_layers):
             self._convolutional_path.append(
                 BaseConvLayer(
-                    conv_layer_class, {
-                        'in_channels': dim_h, 'out_channels': dim_h,
-                        'kernel_size': 1, 'bias': use_bias,
+                    conv_layer_class,
+                    {
+                        "in_channels": dim_h,
+                        "out_channels": dim_h,
+                        "kernel_size": 1,
+                        "bias": use_bias,
                     },
-                    norm_layer_class=norm_layer_class, norm_layer_args={
-                        'num_features': dim_h
-                    },
-                    activation_class=activation_class, activation_args={
-                        'inplace': True
-                    },
-                    weights_initialization_type=weights_initialization_type
+                    norm_layer_class=norm_layer_class,
+                    norm_layer_args={"num_features": dim_h},
+                    activation_class=activation_class,
+                    activation_args={"inplace": True},
+                    weights_initialization_type=weights_initialization_type,
                 )
             )
         # add last layer
         self._convolutional_path.append(
             BaseConvLayer(
-                conv_layer_class, {
-                    'in_channels': dim_h, 'out_channels': self._dim_l,
-                    'kernel_size': 1, 'bias': use_bias,
+                conv_layer_class,
+                {
+                    "in_channels": dim_h,
+                    "out_channels": self._dim_l,
+                    "kernel_size": 1,
+                    "bias": use_bias,
                 },
-                weights_initialization_type=weights_initialization_type
+                weights_initialization_type=weights_initialization_type,
             )
         )
 
         self._identity_shortcut = BaseConvLayer(
-            conv_layer_class, {
-                'in_channels': dim_in, 'out_channels': dim_l,
-                'kernel_size': 1, 'bias': use_bias,
+            conv_layer_class,
+            {
+                "in_channels": dim_in,
+                "out_channels": dim_l,
+                "kernel_size": 1,
+                "bias": use_bias,
             },
-            weights_initialization_type='skip'
+            weights_initialization_type="skip",
         )
 
     def init_weights(self):
@@ -115,13 +121,11 @@ class ConvHead(ABaseArchitecture):
         if self._dim_l >= self._dim_in:
             eye_mask = None
             if self._conv_layer_class is nn.Conv3d:
-                eye_mask = torch.zeros(
-                    self._dim_l, self._dim_in, 1, 1, 1, dtype=bool)
+                eye_mask = torch.zeros(self._dim_l, self._dim_in, 1, 1, 1, dtype=bool)
                 for i in range(self._dim_in):
                     eye_mask[i, i, 0, 0, 0] = 1
             elif self._conv_layer_class is nn.Conv2d:
-                eye_mask = torch.zeros(
-                    self._dim_l, self._dim_in, 1, 1, dtype=bool)
+                eye_mask = torch.zeros(self._dim_l, self._dim_in, 1, 1, dtype=bool)
                 for i in range(self._dim_in):
                     eye_mask[i, i, 0, 0] = 1
             else:

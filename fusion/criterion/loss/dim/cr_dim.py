@@ -1,7 +1,7 @@
 from fusion.criterion.loss.dim import BaseDim
 
 
-CR_MODE = 'CR'
+CR_MODE = "CR"
 
 
 class CrDim(BaseDim):
@@ -15,9 +15,7 @@ class CrDim(BaseDim):
             for dim_conv, conv in convs[source_id].items():
                 assert dim_conv_latent in rep.keys()
                 name = self._name_it(source_id, dim_conv)
-                loss, penalty = self._estimator(
-                    conv, rep[dim_conv_latent]
-                )
+                loss, penalty = self._estimator(conv, rep[dim_conv_latent])
                 total_loss, raw_losses = self._update_loss(
                     name, total_loss, raw_losses, loss, penalty
                 )

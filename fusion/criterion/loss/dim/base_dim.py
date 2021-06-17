@@ -22,9 +22,9 @@ class BaseDim(abc.ABC):
 
     def _update_loss(self, name, total_loss, raw_losses, loss, penalty):
         loss = self._weight * loss
-        raw_losses[f'{name}_loss'] = loss.item()
+        raw_losses[f"{name}_loss"] = loss.item()
         total_loss = total_loss_summation(total_loss, loss)
         if penalty is not None:
-            raw_losses[f'{name}_penalty'] = penalty.item()
+            raw_losses[f"{name}_penalty"] = penalty.item()
             total_loss = total_loss_summation(total_loss, penalty)
         return total_loss, raw_losses

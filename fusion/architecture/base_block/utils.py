@@ -3,11 +3,10 @@ from torch import Tensor
 
 
 class Flatten(nn.Module):
-
     def __init__(self):
         """
         Custom Pytorch module that flattens an input tensor
-        
+
         Return:
             Flattened tensor
         """
@@ -16,7 +15,7 @@ class Flatten(nn.Module):
     def forward(self, input_tensor: Tensor) -> Tensor:
         """
         The forward function that receives an input tensor and flattens it
-        
+
         Args:
             input_tensor: Input tensor to flatten
         Return:
@@ -30,7 +29,7 @@ class Unflatten(nn.Module):
     def __init__(self, input_dim: int = 2):
         """
         Custom Pytorch module that unflattens the tensor for a set number of dimensions
-        
+
         Args:
             input_dim: Input dimension, the input tensor is unsqueezed input_dim times
 
@@ -43,7 +42,7 @@ class Unflatten(nn.Module):
     def forward(self, input_tensor: Tensor) -> Tensor:
         """
         The forward function that receives a tensor and unflattens it self.input_dim times
-        
+
         Args:
             input_tensor: Input tensor to unflatten
         Return:

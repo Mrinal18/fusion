@@ -18,5 +18,5 @@ class TestPenalties(unittest.TestCase):
         self.assertAlmostEqual(p, 0.0268, places=4)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

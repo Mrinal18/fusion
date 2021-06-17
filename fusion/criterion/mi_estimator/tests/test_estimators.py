@@ -1,8 +1,5 @@
 from fusion.criterion.mi_estimator import InfoNceEstimator
 from fusion.criterion.mi_estimator import FenchelDualEstimator
-from fusion.criterion.mi_estimator.critic import SeparableCritic
-from fusion.criterion.mi_estimator.clip import TahnClip
-from fusion.criterion.mi_estimator.penalty import L2Penalty
 from fusion.utils import Setting
 import torch
 import unittest
@@ -21,11 +18,12 @@ class TestMIEstimators(unittest.TestCase):
         return x, y
 
     def test_infonce_estimator(self):
-        critic_setting = Setting(class_type='SeparableCritic', args={})
-        clip_setting = Setting(class_type='TahnClip', args={})
-        penalty_setting = Setting(class_type='L2Penalty', args={})
+        critic_setting = Setting(class_type="SeparableCritic", args={})
+        clip_setting = Setting(class_type="TahnClip", args={})
+        penalty_setting = Setting(class_type="L2Penalty", args={})
         estimator = InfoNceEstimator(
-            critic_setting, clip_setting, penalty_setting=penalty_setting)
+            critic_setting, clip_setting, penalty_setting=penalty_setting
+        )
         x, y = self._generate_data()
         score, penalty = estimator(x, y)
         score = score.item()
@@ -34,10 +32,11 @@ class TestMIEstimators(unittest.TestCase):
         self.assertAlmostEqual(penalty, 10.2132, places=3)
 
     def test_fenchel_dual(self):
-        critic_setting = Setting(class_type='SeparableCritic', args={})
-        penalty_setting = Setting(class_type='L2Penalty', args={})
+        critic_setting = Setting(class_type="SeparableCritic", args={})
+        penalty_setting = Setting(class_type="L2Penalty", args={})
         estimator = FenchelDualEstimator(
-            critic_setting, penalty_setting=penalty_setting)
+            critic_setting, penalty_setting=penalty_setting
+        )
         x, y = self._generate_data()
         score, penalty = estimator(x, y)
         score = score.item()
@@ -46,6 +45,5 @@ class TestMIEstimators(unittest.TestCase):
         self.assertAlmostEqual(penalty, 10.2132, places=3)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

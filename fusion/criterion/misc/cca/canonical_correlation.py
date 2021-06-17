@@ -17,7 +17,6 @@ from fusion.criterion.misc.utils import total_loss_summation
 from fusion.model.misc import ModelOutput
 
 import torch
-import torch.nn as nn
 from torch import Tensor
 
 from typing import Optional, Tuple, Any, Dict
@@ -30,7 +29,7 @@ class CanonicalCorrelation(ABaseLoss):
         r1: float = 1e-7,
         r2: float = 1e-7,
         use_all_singular_values: bool = True,
-        num_top_canonical_components: Optional[int] = None
+        num_top_canonical_components: Optional[int] = None,
     ):
         """
         Implementation of the loss functions in the DCCA
@@ -62,9 +61,7 @@ class CanonicalCorrelation(ABaseLoss):
         self._num_canonical_components = num_top_canonical_components
 
     def forward(
-        self,
-        preds: ModelOutput,
-        target: Optional[Tensor] = None
+        self, preds: ModelOutput, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward pass for the loss.
@@ -82,7 +79,7 @@ class CanonicalCorrelation(ABaseLoss):
         for source_id_one, z_one in preds.z.items():
             for source_id_two, z_two in preds.z.items():
                 if source_id_one != source_id_two:
-                    name = f'CCA_{source_id_one}_{source_id_two}'
+                    name = f"CCA_{source_id_one}_{source_id_two}"
                     loss = self._linear_cca(z_one, z_two)
                     raw_losses[name] = loss.item()
                     total_loss = total_loss_summation(total_loss, loss)
@@ -109,17 +106,17 @@ class CanonicalCorrelation(ABaseLoss):
         # Compute covariance matrices and add diagonal so they are
         # positive definite
         sigma_hat12 = (1.0 / (m - 1)) * torch.matmul(h1_bar, h2_bar.t())
-        sigma_hat11 = (1.0 / (m - 1)) * torch.matmul(h1_bar, h1_bar.t()) + \
-            self._r1 * torch.eye(o1, device=h1_bar.device)
-        sigma_hat22 = (1.0 / (m - 1)) * torch.matmul(h2_bar, h2_bar.t()) + \
-            self._r2 * torch.eye(o2, device=h2_bar.device)
+        sigma_hat11 = (1.0 / (m - 1)) * torch.matmul(
+            h1_bar, h1_bar.t()
+        ) + self._r1 * torch.eye(o1, device=h1_bar.device)
+        sigma_hat22 = (1.0 / (m - 1)) * torch.matmul(
+            h2_bar, h2_bar.t()
+        ) + self._r2 * torch.eye(o2, device=h2_bar.device)
 
         # Calculate the root inverse of covariance matrices by using
         # eigen decomposition
-        [d1, v1] = torch.symeig(
-            sigma_hat11, eigenvectors=True)
-        [d2, v2] = torch.symeig(
-            sigma_hat22, eigenvectors=True)
+        [d1, v1] = torch.symeig(sigma_hat11, eigenvectors=True)
+        [d2, v2] = torch.symeig(sigma_hat22, eigenvectors=True)
 
         # Additional code to increase numerical stability
         pos_ind1 = torch.gt(d1, self._eps).nonzero()[:, 0]
@@ -129,16 +126,17 @@ class CanonicalCorrelation(ABaseLoss):
         d2 = d2[pos_ind2]
         v2 = v2[:, pos_ind2]
 
-         # Compute sigma hat matrices using the edited covariance matrices
+        # Compute sigma hat matrices using the edited covariance matrices
         sigma_hat11_root_inv = torch.matmul(
-            torch.matmul(v1, torch.diag(d1 ** -0.5)), v1.t())
+            torch.matmul(v1, torch.diag(d1 ** -0.5)), v1.t()
+        )
         sigma_hat22_root_inv = torch.matmul(
-            torch.matmul(v2, torch.diag(d2 ** -0.5)), v2.t())
+            torch.matmul(v2, torch.diag(d2 ** -0.5)), v2.t()
+        )
 
         # Compute the T matrix, whose matrix trace norm is the loss
         tval = torch.matmul(
-            torch.matmul(sigma_hat11_root_inv, sigma_hat12),
-            sigma_hat22_root_inv
+            torch.matmul(sigma_hat11_root_inv, sigma_hat12), sigma_hat22_root_inv
         )
 
         if self._use_all_singular_values:
@@ -147,9 +145,7 @@ class CanonicalCorrelation(ABaseLoss):
             corr = torch.sqrt(tmp)
         else:
             # just the top self._num_canonical_components singular values are used
-            u, v = torch.symeig(
-                torch.matmul(
-                    tval.t(), tval), eigenvectors=True)
+            u, v = torch.symeig(torch.matmul(tval.t(), tval), eigenvectors=True)
             u = u.topk(self._num_canonical_components)[0]
             corr = torch.sum(torch.sqrt(u))
         return -corr

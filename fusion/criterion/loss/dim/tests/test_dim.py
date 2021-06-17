@@ -27,11 +27,12 @@ class TestDim(unittest.TestCase):
                     reps[source_id][dim_conv] = torch.rand(batch_size, dim_l, 1)
                     convs[source_id][dim_conv] = data
 
-        critic_setting = Setting(class_type='SeparableCritic', args={})
-        clip_setting = Setting(class_type='TahnClip', args={})
-        penalty_setting = Setting(class_type='L2Penalty', args={})
+        critic_setting = Setting(class_type="SeparableCritic", args={})
+        clip_setting = Setting(class_type="TahnClip", args={})
+        penalty_setting = Setting(class_type="L2Penalty", args={})
         estimator = InfoNceEstimator(
-            critic_setting, clip_setting, penalty_setting=penalty_setting)
+            critic_setting, clip_setting, penalty_setting=penalty_setting
+        )
 
         return convs, reps, estimator
 
@@ -73,7 +74,7 @@ class TestDim(unittest.TestCase):
         objective = RrDim(estimator=estimator, weight=1)
         loss, raw_losses = objective(reps, convs)
         raw_keys = list(raw_losses.keys())
-        print (loss, raw_losses)
+        print(loss, raw_losses)
         self.assertAlmostEqual(raw_losses[raw_keys[0]], 2.0777, places=3)
         self.assertAlmostEqual(raw_losses[raw_keys[1]], 10.9743, places=3)
         self.assertAlmostEqual(raw_losses[raw_keys[2]], 2.0887, places=3)
@@ -81,5 +82,5 @@ class TestDim(unittest.TestCase):
         self.assertAlmostEqual(loss.item(), 26.1152, places=3)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

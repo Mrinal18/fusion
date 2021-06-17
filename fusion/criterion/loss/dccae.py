@@ -26,9 +26,7 @@ class DCCAE(ABaseLoss):
         self._cca_loss = CanonicalCorrelation(**cca_args)
 
     def forward(
-        self,
-        preds: ModelOutput,
-        target: Optional[Tensor] = None
+        self, preds: ModelOutput, target: Optional[Tensor] = None
     ) -> Tuple[Optional[Tensor], Dict[str, Any]]:
         """
         Forward pass for the loss.

@@ -9,13 +9,13 @@ from .multi_dim import SpatialMultiDim, VolumetricMultiDim
 
 
 __all__ = [
-    'ABaseLoss',
-    'CustomCrossEntropyLoss',
-    'BCEWithLogitsLoss',
-    'AE',
-    'SpatialMultiDim',
-    'VolumetricMultiDim',
-    'RR_AE',
-    'CR_CCA',
-    'DCCAE'
+    "ABaseLoss",
+    "CustomCrossEntropyLoss",
+    "BCEWithLogitsLoss",
+    "AE",
+    "SpatialMultiDim",
+    "VolumetricMultiDim",
+    "RR_AE",
+    "CR_CCA",
+    "DCCAE",
 ]

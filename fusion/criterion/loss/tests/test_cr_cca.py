@@ -4,8 +4,6 @@ import unittest
 from fusion.model import Dim
 from fusion.utils import Setting
 from fusion.criterion.loss import CR_CCA
-from fusion.criterion.misc import CanonicalCorrelation
-from fusion.criterion.loss.dim import CR_MODE, XX_MODE, RR_MODE, CC_MODE
 
 
 class TestSpatialMultiDim(unittest.TestCase):
@@ -16,13 +14,13 @@ class TestSpatialMultiDim(unittest.TestCase):
         dim_l = 64
         dim_cls = [8]
         input_size = 32
-        architecture = 'DcganEncoder'
+        architecture = "DcganEncoder"
         architecture_params = dict(
             input_size=input_size,
             dim_in=[dim_in, dim_in],
             dim_h=2,
             dim_l=dim_l,
-            dim_cls=dim_cls
+            dim_cls=dim_cls,
         )
         sources = [0, 1]
         batch_size = 8
@@ -34,16 +32,16 @@ class TestSpatialMultiDim(unittest.TestCase):
             x.append(torch.rand(batch_size, dim_in, input_size, input_size))
         # forward pass
         output = model(x)
-        critic_setting = Setting(class_type='SeparableCritic', args={})
-        clip_setting = Setting(class_type='TahnClip', args={})
-        penalty_setting = Setting(class_type='L2Penalty', args={})
+        critic_setting = Setting(class_type="SeparableCritic", args={})
+        clip_setting = Setting(class_type="TahnClip", args={})
+        penalty_setting = Setting(class_type="L2Penalty", args={})
         estimator_setting = Setting(
-            class_type='InfoNceEstimator',
+            class_type="InfoNceEstimator",
             args={
-                'critic_setting': critic_setting,
-                'clip_setting': clip_setting,
-                'penalty_setting': penalty_setting
-            }
+                "critic_setting": critic_setting,
+                "clip_setting": clip_setting,
+                "penalty_setting": penalty_setting,
+            },
         )
         return output, dim_cls, estimator_setting
 
@@ -53,17 +51,17 @@ class TestSpatialMultiDim(unittest.TestCase):
             dim_cls=dim_cls,
             input_dim=2,
             estimator_setting=estimator_setting,
-            cca_args={}
+            cca_args={},
         )
         total_loss, raw_losses = criterion(output)
         self.assertAlmostEqual(total_loss.item(), 10.9177, places=3)
-        self.assertAlmostEqual(raw_losses['CR8_0_loss'], 6.1393, places=3)
-        self.assertAlmostEqual(raw_losses['CR8_0_penalty'], 0.0019, places=3)
-        self.assertAlmostEqual(raw_losses['CR8_1_loss'], 9.5305, places=3)
-        self.assertAlmostEqual(raw_losses['CR8_1_penalty'], 0.5373, places=3)
-        self.assertAlmostEqual(raw_losses['CCA_0_1'], -2.6457, places=3)
-        self.assertAlmostEqual(raw_losses['CCA_1_0'], -2.6457, places=3)
+        self.assertAlmostEqual(raw_losses["CR8_0_loss"], 6.1393, places=3)
+        self.assertAlmostEqual(raw_losses["CR8_0_penalty"], 0.0019, places=3)
+        self.assertAlmostEqual(raw_losses["CR8_1_loss"], 9.5305, places=3)
+        self.assertAlmostEqual(raw_losses["CR8_1_penalty"], 0.5373, places=3)
+        self.assertAlmostEqual(raw_losses["CCA_0_1"], -2.6457, places=3)
+        self.assertAlmostEqual(raw_losses["CCA_1_0"], -2.6457, places=3)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

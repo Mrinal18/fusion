@@ -1,4 +1,4 @@
-'''
+"""
 BSD 3-Clause License
 
 Copyright (c) 2018, Devon Hjelm
@@ -50,7 +50,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 # Modified work Copyright 2020 Alex Fedorov
 
 import abc
@@ -66,23 +66,17 @@ from fusion.criterion.mi_estimator.penalty import penalty_provider
 class ABaseMIEstimator(abc.ABC):
     def __init__(self, critic_setting, clip_setting=None, penalty_setting=None):
         args = {} if critic_setting.args is None else critic_setting.args
-        self._critic = critic_provider.get(
-            critic_setting.class_type, **args
-        )
+        self._critic = critic_provider.get(critic_setting.class_type, **args)
         self._clip = None
         self._penalty = None
         if clip_setting is not None:
             if clip_setting.class_type is not None:
                 args = {} if clip_setting.args is None else clip_setting.args
-                self._clip = clip_provider.get(
-                    clip_setting.class_type, **args
-                )
+                self._clip = clip_provider.get(clip_setting.class_type, **args)
         if penalty_setting is not None:
             if penalty_setting.class_type is not None:
                 args = {} if penalty_setting.args is None else penalty_setting.args
-                self._penalty = penalty_provider.get(
-                    penalty_setting.class_type, **args
-                )
+                self._penalty = penalty_provider.get(penalty_setting.class_type, **args)
 
     @abc.abstractmethod
     def __call__(self, x: Tensor, y: Tensor):

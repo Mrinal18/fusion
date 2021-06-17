@@ -1,4 +1,4 @@
-name: "LinearEvaluationTask"
+name: "linear_evaluation"
 shuffle: True
 drop_last: False
 args:

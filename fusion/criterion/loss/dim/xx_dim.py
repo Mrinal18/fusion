@@ -1,7 +1,7 @@
 from fusion.criterion.loss.dim import BaseDim
 
 
-XX_MODE = 'XX'
+XX_MODE = "XX"
 
 
 class XxDim(BaseDim):
@@ -16,10 +16,10 @@ class XxDim(BaseDim):
                 if rep_source_id != conv_source_id:
                     for dim_conv, conv_latent in conv.items():
                         assert dim_conv_latent in rep.keys()
-                        name = self._name_it(
-                            rep_source_id, conv_source_id, dim_conv)
+                        name = self._name_it(rep_source_id, conv_source_id, dim_conv)
                         loss, penalty = self._estimator(
-                           conv_latent, rep[dim_conv_latent])
+                            conv_latent, rep[dim_conv_latent]
+                        )
                         loss = self._weight * loss
                         total_loss, raw_losses = self._update_loss(
                             name, total_loss, raw_losses, loss, penalty
@@ -27,5 +27,4 @@ class XxDim(BaseDim):
         return total_loss, raw_losses
 
     def _name_it(self, rep_source_id, conv_source_id, dim_conv):
-        return f"{self._name}{dim_conv}_" \
-               f"{rep_source_id}_{conv_source_id}"
+        return f"{self._name}{dim_conv}_" f"{rep_source_id}_{conv_source_id}"

@@ -1,4 +1,4 @@
-name: "PretrainingTask"
+name: "pretraining"
 shuffle: True
 drop_last: True
 args:

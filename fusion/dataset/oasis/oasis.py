@@ -16,7 +16,7 @@ from torchio import Subject, ScalarImage, SubjectsDataset
 
 from fusion.dataset.abasedataset import ABaseDataset, SetId
 from fusion.dataset.utils import seed_worker
-from fusion.task import TaskId
+from fusion.task.misc import TaskId
 
 from .transforms import MNIMaskTransform
 from .transforms import VolumetricRandomCrop
@@ -42,7 +42,7 @@ class Oasis(ABaseDataset):
         use_balanced_sampler: bool = False,
         use_separate_augmentation: bool = False,
         only_labeled: bool = False,
-        task_id: TaskId = TaskId.PRETRAINING
+        task_id: TaskId = TaskId.PRETRAINING,
     ):
         """
         Initialization of Class Oasis dataset
@@ -66,7 +66,7 @@ class Oasis(ABaseDataset):
 
         """
         super().__init__(
-            dataset_dir + f'/{fold}/',
+            dataset_dir + f"/{fold}/",
             fold=fold,
             num_folds=num_folds,
             sources=sources,
@@ -80,7 +80,9 @@ class Oasis(ABaseDataset):
             persistent_workers=persistent_workers,
             num_prefetches=num_prefetches,
         )
-        assert shuffle != use_balanced_sampler, "Sampler and Shuffle do not go together for dataloader in PyTorch"
+        assert (
+            shuffle != use_balanced_sampler
+        ), "Sampler and Shuffle do not go together for dataloader in PyTorch"
         self._is_only_one_pair_per_subject = is_only_one_pair_per_subject
         self._use_balanced_sampler = use_balanced_sampler
         self._use_separate_augmentation = use_separate_augmentation
@@ -91,25 +93,25 @@ class Oasis(ABaseDataset):
         for set_id in [SetId.TRAIN, SetId.VALID, SetId.INFER]:
             list_of_subjects, labels = self._prepare_subject_list(set_id)
             transforms = self._prepare_transforms(
-                set_id, self._use_separate_augmentation)
-            dataset = SubjectsDataset(
-                list_of_subjects,
-                transform=transforms
+                set_id, self._use_separate_augmentation
             )
+            dataset = SubjectsDataset(list_of_subjects, transform=transforms)
             self._set_dataloader(dataset, set_id, labels)
 
     def _set_dataloader(
-        self,
-        dataset: SubjectsDataset,
-        set_id: SetId,
-        labels: List[int]
+        self, dataset: SubjectsDataset, set_id: SetId, labels: List[int]
     ):
         drop_last = self._drop_last
         shuffle = self._shuffle
         if set_id == SetId.TRAIN:
-            sampler = BalanceClassSampler(
-                labels, mode='upsampling',
-            ) if self._use_balanced_sampler else None
+            sampler = (
+                BalanceClassSampler(
+                    labels,
+                    mode="upsampling",
+                )
+                if self._use_balanced_sampler
+                else None
+            )
             drop_last = True
             shuffle = True
             self._set_num_classes(labels)
@@ -123,7 +125,7 @@ class Oasis(ABaseDataset):
                 worker_init_fn=seed_worker,
                 prefetch_factor=self._prefetch_factor,
                 persistent_workers=self._persistent_workers,
-                pin_memory=self._pin_memory
+                pin_memory=self._pin_memory,
             )
         else:
             data_loader = DataLoader(
@@ -135,7 +137,7 @@ class Oasis(ABaseDataset):
                 worker_init_fn=seed_worker,
                 prefetch_factor=self._prefetch_factor,
                 persistent_workers=self._persistent_workers,
-                pin_memory=self._pin_memory
+                pin_memory=self._pin_memory,
             )
         if torch.cuda.is_available() and self._num_prefetches is not None:
             data_loader = BatchPrefetchLoaderWrapper(
@@ -150,32 +152,28 @@ class Oasis(ABaseDataset):
         if self._only_labeled:
             df = self._keep_only_labeled(df)
         list_of_subjects = self._prepare_list_of_torchio_subjects(df, self._sources)
-        labels = df['target'].values
+        labels = df["target"].values
         if set_id == SetId.TRAIN and self._only_labeled:
             self._set_num_classes(labels)
         return (list_of_subjects, labels)
 
     def _prepare_transforms(
-        self,
-        set_id: SetId,
-        use_separate_augmentation: bool = False
+        self, set_id: SetId, use_separate_augmentation: bool = False
     ):
-        assert use_separate_augmentation == False, 'Separate augmentations have not been implemented'
+        assert (
+            use_separate_augmentation is False
+        ), "Separate augmentations have not been implemented"
         self.landmarks = {}
         self.train_histogram_standartization()
         canonical = tio.transforms.ToCanonical()
         mask = MNIMaskTransform()
-        hist_standard = tio.transforms.HistogramStandardization(
-            self.landmarks)
+        hist_standard = tio.transforms.HistogramStandardization(self.landmarks)
         znorm = tio.transforms.ZNormalization(
-            masking_method=tio.transforms.ZNormalization.mean)
+            masking_method=tio.transforms.ZNormalization.mean
+        )
         pad_size = self.input_size // 8
         pad = tio.transforms.Pad(
-            padding=(
-                pad_size, pad_size,
-                pad_size, pad_size,
-                pad_size, pad_size
-            )
+            padding=(pad_size, pad_size, pad_size, pad_size, pad_size, pad_size)
         )
         crop = VolumetricRandomCrop(self.input_size)
         flip = tio.transforms.RandomFlip(axes=(0, 1, 2), p=0.5)
@@ -183,10 +181,7 @@ class Oasis(ABaseDataset):
         transforms.append(hist_standard)
         transforms.append(znorm)
         if (
-            self._task_id in [
-                TaskId.PRETRAINING,
-                TaskId.LINEAR_EVALUATION
-            ]
+            self._task_id in [TaskId.PRETRAINING, TaskId.LINEAR_EVALUATION]
         ) and set_id != SetId.INFER:
             transforms.append(pad)
             transforms.append(crop)
@@ -196,22 +191,22 @@ class Oasis(ABaseDataset):
 
     @staticmethod
     def _drop_duplicate_pairs(df: pd.DataFrame):
-        logging.debug(f'Shape with multiple pairs per subject {df.shape}')
-        df = df.drop_duplicates(subset='subject').reset_index(drop=True)
-        logging.debug(f'Shape with only one pair per subject {df.shape}')
+        logging.debug(f"Shape with multiple pairs per subject {df.shape}")
+        df = df.drop_duplicates(subset="subject").reset_index(drop=True)
+        logging.debug(f"Shape with only one pair per subject {df.shape}")
         return df
 
     @staticmethod
     def _keep_only_labeled(df: pd.DataFrame):
-        logging.debug('Cleaning labels with -1')
+        logging.debug("Cleaning labels with -1")
         df = df[df["target"] != -1].reset_index(drop=True)
-        logging.debug(f'Shape without label -1 {df.shape}')
+        logging.debug(f"Shape without label -1 {df.shape}")
         logging.debug(df["target"].value_counts())
         return df
 
     @staticmethod
     def _load_csv(dataset_dir: str, set_id: SetId):
-        csv_file = os.path.join(dataset_dir, f'{set_id}.csv')
+        csv_file = os.path.join(dataset_dir, f"{set_id}.csv")
         df = pd.read_csv(csv_file)
         return df
 
@@ -224,7 +219,7 @@ class Oasis(ABaseDataset):
                 filename = df[f"filename_{source_id + 1}"].iloc[i]
                 # print (filename)
                 subject_dict[f"source_{source_id}"] = ScalarImage(filename)
-            subject_dict['label'] = df.at[i, "target"]
+            subject_dict["label"] = df.at[i, "target"]
             subject = Subject(subject_dict)
             list_of_subjects.append(subject)
         return list_of_subjects

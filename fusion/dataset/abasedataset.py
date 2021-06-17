@@ -1,18 +1,10 @@
-import abc
-from enum import auto
-from typing import Dict, List, Optional
+from .misc import SetId
 
-from strenum import LowercaseStrEnum
+import abc
+from typing import Dict, List, Optional
 
 import torch
 from torch.utils.data import DataLoader
-
-
-class SetId(LowercaseStrEnum):
-    TRAIN: 'SetId' = auto()  # type: ignore
-    TEST: 'SetId' = auto()  # type: ignore
-    VALID: 'SetId' = auto()  # type: ignore
-    INFER: 'SetId' = auto()  # type: ignore
 
 
 class ABaseDataset(abc.ABC):
@@ -51,19 +43,18 @@ class ABaseDataset(abc.ABC):
 
     @abc.abstractmethod
     def load(self):
-        """Loads the dataset
-        """
+        """Loads the dataset"""
         pass
 
     def get_all_loaders(self) -> Dict[SetId, DataLoader]:
-        """Returns dictionary with data loaders
-        """
+        """Returns dictionary with data loaders"""
         return self._data_loaders
 
     def get_cv_loaders(self) -> Dict[SetId, DataLoader]:
-        """Returns dictionary with cross-validation loaders
-        """
-        return {set_id: self._data_loaders[set_id] for set_id in [SetId.TRAIN, SetId.VALID]}
+        """Returns dictionary with cross-validation loaders"""
+        return {
+            set_id: self._data_loaders[set_id] for set_id in [SetId.TRAIN, SetId.VALID]
+        }
 
     def get_loader(self, set_id: SetId) -> DataLoader:
         """Returns loader with specific set
@@ -75,12 +66,10 @@ class ABaseDataset(abc.ABC):
 
     @property
     def num_classes(self) -> Optional[int]:
-        """Number of classes
-        """
+        """Number of classes"""
         return self._num_classes
 
     @num_classes.setter
     def num_classes(self, value: int):
-        """Number of classes
-        """
+        """Number of classes"""
         self._num_classes = value

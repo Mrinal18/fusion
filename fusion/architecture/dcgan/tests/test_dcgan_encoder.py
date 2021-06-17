@@ -5,7 +5,6 @@ from fusion.architecture.dcgan import DcganEncoder
 
 
 class TestDcganEncoder(unittest.TestCase):
-
     def test_forward(self):
         # define parameters
         input_size = 32
@@ -32,5 +31,5 @@ class TestDcganEncoder(unittest.TestCase):
                 self.assertEqual(len(l.size()), len(x.size()))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

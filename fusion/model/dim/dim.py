@@ -9,6 +9,7 @@ from fusion.architecture.projection_head import ConvHead, LatentHead
 from fusion.model import ABaseModel
 from fusion.model.misc import ModelOutput
 
+
 class Dim(ABaseModel):
     def __init__(
         self,
@@ -30,15 +31,18 @@ class Dim(ABaseModel):
         """
         # create encoders for each source
         super().__init__(sources, architecture, architecture_params)
-        self._input_size = architecture_params['input_size']
-        self._conv_layer_class = architecture_params[
-            'conv_layer_class'] if 'conv_layer_class' in architecture_params.keys() else nn.Conv2d
+        self._input_size = architecture_params["input_size"]
+        self._conv_layer_class = (
+            architecture_params["conv_layer_class"]
+            if "conv_layer_class" in architecture_params.keys()
+            else nn.Conv2d
+        )
         # create convolutional heads
         self._conv_heads = nn.ModuleDict()
         conv_head_params = None
         for source_id in self._encoder.keys():
             self._conv_heads[source_id] = nn.ModuleDict()
-            for conv_latent_size in architecture_params['dim_cls']:
+            for conv_latent_size in architecture_params["dim_cls"]:
                 conv_head_params = self._parse_conv_head_params(
                     conv_head_params, architecture_params, conv_latent_size, source_id
                 )
@@ -56,8 +60,9 @@ class Dim(ABaseModel):
             latent_head.init_weights()
             self._latent_heads[source_id] = latent_head
 
-
-    def _source_forward(self, source_id: int, x: Tensor) -> Tuple[Tensor, Dict[int, Tensor]]:
+    def _source_forward(
+        self, source_id: int, x: Tensor
+    ) -> Tuple[Tensor, Dict[int, Tensor]]:
         source_id_s = str(source_id)
         if len(self._sources) == 1:
             source_id = 0
@@ -67,8 +72,9 @@ class Dim(ABaseModel):
             if conv_latent_size == 1:
                 conv_latent = self._latent_heads[source_id_s](conv_latent)
             elif conv_latent_size > 1:
-                conv_latent = self._conv_heads[source_id_s][
-                    str(conv_latent_size)](conv_latent)
+                conv_latent = self._conv_heads[source_id_s][str(conv_latent_size)](
+                    conv_latent
+                )
             else:
                 assert False
             latents[conv_latent_size] = conv_latent
@@ -84,56 +90,66 @@ class Dim(ABaseModel):
 
         """
         ret = ModelOutput(z={}, attrs={})
-        ret.attrs['latents'] = {}
+        ret.attrs["latents"] = {}
         for source_id, _ in self._encoder.items():
             source_id = int(source_id)
             z, conv_latents = self._source_forward(source_id, x)
             ret.z[int(source_id)] = z
-            ret.attrs['latents'][source_id] = conv_latents
+            ret.attrs["latents"][source_id] = conv_latents
         return ret
 
     def _parse_conv_head_params(
-            self, conv_head_params: Optional[Dict[str, Any]],
-            architecture_params: Dict[str, Any],
-            conv_latent_size: int, source_id: int
+        self,
+        conv_head_params: Optional[Dict[str, Any]],
+        architecture_params: Dict[str, Any],
+        conv_latent_size: int,
+        source_id: int,
     ) -> Dict[str, Any]:
         if conv_head_params is None:
             # by design choice
             conv_head_params = copy.deepcopy(dict(**architecture_params))
-            conv_head_params.pop('dim_cls')
-            conv_head_params.pop('input_size')
-            dim_in = self._find_dim_in(conv_latent_size, source_id) # find the dim_in for dim_conv
-            conv_head_params['dim_in'] = dim_in
-            conv_head_params['dim_h'] = conv_head_params['dim_l']
+            conv_head_params.pop("dim_cls")
+            conv_head_params.pop("input_size")
+            dim_in = self._find_dim_in(
+                conv_latent_size, source_id
+            )  # find the dim_in for dim_conv
+            conv_head_params["dim_in"] = dim_in
+            conv_head_params["dim_h"] = conv_head_params["dim_l"]
         return conv_head_params
 
-    def _parse_latent_head_params(self, latent_head_params: Optional[Dict[str, Any]],
-        architecture_params: Dict[str, Any]
+    def _parse_latent_head_params(
+        self,
+        latent_head_params: Optional[Dict[str, Any]],
+        architecture_params: Dict[str, Any],
     ) -> Dict[str, Any]:
         if latent_head_params is None:
             # by design choice
             latent_head_params = copy.deepcopy(dict(**architecture_params))
-            latent_head_params.pop('dim_cls')
-            latent_head_params.pop('input_size')
-            latent_head_params['dim_in'] = latent_head_params['dim_l']
-            latent_head_params['dim_h'] = latent_head_params['dim_l']
+            latent_head_params.pop("dim_cls")
+            latent_head_params.pop("input_size")
+            latent_head_params["dim_in"] = latent_head_params["dim_l"]
+            latent_head_params["dim_h"] = latent_head_params["dim_l"]
         return latent_head_params
 
     def _find_dim_in(self, conv_latent_size, source_id):
         dim_conv = None
-        dim_in = self._architecture_params['dim_in']
+        dim_in = self._architecture_params["dim_in"]
         with torch.no_grad():
             batch_size = 2
             source_id_int = 0 if len(dim_in) == 1 else int(source_id)
-            dim_in = self._architecture_params['dim_in'][source_id_int]
+            dim_in = self._architecture_params["dim_in"][source_id_int]
             dummy_encoder = self._encoder[source_id].eval()
             if self._conv_layer_class is nn.Conv2d:
                 dummy_batch = torch.FloatTensor(
-                    batch_size, dim_in, self._input_size, self._input_size)
+                    batch_size, dim_in, self._input_size, self._input_size
+                )
             elif self._conv_layer_class is nn.Conv3d:
                 dummy_batch = torch.FloatTensor(
-                    batch_size, dim_in,
-                    self._input_size, self._input_size, self._input_size
+                    batch_size,
+                    dim_in,
+                    self._input_size,
+                    self._input_size,
+                    self._input_size,
                 )
             else:
                 raise NotImplementedError
@@ -143,7 +159,8 @@ class Dim(ABaseModel):
                 if conv_latent.size(-1) == conv_latent_size:
                     dim_conv = conv_latent.size(1)
             if dim_conv is None:
-                assert False, \
-                    f'There is no features with ' \
-                    f'convolutional latent size {conv_latent_size} '
+                assert False, (
+                    f"There is no features with "
+                    f"convolutional latent size {conv_latent_size} "
+                )
         return dim_conv
