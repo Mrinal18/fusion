@@ -1,0 +1,9 @@
+name: "Dim"
+dim_l: ${experiment.dim_l}
+args:
+  sources: ${experiment.sources}
+  architecture: ${experiment.model.architecture.name}
+  architecture_params: ${experiment.model.architecture.args}
+  pretrained_checkpoint: ${experiment.pretrained_checkpoint}
+defaults:
+  - architecture: dcgan_encoder_3d

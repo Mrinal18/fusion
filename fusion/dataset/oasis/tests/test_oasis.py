@@ -7,7 +7,7 @@ class TestOasis(unittest.TestCase):
     @unittest.skip("Skipping Oasis, as it requires OASIS which is not open_sourced")
     def test_oasis(self):
         BATCH_SIZE = 8
-        dataset_dir = "/data/users2/afedorov/trends/oasis/DSLW2/"
+        dataset_dir = "../../../../data/oasis/"
         template = "../../../../data/MNI152_T1_3mm_brain_mask_dil_cubic192.nii.gz"
         dataset = Oasis(
             dataset_dir=dataset_dir,
