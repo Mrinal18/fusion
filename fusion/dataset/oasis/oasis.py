@@ -1,11 +1,11 @@
 import logging
+import numpy as np
 import os
 import pandas as pd
 from typing import List, Optional
 
 from catalyst.data.sampler import BalanceClassSampler
 from catalyst.data.loader import BatchPrefetchLoaderWrapper
-from torch.utils.data.dataloader import DataLoader
 
 import torch
 from torch import Tensor
@@ -29,6 +29,7 @@ class Oasis(ABaseDataset):
         fold: int = 0,
         num_folds: int = 5,
         sources: List[int] = [0],
+        input_size: int = 64,
         batch_size: int = 2,
         shuffle: bool = False,
         drop_last: bool = False,
@@ -43,6 +44,7 @@ class Oasis(ABaseDataset):
         use_separate_augmentation: bool = False,
         only_labeled: bool = False,
         task_id: TaskId = TaskId.PRETRAINING,
+        template: str = './data/MNI152_T1_3mm_brain_mask_dil_cubic192.nii.gz',
     ):
         """
         Initialization of Class Oasis dataset
@@ -66,7 +68,7 @@ class Oasis(ABaseDataset):
 
         """
         super().__init__(
-            dataset_dir + f"/{fold}/",
+            dataset_dir + f"/fold_{fold}/",
             fold=fold,
             num_folds=num_folds,
             sources=sources,
@@ -81,13 +83,16 @@ class Oasis(ABaseDataset):
             num_prefetches=num_prefetches,
         )
         assert (
-            shuffle != use_balanced_sampler
+            not ((shuffle is True) and (use_balanced_sampler is True))
         ), "Sampler and Shuffle do not go together for dataloader in PyTorch"
+        self._input_size = input_size
         self._is_only_one_pair_per_subject = is_only_one_pair_per_subject
         self._use_balanced_sampler = use_balanced_sampler
         self._use_separate_augmentation = use_separate_augmentation
         self._only_labeled = only_labeled
         self._task_id = task_id
+        self._template = template
+        self._landmarks = {}
 
     def load(self):
         for set_id in [SetId.TRAIN, SetId.VALID, SetId.INFER]:
@@ -101,6 +106,7 @@ class Oasis(ABaseDataset):
     def _set_dataloader(
         self, dataset: SubjectsDataset, set_id: SetId, labels: List[int]
     ):
+        sampler = None
         drop_last = self._drop_last
         shuffle = self._shuffle
         if set_id == SetId.TRAIN:
@@ -157,6 +163,28 @@ class Oasis(ABaseDataset):
             self._set_num_classes(labels)
         return (list_of_subjects, labels)
 
+    def _train_histogram_standartization(self):
+        train_dataset_csv = os.path.join(
+            self._dataset_dir, 'train.csv'
+        )
+        train_dataset = pd.read_csv(train_dataset_csv)
+        for source in self._sources:
+            column = f"filename_{source + 1}"
+            df = train_dataset
+            df = df.drop_duplicates(subset=column)
+            df = df.reset_index(drop=True)
+            paths = df[column].values
+            source_landmarks_path = os.path.abspath(os.path.join(
+                self._dataset_dir, f'landmarks_{source + 1}.npy'
+            ))
+            if not os.path.exists(source_landmarks_path):
+                landmarks = tio.HistogramStandardization.train(
+                    paths, output_path=source_landmarks_path,
+                )
+            else:
+                landmarks = np.load(source_landmarks_path)
+            self._landmarks[f'source_{source}'] = landmarks
+
     def _prepare_transforms(
         self, set_id: SetId, use_separate_augmentation: bool = False
     ):
@@ -164,18 +192,18 @@ class Oasis(ABaseDataset):
             use_separate_augmentation is False
         ), "Separate augmentations have not been implemented"
         self.landmarks = {}
-        self.train_histogram_standartization()
+        self._train_histogram_standartization()
         canonical = tio.transforms.ToCanonical()
-        mask = MNIMaskTransform()
-        hist_standard = tio.transforms.HistogramStandardization(self.landmarks)
+        mask = MNIMaskTransform(template=self._template)
+        hist_standard = tio.transforms.HistogramStandardization(self._landmarks)
         znorm = tio.transforms.ZNormalization(
             masking_method=tio.transforms.ZNormalization.mean
         )
-        pad_size = self.input_size // 8
+        pad_size = self._input_size // 8
         pad = tio.transforms.Pad(
             padding=(pad_size, pad_size, pad_size, pad_size, pad_size, pad_size)
         )
-        crop = VolumetricRandomCrop(self.input_size)
+        crop = VolumetricRandomCrop(self._input_size)
         flip = tio.transforms.RandomFlip(axes=(0, 1, 2), p=0.5)
         transforms = [mask, canonical]
         transforms.append(hist_standard)
@@ -225,4 +253,4 @@ class Oasis(ABaseDataset):
         return list_of_subjects
 
     def _set_num_classes(self, targets: Tensor):
-        self._num_classes = len(torch.unique(targets))
+        self._num_classes = len(np.unique(targets))

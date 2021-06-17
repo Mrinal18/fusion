@@ -1,5 +1,5 @@
 from fusion.dataset.two_view_mnist.two_view_mnist import TwoViewMnist
-from fusion.dataset.abasedataset import SetId
+from fusion.dataset.misc import SetId
 import unittest
 
 

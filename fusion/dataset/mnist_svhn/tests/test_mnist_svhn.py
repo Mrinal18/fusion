@@ -1,5 +1,5 @@
 from fusion.dataset.mnist_svhn.mnist_svhn import MnistSvhn
-from fusion.dataset.abasedataset import SetId
+from fusion.dataset.misc import SetId
 import unittest
 
 
