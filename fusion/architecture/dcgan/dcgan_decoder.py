@@ -41,6 +41,7 @@ class DcganDecoder(ABaseArchitecture):
             Class of DCGAN decoder model
         """
         super().__init__(
+            input_dim=input_dim,
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,

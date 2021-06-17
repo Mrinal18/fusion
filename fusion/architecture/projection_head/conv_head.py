@@ -14,6 +14,7 @@ class ConvHead(ABaseArchitecture):
         dim_l: int,
         dim_h: int,
         num_h_layers: int = 1,
+        input_dim: int = 2,
         conv_layer_class: TConv = nn.Conv2d,
         norm_layer_class: TNorm = nn.BatchNorm2d,
         activation_class: TActivation = nn.ReLU,
@@ -37,6 +38,7 @@ class ConvHead(ABaseArchitecture):
             Convolution head model
         """
         super().__init__(
+            input_dim=input_dim,
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
@@ -44,7 +46,7 @@ class ConvHead(ABaseArchitecture):
         )
         self._dim_in = dim_in
         self._dim_l = dim_l
-        self._bn_embedding = norm_layer_class(dim_l, affine=True)
+        self._bn_embedding = self._norm_layer_class(dim_l, affine=True)
         self._convolutional_path = nn.ModuleList([])
         # add first layer
         self._convolutional_path.append(
@@ -56,11 +58,12 @@ class ConvHead(ABaseArchitecture):
                     "kernel_size": 1,
                     "bias": use_bias,
                 },
-                norm_layer_class=norm_layer_class,
+                input_dim=self._input_dim,
+                norm_layer_class=self._norm_layer_class,
                 norm_layer_args={"num_features": dim_h},
-                activation_class=activation_class,
+                activation_class=self._activation_class,
                 activation_args={"inplace": True},
-                weights_initialization_type=weights_initialization_type,
+                weights_initialization_type=self._weights_initialization_type,
             )
         )
         for i in range(1, num_h_layers):
@@ -73,11 +76,12 @@ class ConvHead(ABaseArchitecture):
                         "kernel_size": 1,
                         "bias": use_bias,
                     },
-                    norm_layer_class=norm_layer_class,
+                    input_dim=self._input_dim,
+                    norm_layer_class=self._norm_layer_class,
                     norm_layer_args={"num_features": dim_h},
-                    activation_class=activation_class,
+                    activation_class=self._activation_class,
                     activation_args={"inplace": True},
-                    weights_initialization_type=weights_initialization_type,
+                    weights_initialization_type=self._weights_initialization_type,
                 )
             )
         # add last layer
@@ -90,10 +94,10 @@ class ConvHead(ABaseArchitecture):
                     "kernel_size": 1,
                     "bias": use_bias,
                 },
-                weights_initialization_type=weights_initialization_type,
+                input_dim=self._input_dim,
+                weights_initialization_type=self._weights_initialization_type,
             )
         )
-
         self._identity_shortcut = BaseConvLayer(
             conv_layer_class,
             {
@@ -102,6 +106,7 @@ class ConvHead(ABaseArchitecture):
                 "kernel_size": 1,
                 "bias": use_bias,
             },
+            input_dim=self._input_dim,
             weights_initialization_type="skip",
         )
 

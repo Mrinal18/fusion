@@ -200,6 +200,7 @@ class Oasis(ABaseDataset):
             masking_method=tio.transforms.ZNormalization.mean
         )
         pad_size = self._input_size // 8
+        #print (pad_size)
         pad = tio.transforms.Pad(
             padding=(pad_size, pad_size, pad_size, pad_size, pad_size, pad_size)
         )

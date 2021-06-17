@@ -23,6 +23,7 @@ class BaseConvLayer(ABaseArchitecture):
         dp_layer_args: Dict[str, Any] = {},
         activation_class: Optional[TActivation] = None,
         activation_args: Dict[str, Any] = {},
+        input_dim: int = 2,
         weights_initialization_type: str = "xavier_uniform",
     ):
         """
@@ -49,6 +50,7 @@ class BaseConvLayer(ABaseArchitecture):
         """
 
         super(BaseConvLayer, self).__init__(
+            input_dim=input_dim,
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             dp_layer_class=dp_layer_class,

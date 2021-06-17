@@ -28,7 +28,7 @@ class VolumetricRandomCrop(Transform):
     def apply_transform(self, volume):
         start, end = None, None
         for key, vol in volume.items():
-            if "view" in key:
+            if "source" in key:
                 volume[key]["data"], start, end = self.process_volume(
                     vol["data"], start, end
                 )

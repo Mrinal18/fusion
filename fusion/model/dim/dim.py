@@ -32,10 +32,10 @@ class Dim(ABaseModel):
         # create encoders for each source
         super().__init__(sources, architecture, architecture_params)
         self._input_size = architecture_params["input_size"]
-        self._conv_layer_class = (
-            architecture_params["conv_layer_class"]
-            if "conv_layer_class" in architecture_params.keys()
-            else nn.Conv2d
+        self._input_dim = (
+            architecture_params["input_dim"]
+            if "input_dim" in architecture_params.keys()
+            else 2
         )
         # create convolutional heads
         self._conv_heads = nn.ModuleDict()
@@ -127,6 +127,14 @@ class Dim(ABaseModel):
             latent_head_params = copy.deepcopy(dict(**architecture_params))
             latent_head_params.pop("dim_cls")
             latent_head_params.pop("input_size")
+            if "input_dim" in latent_head_params:
+                latent_head_params.pop("input_dim")
+            if "weights_initialization_type" in latent_head_params.keys():
+                latent_head_params.pop("weights_initialization_type")
+            if "conv_layer_class" in latent_head_params.keys():
+                latent_head_params.pop("conv_layer_class")
+            if "norm_layer_class" in latent_head_params.keys():
+                latent_head_params.pop("norm_layer_class")
             latent_head_params["dim_in"] = latent_head_params["dim_l"]
             latent_head_params["dim_h"] = latent_head_params["dim_l"]
         return latent_head_params
@@ -139,11 +147,11 @@ class Dim(ABaseModel):
             source_id_int = 0 if len(dim_in) == 1 else int(source_id)
             dim_in = self._architecture_params["dim_in"][source_id_int]
             dummy_encoder = self._encoder[source_id].eval()
-            if self._conv_layer_class is nn.Conv2d:
+            if self._input_dim == 2:
                 dummy_batch = torch.FloatTensor(
                     batch_size, dim_in, self._input_size, self._input_size
                 )
-            elif self._conv_layer_class is nn.Conv3d:
+            elif self._input_dim == 3:
                 dummy_batch = torch.FloatTensor(
                     batch_size,
                     dim_in,

@@ -54,6 +54,7 @@ class DcganAutoEncoder(ABaseArchitecture):
             dim_l,
             dim_cls=dim_cls,
             input_size=input_size,
+            input_dim=input_dim,
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,

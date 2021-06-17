@@ -146,7 +146,7 @@ class VolumetricMultiDim(MultiDim):
     def _create_masks(self) -> Dict[int, nn.parameter.Parameter]:
         masks = {}
         for dim_cl in self._dim_cls:
-            mask = torch.zeros((dim_cl, dim_cl, dim_cl, 1, dim_cl, dim_cl, dim_cl))
+            mask = np.zeros((dim_cl, dim_cl, dim_cl, 1, dim_cl, dim_cl, dim_cl))
             for i in range(dim_cl):
                 for j in range(dim_cl):
                     for k in range(dim_cl):
@@ -154,4 +154,6 @@ class VolumetricMultiDim(MultiDim):
             mask = torch.BoolTensor(mask)
             mask = mask.reshape(-1, 1, dim_cl, dim_cl, dim_cl)
             masks[dim_cl] = nn.Parameter(mask, requires_grad=False)
+            if torch.cuda.is_available():
+                masks[dim_cl].cuda()
         return masks

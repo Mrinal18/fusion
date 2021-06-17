@@ -16,6 +16,7 @@ class DcganEncoder(ABaseArchitecture):
         dim_l: int,
         dim_cls=None,
         input_size: int = 32,
+        input_dim: int = 2,
         conv_layer_class: TConv = nn.Conv2d,
         norm_layer_class: TNorm = nn.BatchNorm2d,
         activation_class: TActivation = nn.LeakyReLU,
@@ -37,6 +38,7 @@ class DcganEncoder(ABaseArchitecture):
             weights_initialization_type: The weight initialization type to use, default='xavier_uniform'
         """
         super().__init__(
+            input_dim=input_dim,
             conv_layer_class=conv_layer_class,
             norm_layer_class=norm_layer_class,
             activation_class=activation_class,
@@ -66,6 +68,7 @@ class DcganEncoder(ABaseArchitecture):
                         "padding": 1,
                         "bias": False,
                     },
+                    input_dim=self._input_dim,
                     activation_class=self._activation_class,
                     activation_args={"negative_slope": 0.2, "inplace": True},
                 ),
@@ -79,6 +82,7 @@ class DcganEncoder(ABaseArchitecture):
                         "padding": 1,
                         "bias": False,
                     },
+                    input_dim=self._input_dim,
                     norm_layer_class=self._norm_layer_class,
                     norm_layer_args={"num_features": 2 * self._dim_h},
                     activation_class=self._activation_class,
@@ -94,6 +98,7 @@ class DcganEncoder(ABaseArchitecture):
                         "padding": 1,
                         "bias": False,
                     },
+                    input_dim=self._input_dim,
                     norm_layer_class=self._norm_layer_class,
                     norm_layer_args={"num_features": 4 * self._dim_h},
                     activation_class=self._activation_class,
@@ -113,6 +118,7 @@ class DcganEncoder(ABaseArchitecture):
                         "padding": 1,
                         "bias": False,
                     },
+                    input_dim=self._input_dim,
                     norm_layer_class=self._norm_layer_class,
                     norm_layer_args={"num_features": 8 * self._dim_h},
                     activation_class=self._activation_class,
@@ -130,6 +136,7 @@ class DcganEncoder(ABaseArchitecture):
                         "padding": 0,
                         "bias": False,
                     },
+                    input_dim=self._input_dim,
                 ),
             )
         elif self._input_size == 32:
@@ -144,6 +151,7 @@ class DcganEncoder(ABaseArchitecture):
                         "padding": 0,
                         "bias": False,
                     },
+                    input_dim=self._input_dim,
                 )
             )
         else:

@@ -14,7 +14,6 @@ class LatentHead(ABaseArchitecture):
         use_linear: bool = False,
         use_bias: bool = False,
         use_bn: bool = True,
-        weights_initialization_type: str = "xavier_uniform",
     ):
         """
         Initialization Class of Latent Head model

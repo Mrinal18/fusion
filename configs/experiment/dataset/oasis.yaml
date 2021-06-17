@@ -20,3 +20,4 @@ args:
   use_separate_augmentation: False
   only_labeled: ${experiment.task.only_labeled}
   task_id: ${experiment.task.name}
+  template: ${work_dir}/data/MNI152_T1_3mm_brain_mask_dil_cubic192.nii.gz

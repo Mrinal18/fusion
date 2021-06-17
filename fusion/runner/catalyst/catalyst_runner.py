@@ -1,3 +1,4 @@
+import logging
 from catalyst import dl, metrics
 from fusion.runner import ABaseRunner
 import torch.nn.functional as F
@@ -18,7 +19,6 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         x, y = batch
         return self.model([x_.to(self.device) for x_ in x]), y
 
-    # ToDo: _handle_batch -> handle_batch Catalyst v21
     def handle_batch(self, batch: Mapping[str, Any]) -> None:
         """
 
@@ -43,7 +43,7 @@ class CatalystRunner(ABaseRunner, dl.Runner):
             self.meters[key].update(self.batch_metrics[key], self.batch_size)
 
         self.batch = {"targets": y}
-        # ToDo: Add self.batch for callbacks
+
         for source_id, source_z in outputs.z.items():
             probs = F.softmax(source_z, dim=-1)
             self.batch[f"logits_{source_id}"] = source_z
