@@ -11,10 +11,12 @@ num_folds: 5
 seed: 343
 num_workers: 4
 logdir: ./
+conv_layer_class: Conv3d
+norm_layer_class: BatchNorm3d
 pretrained_checkpoint:
 defaults:
   - dataset: oasis
-  - model: dim_3d
+  - model: dim
   - criterion: volumetric_multi_dim
   - task: pretraining
   - optimizer: radam

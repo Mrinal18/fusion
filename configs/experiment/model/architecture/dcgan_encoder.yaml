@@ -7,3 +7,5 @@ args:
   input_dim: ${experiment.input_dim}
   input_size: ${experiment.dataset.input_size}
   weights_initialization_type: "xavier_uniform"
+  conv_layer_class: ${experiment.conv_layer_class}
+  norm_layer_class: ${experiment.norm_layer_class}

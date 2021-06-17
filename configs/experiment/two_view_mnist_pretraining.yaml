@@ -12,6 +12,8 @@ seed: 343
 num_workers: 4
 logdir: ./
 pretrained_checkpoint:
+conv_layer_class: Conv2d
+norm_layer_class: BatchNorm2d
 defaults:
   - dataset: two_view_mnist
   - model: dim

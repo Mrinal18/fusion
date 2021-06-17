@@ -11,6 +11,8 @@ num_folds: 5
 seed: 343
 num_workers: 8
 logdir: ./0/
+conv_layer_class: Conv2d
+norm_layer_class: BatchNorm2d
 pretrained_checkpoint:
 defaults:
   - dataset: mnist_svhn
