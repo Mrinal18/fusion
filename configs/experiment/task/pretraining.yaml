@@ -1,12 +1,14 @@
 name: "pretraining"
-shuffle: True
+shuffle: False
 drop_last: True
 is_only_one_pair_per_subject: False
-use_balanced_sampler: False
+use_balanced_sampler: True
 only_labeled: False
 args:
   logdir: './'
-  num_epochs: 50
+  num_epochs: 200
   verbose: true
   resume: false
   timeit: true
+  project: ${experiment.project}
+  name: ${name}_f${experiment.fold}

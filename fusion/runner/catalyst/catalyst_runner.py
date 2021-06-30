@@ -45,7 +45,7 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         self.batch = {"targets": y}
 
         for source_id, source_z in outputs.z.items():
-            probs = F.softmax(source_z, dim=-1)
+            probs = F.softmax(source_z, dim=1)
             self.batch[f"logits_{source_id}"] = source_z
             self.batch[f"probs_{source_id}"] = probs
 
@@ -62,13 +62,6 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         for key in ["loss"]:
             self.loader_metrics[key] = self.meters[key].compute()[0]
         super().on_loader_end(runner)
-
-    def get_loggers(self):
-        return {
-            "console": dl.ConsoleLogger(),
-            "csv": dl.CSVLogger(logdir=self._logdir),
-            "tensorboard": dl.TensorboardLogger(logdir=self._logdir),
-        }
 
     def _unpack_batch(self, batch):
         x, y = batch

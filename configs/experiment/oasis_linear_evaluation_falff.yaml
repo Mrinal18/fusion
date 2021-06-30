@@ -1,23 +1,23 @@
-name: ${model.name}
+name: ${model.name}_falff
 project: oasis_le
-dim_in: [1, 1]
+dim_in: [1]
 dim_l: 64
 dim_cls: [8]
 dataset_dir: ${data_dir}/oasis/
 batch_size: 64
 input_dim: 3
-sources: [0, 1]
+sources: [1]
 fold: 0
 num_folds: 5
 seed: 343
 num_workers: 4
-logdir: ./
+logdir: ./1/
 conv_layer_class: Conv3d
 norm_layer_class: BatchNorm3d
-pretrained_checkpoint: ${work_dir}/${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/pretraining/best.pth
+pretrained_checkpoint: ${work_dir}/${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/pretraining/${experiment.logdir}/best.pth
 defaults:
   - dataset: oasis
-  - model: dim
+  - model: supervised
   - criterion: bce
   - task: linear_evaluation
   - optimizer: radam

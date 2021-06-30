@@ -1,5 +1,5 @@
 name: default
-dir: out
+dir: oasis_out
 hydra:
     run:
         dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${experiment.task.name}/${experiment.logdir}

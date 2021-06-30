@@ -1,24 +1,24 @@
 name: ${model.name}
 project: oasis
-dim_in: [1, 1]
+dim_in: [1]
 dim_l: 64
 dim_cls: [8]
 dataset_dir: ${data_dir}/oasis/
 batch_size: 64
 input_dim: 3
-sources: [0, 1]
+sources: [1]
 fold: 0
 num_folds: 5
 seed: 343
 num_workers: 4
-logdir: ./
+logdir: ./1/
 conv_layer_class: Conv3d
 norm_layer_class: BatchNorm3d
 pretrained_checkpoint:
 defaults:
   - dataset: oasis
-  - model: dim
-  - criterion: volumetric_multi_dim
+  - model: supervised
+  - criterion: cce
   - task: pretraining
   - optimizer: radam
   - scheduler: one_cycle_lr

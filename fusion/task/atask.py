@@ -11,6 +11,7 @@ class ATask(abc.ABC):
     _scheduler = None
     _runner = None
     _callbacks = None
+    _loggers = None
 
     @abc.abstractmethod
     def __init__(self, task_args: DictConfig):
@@ -118,6 +119,7 @@ class TaskDirector:
         self._builder.create_new_task(self._config.task)
         self._builder.add_dataset(self._config.dataset)
         self._builder.add_model(self._config.model)
+        print (self._builder.task._model)
         self._builder.add_criterion(self._config.criterion)
         self._builder.add_runner(self._config.runner)
         self._builder.add_optimizer(self._config.optimizer)

@@ -93,6 +93,11 @@ class Oasis(ABaseDataset):
         self._task_id = task_id
         self._template = template
         self._landmarks = {}
+        logging.info(
+            f"is_only_one_pair_per_subject: {is_only_one_pair_per_subject}\n"
+            f"use_balanced_sampler: {use_balanced_sampler}\n"
+            f"only_labeled: {only_labeled}\n"
+        )
 
     def load(self):
         for set_id in [SetId.TRAIN, SetId.VALID, SetId.INFER]:
@@ -107,7 +112,7 @@ class Oasis(ABaseDataset):
         self, dataset: SubjectsDataset, set_id: SetId, labels: List[int]
     ):
         sampler = None
-        drop_last = self._drop_last
+        drop_last = self._drop_last if set_id == SetId.TRAIN else False
         shuffle = self._shuffle
         if set_id == SetId.TRAIN:
             sampler = (
@@ -119,9 +124,16 @@ class Oasis(ABaseDataset):
                 else None
             )
             drop_last = True
-            shuffle = True
+            shuffle = False if sampler else True
             self._set_num_classes(labels)
         # as sampler and shuffle do not go together
+        logging.info(
+            f"{set_id}:\n"
+            f"drop_last={drop_last}\n"
+            f"shuffle={shuffle}\n"
+            f"batch_size={self._batch_size}\n"
+            f"sampler={sampler}\n"
+        )
         if sampler is not None:
             data_loader = DataLoader(
                 dataset,
@@ -153,7 +165,8 @@ class Oasis(ABaseDataset):
 
     def _prepare_subject_list(self, set_id: SetId):
         df = self._load_csv(self._dataset_dir, set_id)
-        if self._is_only_one_pair_per_subject:
+        logging.info(f"Loaded dataset with {df.shape[0]} inputs.")
+        if set_id == SetId.INFER or self._is_only_one_pair_per_subject:
             df = self._drop_duplicate_pairs(df)
         if self._only_labeled:
             df = self._keep_only_labeled(df)
@@ -178,10 +191,12 @@ class Oasis(ABaseDataset):
                 self._dataset_dir, f'landmarks_{source + 1}.npy'
             ))
             if not os.path.exists(source_landmarks_path):
+                logging.info("Training Histogram Standardization")
                 landmarks = tio.HistogramStandardization.train(
                     paths, output_path=source_landmarks_path,
                 )
             else:
+                logging.info("Loading Histogram Standardization landmarks")
                 landmarks = np.load(source_landmarks_path)
             self._landmarks[f'source_{source}'] = landmarks
 
@@ -195,23 +210,26 @@ class Oasis(ABaseDataset):
         self._train_histogram_standartization()
         canonical = tio.transforms.ToCanonical()
         mask = MNIMaskTransform(template=self._template)
-        hist_standard = tio.transforms.HistogramStandardization(self._landmarks)
+        hist_standard = tio.transforms.HistogramStandardization(
+            self._landmarks)
         znorm = tio.transforms.ZNormalization(
             masking_method=tio.transforms.ZNormalization.mean
         )
         pad_size = self._input_size // 8
-        #print (pad_size)
         pad = tio.transforms.Pad(
-            padding=(pad_size, pad_size, pad_size, pad_size, pad_size, pad_size)
+            padding=(
+                pad_size, pad_size,
+                pad_size, pad_size,
+                pad_size, pad_size
+            )
         )
         crop = VolumetricRandomCrop(self._input_size)
         flip = tio.transforms.RandomFlip(axes=(0, 1, 2), p=0.5)
         transforms = [mask, canonical]
         transforms.append(hist_standard)
         transforms.append(znorm)
-        if (
-            self._task_id in [TaskId.PRETRAINING, TaskId.LINEAR_EVALUATION]
-        ) and set_id != SetId.INFER:
+        if self._task_id == TaskId.PRETRAINING:
+        #if set_id == SetId.TRAIN:
             transforms.append(pad)
             transforms.append(crop)
             transforms.append(flip)
@@ -220,17 +238,17 @@ class Oasis(ABaseDataset):
 
     @staticmethod
     def _drop_duplicate_pairs(df: pd.DataFrame):
-        logging.debug(f"Shape with multiple pairs per subject {df.shape}")
+        logging.info(f"Shape with multiple pairs per subject {df.shape}")
         df = df.drop_duplicates(subset="subject").reset_index(drop=True)
-        logging.debug(f"Shape with only one pair per subject {df.shape}")
+        logging.info(f"Shape with only one pair per subject {df.shape}")
         return df
 
     @staticmethod
     def _keep_only_labeled(df: pd.DataFrame):
-        logging.debug("Cleaning labels with -1")
+        logging.info("Cleaning labels with -1")
         df = df[df["target"] != -1].reset_index(drop=True)
-        logging.debug(f"Shape without label -1 {df.shape}")
-        logging.debug(df["target"].value_counts())
+        logging.info(f"Shape without label -1 {df.shape}")
+        logging.info(df["target"].value_counts())
         return df
 
     @staticmethod

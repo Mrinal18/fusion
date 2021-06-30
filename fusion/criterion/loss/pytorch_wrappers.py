@@ -3,6 +3,7 @@ from typing import Optional, Tuple, Any, Dict
 from fusion.criterion.misc.utils import total_loss_summation
 from fusion.model.misc import ModelOutput
 
+import torch
 import torch.nn as nn
 from torch import Tensor
 
@@ -102,7 +103,8 @@ class BCEWithLogitsLoss(ABaseLoss):
         total_loss = None
         raw_losses = {}
         for source_id, z in preds.z.items():
-            loss = self._loss(z.squeeze(1), target)
+            labels = torch.nn.functional.one_hot(target, num_classes=z.shape[1]).float()
+            loss = self._loss(z.squeeze(1), labels.float())
             total_loss = total_loss_summation(total_loss, loss)
-            raw_losses[f"CE{source_id}"] = loss
+            raw_losses[f"BCE{source_id}"] = loss
         return total_loss, raw_losses

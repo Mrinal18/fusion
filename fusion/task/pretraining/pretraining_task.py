@@ -101,6 +101,15 @@ class PretrainingTask(ATask):
         """
         Method launch training of Pretraining Task
         """
+        self._loggers = {
+            "console": dl.ConsoleLogger(),
+            "csv": dl.CSVLogger(logdir=self._task_args["logdir"]),
+            "tensorboard": dl.TensorboardLogger(logdir=self._task_args["logdir"]),
+            "wandb": dl.WandbLogger(
+                project=self._task_args["project"],
+                name=self._task_args["name"]
+            )
+        }
         logging.info(f"logdir: {self._task_args['logdir']}")
         self._callbacks = [
             dl.CheckpointCallback(
@@ -123,4 +132,5 @@ class PretrainingTask(ATask):
             # resume=self._task_args['resume'],
             timeit=self._task_args["timeit"],
             callbacks=self._callbacks,
+            loggers=self._loggers
         )

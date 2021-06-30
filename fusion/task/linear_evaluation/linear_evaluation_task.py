@@ -57,26 +57,6 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
             )
             self._task.model[source_id] = linear_evaluator
 
-    def add_criterion(self, criterion_config: DictConfig):
-        """
-        Method for add criterion to linear evaluation task
-        Args:
-                criterion_config: dictionary with criterion's parameters from config
-        """
-        # TODO: add check for CrossEntropy or BinaryCrossEntropyWithLogits
-        self._task.criterion = criterion_provider.get(
-            criterion_config.name, **criterion_config.args
-        )
-
-    def add_runner(self, runner_config: DictConfig):
-        """
-        Method for add runner to linear evaluation task
-        Args:
-                runner_config: dictionary with runner's parameters from config
-        """
-        runner_args = {} if runner_config.args is None else runner_config.args
-        self._task.runner = runner_provider.get(runner_config.name, **runner_args)
-
     def add_optimizer(self, optimizer_config: DictConfig):
         """
         Method for add optimizer to linear evaluation task
@@ -128,14 +108,41 @@ class LinearEvaluationTask(ATask):
                     input_key=f"logits_{source_id}",
                     target_key="targets",
                 ),
+                dl.AUCCallback(
+                    input_key=f"logits_{source_id}",
+                    target_key="targets",
+                ),
                 dl.CheckpointCallback(
-                    logdir=logdir,
+                    logdir=logdir + '/loss_val',
                     loader_key="valid",
                     metric_key="loss",
                     minimize=True,
                     save_n_best=3,
                 ),
+                dl.CheckpointCallback(
+                    logdir=logdir + '/auc_val',
+                    loader_key="valid",
+                    metric_key="auc",
+                    minimize=False,
+                    save_n_best=3,
+                ),
+                dl.CheckpointCallback(
+                    logdir=logdir + '/auc_infer',
+                    loader_key="infer",
+                    metric_key="auc",
+                    minimize=False,
+                    save_n_best=3,
+                ),
             ]
+            self._loggers = {
+                "console": dl.ConsoleLogger(),
+                "csv": dl.CSVLogger(logdir=self._task_args["logdir"]),
+                "tensorboard": dl.TensorboardLogger(logdir=self._task_args["logdir"]),
+                "wandb": dl.WandbLogger(
+                    project=self._task_args["project"],
+                    name=self._task_args["name"]
+                )
+            }
             self._runner.train(
                 model=source_model,
                 criterion=self._criterion,
@@ -149,4 +156,5 @@ class LinearEvaluationTask(ATask):
                 # resume=self._task_args['resume'],
                 timeit=self._task_args["timeit"],
                 callbacks=self._callbacks,
+                loggers=self._loggers
             )
