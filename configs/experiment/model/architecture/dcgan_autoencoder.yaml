@@ -9,3 +9,4 @@ args:
   weights_initialization_type: "xavier_uniform"
   conv_layer_class: ${experiment.conv_layer_class}
   norm_layer_class: ${experiment.norm_layer_class}
+  conv_t_layer_class: ${experiment.conv_t_layer_class}

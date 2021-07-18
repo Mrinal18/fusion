@@ -18,7 +18,9 @@ class LinearEvaluator(nn.Module):
         self._encoder = encoder
         self._encoder.eval()
         self._flatten = Flatten()
-        self._linear = nn.Linear(dim_l, num_classes)
+        self._linear = nn.Linear(dim_l, num_classes, bias=True)
+        nn.init.xavier_uniform_(self._linear.weight)
+        nn.init.constant_(self._linear.bias, 1 / num_classes)
         self._source_id = source_id
 
     def forward(self, x: Tensor) -> ModelOutput:

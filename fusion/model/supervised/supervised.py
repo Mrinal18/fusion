@@ -31,7 +31,9 @@ class Supervised(ABaseModel):
         super().__init__(sources, architecture, architecture_params)
         assert len(sources) == 1
         self._sources = sources
-        self._linear = nn.Linear(dim_l, num_classes)
+        self._linear = nn.Linear(dim_l, num_classes, bias=True)
+        nn.init.xavier_uniform_(self._linear.weight)
+        nn.init.constant_(self._linear.bias, 1 / num_classes)
 
     def forward(self, x: Tensor) -> Tensor:
         """

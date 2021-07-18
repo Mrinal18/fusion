@@ -1,5 +1,5 @@
 name: default
-dir: oasis_out
+dir: oasis3_out
 hydra:
     run:
         dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${experiment.task.name}/${experiment.logdir}
@@ -10,3 +10,4 @@ work_dir: ${hydra:runtime.cwd}
 data_dir: ${work_dir}/data/
 defaults:
   - experiment: two_view_mnist_pretraining
+  #- hydra/launcher: submitit_slurm

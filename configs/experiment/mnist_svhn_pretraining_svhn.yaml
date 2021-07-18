@@ -13,6 +13,7 @@ num_workers: 8
 logdir: ./1/
 conv_layer_class: Conv2d
 norm_layer_class: BatchNorm2d
+conv_t_layer_class: ConvTranspose2d
 pretrained_checkpoint:
 defaults:
   - dataset: mnist_svhn

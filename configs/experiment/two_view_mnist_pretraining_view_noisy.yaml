@@ -14,6 +14,7 @@ logdir: ./1/
 pretrained_checkpoint:
 conv_layer_class: Conv2d
 norm_layer_class: BatchNorm2d
+conv_t_layer_class: ConvTranspose2d
 defaults:
   - dataset: two_view_mnist
   - model: supervised

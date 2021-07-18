@@ -47,6 +47,7 @@ class DcganDecoder(ABaseArchitecture):
             activation_class=activation_class,
             weights_initialization_type=weights_initialization_type,
         )
+        self._parse()
         self._dim_in = dim_in
         self._dim_h = dim_h
         self._dim_l = dim_l
@@ -197,3 +198,32 @@ class DcganDecoder(ABaseArchitecture):
         """
         for layer in self._layers:
             layer.init_weights()
+
+    def _parse(self):
+        if isinstance(self._conv_layer_class, str):
+            if self._conv_layer_class == 'ConvTranspose2d':
+                self._conv_layer_class = nn.ConvTranspose2d
+                assert self._input_dim == 2
+            elif self._conv_layer_class == 'ConvTranspose3d':
+                self._conv_layer_class = nn.ConvTranspose3d
+                assert self._input_dim == 3
+            else:
+                assert False, 'Only Conv2d and Conv3d are supported'
+        if isinstance(self._norm_layer_class, str):
+            if self._norm_layer_class == 'BatchNorm2d':
+                self._norm_layer_class = nn.BatchNorm2d
+                assert self._input_dim == 2
+            elif self._norm_layer_class == 'BatchNorm3d':
+                self._norm_layer_class = nn.BatchNorm3d
+                assert self._input_dim == 3
+            else:
+                assert False, 'Only BatchNorm2d and BatchNorm3d are supported'
+        if isinstance(self._dp_layer_class, str):
+            if self._dp_layer_class == 'Dropout2d':
+                self._dp_layer_class = nn.Dropout2d
+                assert self._input_dim == 2
+            elif self._dp_layer_class == 'Dropout3d':
+                self._dp_layer_class = nn.Dropout3d
+                assert self._input_dim == 3
+            else:
+                assert False, 'Only Dropout2d and Dropout3d are supported'

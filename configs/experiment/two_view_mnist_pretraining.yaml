@@ -1,4 +1,5 @@
 name: ${model.name}
+project: two_view_mnist
 dim_in: [1, 1]
 dim_l: 64
 dim_cls: [8]
@@ -14,6 +15,7 @@ logdir: ./
 pretrained_checkpoint:
 conv_layer_class: Conv2d
 norm_layer_class: BatchNorm2d
+conv_t_layer_class: ConvTranspose2d
 defaults:
   - dataset: two_view_mnist
   - model: dim

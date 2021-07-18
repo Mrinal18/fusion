@@ -1,6 +1,6 @@
 
 name: ${model.name}
-project: oasis
+project: oasis3
 dim_in: [1]
 dim_l: 64
 dim_cls: [8]
@@ -15,6 +15,7 @@ num_workers: 4
 logdir: ./0/
 conv_layer_class: Conv3d
 norm_layer_class: BatchNorm3d
+conv_t_layer_class: ConvTranspose3d
 pretrained_checkpoint:
 defaults:
   - dataset: oasis

@@ -1,5 +1,5 @@
 name: ${model.name}_t1
-project: oasis_le
+project: oasis3_le
 dim_in: [1]
 dim_l: 64
 dim_cls: [8]
@@ -14,6 +14,7 @@ num_workers: 4
 logdir: ./0/
 conv_layer_class: Conv3d
 norm_layer_class: BatchNorm3d
+conv_t_layer_class: ConvTranspose3d
 pretrained_checkpoint: ${work_dir}/${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/pretraining/${experiment.logdir}/best.pth
 defaults:
   - dataset: oasis
