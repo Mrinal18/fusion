@@ -112,7 +112,8 @@ class Oasis(ABaseDataset):
         self, dataset: SubjectsDataset, set_id: SetId, labels: List[int]
     ):
         sampler = None
-        drop_last = self._drop_last if set_id == SetId.TRAIN else False
+        drop_last = self._drop_last
+        #drop_last = self._drop_last if set_id == SetId.TRAIN else False
         shuffle = self._shuffle
         if set_id == SetId.TRAIN:
             sampler = (
@@ -123,8 +124,8 @@ class Oasis(ABaseDataset):
                 if self._use_balanced_sampler
                 else None
             )
-            drop_last = True
-            shuffle = False if sampler else True
+            #drop_last = True
+            #shuffle = False if sampler else True
             self._set_num_classes(labels)
         # as sampler and shuffle do not go together
         logging.info(
@@ -229,7 +230,6 @@ class Oasis(ABaseDataset):
         transforms.append(hist_standard)
         transforms.append(znorm)
         if self._task_id == TaskId.PRETRAINING:
-        #if set_id == SetId.TRAIN:
             transforms.append(pad)
             transforms.append(crop)
             transforms.append(flip)

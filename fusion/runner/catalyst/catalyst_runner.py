@@ -16,7 +16,7 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         Return
 
         """
-        x, y = batch
+        x, y = self._unpack_batch(batch)
         return self.model([x_.to(self.device) for x_ in x]), y
 
     def handle_batch(self, batch: Mapping[str, Any]) -> None:

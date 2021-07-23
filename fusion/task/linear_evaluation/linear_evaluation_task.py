@@ -5,10 +5,8 @@ from catalyst.utils.torch import load_checkpoint, unpack_checkpoint
 
 from omegaconf import DictConfig
 
-from fusion.criterion import criterion_provider
 from fusion.model import model_provider
 from fusion.optimizer import optimizer_provider
-from fusion.runner import runner_provider
 from fusion.scheduler import scheduler_provider
 from fusion.task import ATask
 from fusion.task.pretraining import PretrainingTaskBuilder

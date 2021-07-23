@@ -1,0 +1,14 @@
+name: "logreg_evaluation"
+shuffle: False
+drop_last: False
+is_only_one_pair_per_subject: True
+use_balanced_sampler: False
+only_labeled: True
+args:
+  logdir: './'
+  project: ${experiment.project}
+  name: ${name}_f${experiment.fold}
+  optuna:
+    solver: saga
+    num_trials: 500
+    seed: ${experiment.seed}

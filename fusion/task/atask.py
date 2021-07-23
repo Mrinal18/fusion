@@ -119,11 +119,13 @@ class TaskDirector:
         self._builder.create_new_task(self._config.task)
         self._builder.add_dataset(self._config.dataset)
         self._builder.add_model(self._config.model)
-        print (self._builder.task._model)
-        self._builder.add_criterion(self._config.criterion)
+        if 'criterion' in self._config.keys():
+            self._builder.add_criterion(self._config.criterion)
+        if 'optimizer' in self._config.keys():
+            self._builder.add_optimizer(self._config.optimizer)
+        if 'scheduler' in self._config.keys():
+            self._builder.add_scheduler(self._config.scheduler)
         self._builder.add_runner(self._config.runner)
-        self._builder.add_optimizer(self._config.optimizer)
-        self._builder.add_scheduler(self._config.scheduler)
 
     def get_task(self):
         return self._builder.task

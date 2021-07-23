@@ -1,0 +1,186 @@
+import copy
+import numpy as np
+from omegaconf import DictConfig
+import os
+import optuna
+import pandas as pd
+import pickle
+
+
+from catalyst import dl
+from catalyst.utils.torch import load_checkpoint, unpack_checkpoint
+
+from fusion.dataset.misc import SetId
+from fusion.model import model_provider
+from fusion.task.linear_evaluation import LinearEvaluationTask
+from fusion.task.linear_evaluation import LinearEvaluationTaskBuilder
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import balanced_accuracy_score
+from sklearn.metrics import brier_score_loss
+from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
+
+class LogRegEvaluationTaskBuilder(LinearEvaluationTaskBuilder):
+    def create_new_task(self, task_args: DictConfig):
+        """
+        Method to create new logistic regression evaluation task
+
+        Args:
+            task_args: dictionary with task's parameters from config
+        """
+        self._task = LogRegEvaluationTask(task_args.args)
+
+    def add_model(self, model_config: DictConfig):
+        """
+        Method for add model to linear evaluation task
+        Args:
+                model_config: dictionary with model's parameters from config
+        """
+        self._task.model = {}
+        # get number of classes
+        num_classes = self._task.dataset._num_classes
+        if "num_classes" in model_config.args.keys():
+            model_config.args["num_classes"] = num_classes
+        pretrained_checkpoint = model_config.args.pretrained_checkpoint
+        # create model
+        model_args = copy.deepcopy({**model_config.args})
+        model_args.pop("pretrained_checkpoint")
+        pretrained_model = model_provider.get(model_config.name, **model_args)
+        # load checkpoint
+        checkpoint = load_checkpoint(pretrained_checkpoint)
+        unpack_checkpoint(checkpoint, pretrained_model)
+        # create linear evaluators
+        for source_id, encoder in pretrained_model.get_encoder_list().items():
+            encoder_extractor_args = {
+                "encoder": encoder,
+                "source_id": int(source_id),
+            }
+            print(encoder_extractor_args)
+            encoder_extractor = model_provider.get(
+                "EncoderExtractor", **encoder_extractor_args
+            )
+            self._task.model[source_id] = encoder_extractor
+
+    def add_criterion(self, criterion_config: DictConfig):
+        pass
+
+    def add_optimizer(self, optimizer_config: DictConfig):
+        pass
+
+    def add_scheduler(self, scheduler_config: DictConfig):
+        pass
+
+
+class LogRegEvaluationTask(LinearEvaluationTask):
+    def run(self):
+        for source_id, source_model in self._model.items():
+            results = []
+            logdir = self._task_args["logdir"] + f"/logreg_{source_id}/"
+            if not os.path.exists(logdir):
+                os.makedirs(logdir)
+            model = None
+            scaler = StandardScaler()
+            for set_name in [SetId.TRAIN, SetId.VALID, SetId.INFER]:
+                representation, targets = self._get_representation(
+                    source_id, set_name
+                )
+                # train if train set
+                if set_name == SetId.TRAIN:
+                    scaler.fit(representation)
+                    representation = scaler.transform(representation)
+                    model = self._search_train(representation, targets, logdir)
+                assert model is not None
+                assert scaler is not None
+                representation = scaler.transform(representation)
+                metrics = self._evaluate(model, representation, targets)
+                metrics = [source_id, set_name] + metrics
+                results.append(metrics)
+            results = pd.DataFrame(results, columns=[
+                'Source Id', 'Set Name', 'ACC', 'BACC', 'ROCAUC', 'Brier'
+            ])
+            results.to_csv(logdir + 'metrics.csv', index=False)
+            print (results)
+
+    def _evaluate(self, model, representation, targets):
+        predicted = model.predict(representation)
+        assert len(np.unique(targets)) == 2
+        probs = model.predict_proba(representation)[:, 1]
+        acc = accuracy_score(targets, predicted)
+        bacc = balanced_accuracy_score(targets, predicted)
+        ras = roc_auc_score(targets, probs)
+        brier = brier_score_loss(targets, probs)
+        results = [acc, bacc, ras, brier]
+        return results
+
+    def _search_train(self, representation, targets, logdir):
+        optuna_args = self._task_args["optuna"]
+        solver = optuna_args['solver']
+        num_trials = optuna_args["num_trials"]
+        seed = optuna_args["seed"]
+
+        def _objective(trial):
+            C_ = trial.suggest_loguniform('C', 1e-6, 1e3)
+            penalty_ = trial.suggest_categorical(
+                'penalty', ['l2', 'l1', 'elasticnet'])
+            l1_ratio_ = trial.suggest_uniform('l1_ratio', 0.0, 1.0)
+            clf = LogisticRegression(
+                random_state=seed,
+                class_weight='balanced',
+                penalty=penalty_,
+                C=C_,
+                solver=solver,
+                l1_ratio=l1_ratio_,
+                fit_intercept=False,
+                max_iter=200
+            )
+            score = cross_val_score(
+                clf, representation, targets, cv=5, n_jobs=-1, scoring='roc_auc')
+            return score.mean()
+
+        study = optuna.create_study(direction='maximize')
+        study.optimize(_objective, n_trials=num_trials)
+        trial = study.best_trial
+        print (trial)
+        with open(logdir + 'best_trial_optuna.pickle', 'wb') as handle:
+            pickle.dump(
+                trial,
+                handle,
+                protocol=pickle.HIGHEST_PROTOCOL
+            )
+        clf = LogisticRegression(
+            random_state=seed,
+            class_weight='balanced',
+            penalty=trial.params['penalty'],
+            C=trial.params['C'],
+            solver=solver,
+            fit_intercept=False,
+            l1_ratio=trial.params['l1_ratio'],
+            max_iter=200
+        )
+        clf.fit(representation, targets)
+        return clf
+
+    def _get_representation(self, source_id, set_name):
+        predictions = self._runner.predict_loader(
+            loader=self._dataset.get_loader(set_name),
+            model=self._model[source_id]
+        )
+        representation = None
+        targets = None
+        for preds in predictions:
+            batch_output, batch_targets = preds
+            batch_representation = batch_output.z[int(source_id)]
+            batch_targets = batch_targets.cpu().numpy()
+            batch_representation = batch_representation.detach().cpu().numpy()
+            representation = self._concat_x_to_y(batch_representation, representation)
+            targets = self._concat_x_to_y(batch_targets, targets)
+        return (representation, targets)
+
+    @staticmethod
+    def _concat_x_to_y(x, y):
+        y = np.concatenate(
+            (y, x), axis=0) if y is not None else x
+        return y
