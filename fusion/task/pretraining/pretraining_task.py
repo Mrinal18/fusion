@@ -15,13 +15,13 @@ import logging
 class PretrainingTaskBuilder(ATaskBuilder):
     _task: ATask
 
-    def create_new_task(self, task_args: DictConfig):
+    def create_new_task(self, task_args: DictConfig, seed: int = 343):
         """
         Method for create new pretraining task
         Args:
         task_args: dictionary with task's parameters from config
         """
-        self._task = PretrainingTask(task_args.args)
+        self._task = PretrainingTask(task_args.args, seed=seed)
 
     def add_dataset(self, dataset_config: DictConfig):
         """
@@ -88,15 +88,6 @@ class PretrainingTaskBuilder(ATaskBuilder):
 
 
 class PretrainingTask(ATask):
-    def __init__(self, task_args: DictConfig) -> None:
-        """
-        Initilization of class Pretraining Task
-                task_args: task parameters
-        Return:
-                class Logical Pretraining Task
-        """
-        super().__init__(task_args)
-
     def run(self):
         """
         Method launch training of Pretraining Task

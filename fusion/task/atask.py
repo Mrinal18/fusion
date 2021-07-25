@@ -1,5 +1,9 @@
 import abc
+from catalyst.utils.misc import set_global_seed
+import numpy as np
 from omegaconf import DictConfig
+import random
+import torch
 from typing import Optional
 
 
@@ -13,13 +17,19 @@ class ATask(abc.ABC):
     _callbacks = None
     _loggers = None
 
-    @abc.abstractmethod
-    def __init__(self, task_args: DictConfig):
+    def __init__(self, task_args: DictConfig, seed: int = 343):
         self._task_args = task_args
+        self._seed = seed
 
     @abc.abstractmethod
     def run(self):
         pass
+
+    def _reset_seed(self):
+        np.random.seed(self._seed)
+        random.seed(self._seed)
+        torch.manual_seed(self._seed)
+        set_global_seed(self._seed)
 
     @property
     def dataset(self):
@@ -111,12 +121,13 @@ class ATaskBuilder(abc.ABC):
 
 
 class TaskDirector:
-    def __init__(self, task_builder: ATaskBuilder, config: DictConfig):
+    def __init__(self, task_builder: ATaskBuilder, config: DictConfig, seed: int = 343):
         self._builder = task_builder
         self._config = config
+        self._seed = seed
 
     def construct_task(self):
-        self._builder.create_new_task(self._config.task)
+        self._builder.create_new_task(self._config.task, seed=self._seed)
         self._builder.add_dataset(self._config.dataset)
         self._builder.add_model(self._config.model)
         if 'criterion' in self._config.keys():
@@ -125,7 +136,8 @@ class TaskDirector:
             self._builder.add_optimizer(self._config.optimizer)
         if 'scheduler' in self._config.keys():
             self._builder.add_scheduler(self._config.scheduler)
-        self._builder.add_runner(self._config.runner)
+        if 'runner' in self._config.keys():
+            self._builder.add_runner(self._config.runner)
 
     def get_task(self):
         return self._builder.task

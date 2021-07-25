@@ -13,13 +13,13 @@ from fusion.task.pretraining import PretrainingTaskBuilder
 
 
 class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
-    def create_new_task(self, task_args: DictConfig):
+    def create_new_task(self, task_args: DictConfig, seed: int = 343):
         """
         Method for create new linear evaluation task
         Args:
         task_args: dictionary with task's parameters from config
         """
-        self._task = LinearEvaluationTask(task_args.args)
+        self._task = LinearEvaluationTask(task_args.args, seed=seed)
 
     def add_model(self, model_config: DictConfig):
         """
@@ -86,15 +86,6 @@ class LinearEvaluationTaskBuilder(PretrainingTaskBuilder):
 
 
 class LinearEvaluationTask(ATask):
-    def __init__(self, task_args: DictConfig) -> None:
-        """
-        Initilization of class Linear Evaluation Task
-                task_args: task parameters
-        Return:
-                class Linear Evaluation Task
-        """
-        super().__init__(task_args)
-
     def run(self):
         """
         Method launch training of Linear Evaluation Task

@@ -6,3 +6,4 @@ class TaskId(LowercaseStrEnum):
     PRETRAINING: "TaskId" = auto()
     LINEAR_EVALUATION: "TaskId" = auto()
     LOGREG_EVALUATION: "TaskId" = auto()
+    SALIENCY: "TaskId" = auto()

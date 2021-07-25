@@ -6,8 +6,6 @@ import optuna
 import pandas as pd
 import pickle
 
-
-from catalyst import dl
 from catalyst.utils.torch import load_checkpoint, unpack_checkpoint
 
 from fusion.dataset.misc import SetId
@@ -23,15 +21,16 @@ from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 
+
 class LogRegEvaluationTaskBuilder(LinearEvaluationTaskBuilder):
-    def create_new_task(self, task_args: DictConfig):
+    def create_new_task(self, task_args: DictConfig, seed: int = 343):
         """
         Method to create new logistic regression evaluation task
 
         Args:
             task_args: dictionary with task's parameters from config
         """
-        self._task = LogRegEvaluationTask(task_args.args)
+        self._task = LogRegEvaluationTask(task_args.args, seed=seed)
 
     def add_model(self, model_config: DictConfig):
         """
@@ -76,7 +75,7 @@ class LogRegEvaluationTaskBuilder(LinearEvaluationTaskBuilder):
 
 class LogRegEvaluationTask(LinearEvaluationTask):
     def run(self):
-        for source_id, source_model in self._model.items():
+        for source_id in self._model.keys():
             results = []
             logdir = self._task_args["logdir"] + f"/logreg_{source_id}/"
             if not os.path.exists(logdir):
@@ -102,7 +101,7 @@ class LogRegEvaluationTask(LinearEvaluationTask):
                 'Source Id', 'Set Name', 'ACC', 'BACC', 'ROCAUC', 'Brier'
             ])
             results.to_csv(logdir + 'metrics.csv', index=False)
-            print (results)
+            print(results)
 
     def _evaluate(self, model, representation, targets):
         predicted = model.predict(representation)
@@ -143,7 +142,7 @@ class LogRegEvaluationTask(LinearEvaluationTask):
         study = optuna.create_study(direction='maximize')
         study.optimize(_objective, n_trials=num_trials)
         trial = study.best_trial
-        print (trial)
+        print(trial)
         with open(logdir + 'best_trial_optuna.pickle', 'wb') as handle:
             pickle.dump(
                 trial,
