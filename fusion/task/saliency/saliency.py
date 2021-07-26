@@ -36,6 +36,8 @@ class SaliencyTaskBuilder(LogRegEvaluationTaskBuilder):
         # create linear evaluators
         dim_l = model_args["architecture_params"]["dim_l"]
         for source_id, encoder in pretrained_model.get_encoder_list().items():
+            if model_args['architecture'] == 'DcganAutoEncoder':
+                encoder = encoder._encoder
             smoothgrad_args = {
                 "encoder": encoder,
                 "source_id": int(source_id),
