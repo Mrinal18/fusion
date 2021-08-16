@@ -12,3 +12,4 @@ args:
     solver: saga
     num_trials: 500
     seed: ${experiment.seed}
+  save_representation: True

@@ -60,7 +60,7 @@ class SaliencyTask(LogRegEvaluationTask):
         sources = self._model.keys()
         for source_id in sources:
             self._reset_seed()
-            logdir = self._task_args["logdir"] + f"/saliency_{source_id}/"
+            logdir = self._task_args["logdir"] + f"/saliency_{source_id}/subjects/"
             index = 0
             for set_name in [SetId.TRAIN, SetId.VALID, SetId.INFER]:
                 for batch in self._dataset.get_loader(set_name):

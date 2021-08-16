@@ -99,14 +99,19 @@ class Oasis(ABaseDataset):
             f"only_labeled: {only_labeled}\n"
         )
 
-    def load(self):
+    def load(self, only_data=False):
+        data = {}
         for set_id in [SetId.TRAIN, SetId.VALID, SetId.INFER]:
-            list_of_subjects, labels = self._prepare_subject_list(set_id)
-            transforms = self._prepare_transforms(
-                set_id, self._use_separate_augmentation
-            )
-            dataset = SubjectsDataset(list_of_subjects, transform=transforms)
-            self._set_dataloader(dataset, set_id, labels)
+            list_of_subjects, labels, df = self._prepare_subject_list(
+                set_id, only_data=only_data)
+            if not only_data:
+                transforms = self._prepare_transforms(
+                    set_id, self._use_separate_augmentation
+                )
+                dataset = SubjectsDataset(list_of_subjects, transform=transforms)
+                self._set_dataloader(dataset, set_id, labels)
+            data[set_id] = df
+        return data
 
     def _set_dataloader(
         self, dataset: SubjectsDataset, set_id: SetId, labels: List[int]
@@ -164,18 +169,20 @@ class Oasis(ABaseDataset):
             )
         self._data_loaders[set_id] = data_loader
 
-    def _prepare_subject_list(self, set_id: SetId):
+    def _prepare_subject_list(self, set_id: SetId, only_data=False):
         df = self._load_csv(self._dataset_dir, set_id)
         logging.info(f"Loaded dataset with {df.shape[0]} inputs.")
         if set_id == SetId.INFER or self._is_only_one_pair_per_subject:
             df = self._drop_duplicate_pairs(df)
         if self._only_labeled:
             df = self._keep_only_labeled(df)
-        list_of_subjects = self._prepare_list_of_torchio_subjects(df, self._sources)
+        list_of_subjects = None
+        if not only_data:
+            list_of_subjects = self._prepare_list_of_torchio_subjects(df, self._sources)
         labels = df["target"].values
         if set_id == SetId.TRAIN and self._only_labeled:
             self._set_num_classes(labels)
-        return (list_of_subjects, labels)
+        return (list_of_subjects, labels, df)
 
     def _train_histogram_standartization(self):
         train_dataset_csv = os.path.join(

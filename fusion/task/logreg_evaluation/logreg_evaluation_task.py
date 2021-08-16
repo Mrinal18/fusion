@@ -1,10 +1,13 @@
 import copy
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 from omegaconf import DictConfig
 import os
 import optuna
 import pandas as pd
 import pickle
+import seaborn as sns
 
 from catalyst.utils.torch import load_checkpoint, unpack_checkpoint
 
@@ -20,6 +23,7 @@ from sklearn.metrics import brier_score_loss
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
+
 
 
 class LogRegEvaluationTaskBuilder(LinearEvaluationTaskBuilder):
@@ -76,6 +80,7 @@ class LogRegEvaluationTaskBuilder(LinearEvaluationTaskBuilder):
 class LogRegEvaluationTask(LinearEvaluationTask):
     def run(self):
         for source_id in self._model.keys():
+            self._reset_seed()
             results = []
             logdir = self._task_args["logdir"] + f"/logreg_{source_id}/"
             if not os.path.exists(logdir):
@@ -90,18 +95,35 @@ class LogRegEvaluationTask(LinearEvaluationTask):
                 if set_name == SetId.TRAIN:
                     scaler.fit(representation)
                     representation = scaler.transform(representation)
-                    model = self._search_train(representation, targets, logdir)
+                    model = self._search_train(representation, targets, logdir, source_id)
                 assert model is not None
                 assert scaler is not None
                 representation = scaler.transform(representation)
                 metrics = self._evaluate(model, representation, targets)
                 metrics = [source_id, set_name] + metrics
                 results.append(metrics)
+                if self._task_args['save_representation']:
+                    self._save_representation(
+                        logdir, set_name, representation, targets)
+
             results = pd.DataFrame(results, columns=[
                 'Source Id', 'Set Name', 'ACC', 'BACC', 'ROCAUC', 'Brier'
             ])
             results.to_csv(logdir + 'metrics.csv', index=False)
             print(results)
+
+    @staticmethod
+    def _save_representation(logdir, set_name, representation, targets):
+        data_dict = {
+            'representation': representation,
+            'targets': targets
+        }
+        with open(logdir + f'representation_{set_name}.pickle', 'wb') as handle:
+            pickle.dump(
+                data_dict,
+                handle,
+                protocol=pickle.HIGHEST_PROTOCOL
+            )
 
     def _evaluate(self, model, representation, targets):
         predicted = model.predict(representation)
@@ -114,7 +136,7 @@ class LogRegEvaluationTask(LinearEvaluationTask):
         results = [acc, bacc, ras, brier]
         return results
 
-    def _search_train(self, representation, targets, logdir):
+    def _search_train(self, representation, targets, logdir, source_id):
         optuna_args = self._task_args["optuna"]
         solver = optuna_args['solver']
         num_trials = optuna_args["num_trials"]
@@ -160,6 +182,7 @@ class LogRegEvaluationTask(LinearEvaluationTask):
             max_iter=200
         )
         clf.fit(representation, targets)
+        self._save_importance(clf, logdir, modifier=source_id)
         return clf
 
     def _get_representation(self, source_id, set_name):
@@ -183,3 +206,15 @@ class LogRegEvaluationTask(LinearEvaluationTask):
         y = np.concatenate(
             (y, x), axis=0) if y is not None else x
         return y
+
+    @staticmethod
+    def _save_importance(clf, logdir, modifier=''):
+        importance = clf.coef_
+        df = pd.DataFrame(importance)
+        df = df.sort_values(
+            by=0, ascending=False, axis=1)
+        df.to_csv(logdir + f'{modifier}_importance.csv', index=True)
+        plt.figure(figsize=(16, 3))
+        sns.barplot(data=df)
+        plt.tight_layout()
+        plt.savefig(logdir + f'{modifier}_importance.png', dpi=600)
