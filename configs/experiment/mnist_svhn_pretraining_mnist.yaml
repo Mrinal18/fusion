@@ -2,14 +2,15 @@ name: ${model.name}
 dim_in: [1, 3]
 dim_l: 64
 dim_cls: [8]
+project: mnist_svhn
 dataset_dir: ${data_dir}
 batch_size: 64
 input_dim: 2
 sources: [0]
 fold: 0
 num_folds: 5
-seed: 343
-num_workers: 8
+seed: ${seed}
+num_workers: 32
 logdir: ./0/
 conv_layer_class: Conv2d
 norm_layer_class: BatchNorm2d

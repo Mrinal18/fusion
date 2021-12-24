@@ -1,4 +1,5 @@
 from omegaconf import DictConfig, OmegaConf
+import torch
 
 from fusion.task import TaskDirector, task_builder_provider
 
@@ -21,7 +22,9 @@ class Experiment:
 
         :return:
         """
-        #torch.backends.cudnn.deterministic = True
+        torch.autograd.set_detect_anomaly(False)
+        torch.backends.cudnn.benchmark = True
+        torch.backends.cudnn.deterministic = False
         #torch.use_deterministic_algorithms(True)
         task_builder = task_builder_provider.get(self._config.task.name)
         task_director = TaskDirector(task_builder, self._config, self._seed)

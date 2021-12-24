@@ -1,5 +1,5 @@
 name: ${model.name}
-project: oasis3
+project: new_oasis3
 dim_in: [1]
 dim_l: 64
 dim_cls: [8]
@@ -9,7 +9,7 @@ input_dim: 3
 sources: [0]
 fold: 0
 num_folds: 5
-seed: 343
+seed: ${seed}
 num_workers: 4
 logdir: ./0/
 conv_layer_class: Conv3d

@@ -1,11 +1,17 @@
 import logging
 from catalyst import dl, metrics
+from catalyst.typing import Scheduler
 from fusion.runner import ABaseRunner
+from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts, \
+    OneCycleLR, CyclicLR
 import torch.nn.functional as F
 from typing import Mapping, Any
 
 
 class CatalystRunner(ABaseRunner, dl.Runner):
+    epoch = 0
+    batch_id = 0
+
     def predict_batch(self, batch: Mapping[str, Any], **kwargs) -> Mapping[str, Any]:
         """
 
@@ -25,6 +31,10 @@ class CatalystRunner(ABaseRunner, dl.Runner):
         batch:
         :return:
         """
+        if self.is_train_loader:
+            for param in self.model.parameters():
+                param.grad = None
+
         x, y = self._unpack_batch(batch)
         outputs = self.model(x)
         loss = self.criterion(outputs, y)
@@ -34,9 +44,17 @@ class CatalystRunner(ABaseRunner, dl.Runner):
             self.batch_metrics.update(raw_losses)
 
         if self.is_train_loader:
+            self.batch_id += 1
             loss.backward()
             self.optimizer.step()
-            self.optimizer.zero_grad()
+            if isinstance(self.scheduler, CosineAnnealingWarmRestarts):
+                self.scheduler.step(
+                    epoch=int(self.epoch + self.batch_id / len(self._loaders['train'])))
+            elif isinstance(self.scheduler, (OneCycleLR, CyclicLR)):
+                self.scheduler.step()
+            else:
+                raise NotImplementedError
+
 
         self.batch_metrics["loss"] = loss.item()
         for key in ["loss"]:
@@ -61,6 +79,9 @@ class CatalystRunner(ABaseRunner, dl.Runner):
     def on_loader_end(self, runner):
         for key in ["loss"]:
             self.loader_metrics[key] = self.meters[key].compute()[0]
+        if self.is_train_loader:
+            self.epoch += 1
+            self.batch_id = 0
         super().on_loader_end(runner)
 
     def _unpack_batch(self, batch):

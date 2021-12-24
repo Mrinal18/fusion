@@ -6,9 +6,10 @@ batch_size: 64
 input_dim: 2
 sources: [0, 1]
 fold: 0
+project: two_view_mnist
 num_folds: 5
-seed: 343
-num_workers: 8
+seed: ${seed}
+num_workers: 32
 logdir: ./
 conv_layer_class: Conv2d
 norm_layer_class: BatchNorm2d

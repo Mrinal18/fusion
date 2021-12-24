@@ -5,11 +5,12 @@ dim_cls: [8]
 dataset_dir: ${data_dir}
 batch_size: 64
 input_dim: 2
+project: mnist_svhn
 sources: [0]
 fold: 0
 num_folds: 5
-seed: 343
-num_workers: 8
+seed: ${seed}
+num_workers: 32
 logdir: ./0/
 conv_layer_class: Conv2d
 norm_layer_class: BatchNorm2d

@@ -3,11 +3,14 @@ shuffle: False
 drop_last: False
 is_only_one_pair_per_subject: True
 use_balanced_sampler: False
-only_labeled: True
+only_labeled: False
 args:
-  logdir: './'
+  logdir: ./${experiment.task.args.scorer.multi_class}_${experiment.task.args.scorer.average}
   project: ${experiment.project}
   name: ${name}_f${experiment.fold}
+  scorer:
+    multi_class: 'ovo'
+    average: 'macro'
   optuna:
     solver: saga
     num_trials: 500

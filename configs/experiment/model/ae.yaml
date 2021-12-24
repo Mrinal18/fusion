@@ -1,4 +1,5 @@
 name: "AE"
+dim_l: ${experiment.dim_l}
 args:
   sources: ${experiment.sources}
   architecture: ${experiment.model.architecture.name}

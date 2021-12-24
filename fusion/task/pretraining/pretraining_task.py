@@ -82,9 +82,17 @@ class PretrainingTaskBuilder(ATaskBuilder):
         """
         args = dict(scheduler_config.args)
         args["optimizer"] = self._task.optimizer
-        args["steps_per_epoch"] = len(self._task.dataset.get_loader(SetId.TRAIN))
-        args["epochs"] = self._task.task_args["num_epochs"]
-        self._task.scheduler = scheduler_provider.get(scheduler_config.name, **args)
+        print (scheduler_config.name )
+        if scheduler_config.name == "OneCycleLR":
+            args["steps_per_epoch"] = len(self._task.dataset.get_loader(SetId.TRAIN))
+            args["epochs"] = self._task.task_args["num_epochs"]
+        elif scheduler_config.name in ["CAWR", "CLR"]:
+            pass
+        else:
+            raise NotImplementedError
+        self._task.scheduler = scheduler_provider.get(
+            scheduler_config.name, **args
+        )
 
 
 class PretrainingTask(ATask):

@@ -1,10 +1,11 @@
 name: default
-dir: oasis3_out
+seed: 343
+dir: new_oasis3
 hydra:
     run:
-        dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${experiment.task.name}/${experiment.logdir}
+        dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${seed}/${experiment.task.name}/${experiment.logdir}
     sweep:
-        dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${experiment.task.name}/${experiment.logdir}
+        dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${seed}/${experiment.task.name}/${experiment.logdir}
         subdir: ${hydra.job.num}
 work_dir: ${hydra:runtime.cwd}
 data_dir: ${work_dir}/data/

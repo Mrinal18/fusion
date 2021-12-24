@@ -26,9 +26,10 @@ class ATask(abc.ABC):
         pass
 
     def _reset_seed(self):
-        np.random.seed(self._seed)
         random.seed(self._seed)
+        np.random.seed(self._seed)
         torch.manual_seed(self._seed)
+        torch.cuda.manual_seed_all(self._seed)
         set_global_seed(self._seed)
 
     @property

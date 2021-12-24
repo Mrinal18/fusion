@@ -1,6 +1,7 @@
 from .pretraining import PretrainingTaskBuilder
 from .linear_evaluation import LinearEvaluationTaskBuilder
 from .logreg_evaluation import LogRegEvaluationTaskBuilder
+from .tsne import TsneTaskBuilder
 from .misc import TaskId
 from .saliency import SaliencyTaskBuilder
 
@@ -17,4 +18,7 @@ task_builder_provider.register_object(
 )
 task_builder_provider.register_object(
     TaskId.SALIENCY, SaliencyTaskBuilder
+)
+task_builder_provider.register_object(
+    TaskId.TSNE, TsneTaskBuilder
 )

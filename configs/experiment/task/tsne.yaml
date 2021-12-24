@@ -1,0 +1,13 @@
+name: "tsne"
+shuffle: False
+drop_last: False
+is_only_one_pair_per_subject: True
+use_balanced_sampler: False
+only_labeled: False
+args:
+  logdir: './'
+  tsne_args:
+    random_state: ${experiment.seed}
+    n_components: 2
+    n_jobs: ${experiment.num_workers}
+    perplexity: 3

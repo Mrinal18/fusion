@@ -7,3 +7,4 @@ class TaskId(LowercaseStrEnum):
     LINEAR_EVALUATION: "TaskId" = auto()
     LOGREG_EVALUATION: "TaskId" = auto()
     SALIENCY: "TaskId" = auto()
+    TSNE: "TSNE" = auto()

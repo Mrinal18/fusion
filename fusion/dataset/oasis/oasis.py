@@ -1,4 +1,5 @@
 import logging
+import nibabel as nib
 import numpy as np
 import os
 import pandas as pd
@@ -44,7 +45,8 @@ class Oasis(ABaseDataset):
         use_separate_augmentation: bool = False,
         only_labeled: bool = False,
         task_id: TaskId = TaskId.PRETRAINING,
-        template: str = './data/MNI152_T1_3mm_brain_mask_dil_cubic192.nii.gz',
+        unlabelled_as_class: bool = False,
+        mask: str = './data/MNI152_T1_3mm_brain_mask_dil_cubic192.nii.gz',
     ):
         """
         Initialization of Class Oasis dataset
@@ -89,9 +91,11 @@ class Oasis(ABaseDataset):
         self._is_only_one_pair_per_subject = is_only_one_pair_per_subject
         self._use_balanced_sampler = use_balanced_sampler
         self._use_separate_augmentation = use_separate_augmentation
+        self._unlabelled_as_class = unlabelled_as_class
         self._only_labeled = only_labeled
         self._task_id = task_id
-        self._template = template
+        self._mask = mask
+        self._mask_image = None
         self._landmarks = {}
         logging.info(
             f"is_only_one_pair_per_subject: {is_only_one_pair_per_subject}\n"
@@ -100,6 +104,16 @@ class Oasis(ABaseDataset):
         )
 
     def load(self, only_data=False):
+        if os.path.exists(self._mask):
+            self._mask_image = nib.load(self._mask)
+            #print (self._mask_image.header)
+            #print (nib.aff2axcodes(self._mask_image.affine))
+            # reorient to RAS+
+            #self._mask_image = nib.as_closest_canonical(self._mask_image)
+            #print (nib.aff2axcodes(self._mask_image.affine))
+            #print (self._mask_image.header)
+        else:
+            assert False
         data = {}
         for set_id in [SetId.TRAIN, SetId.VALID, SetId.INFER]:
             list_of_subjects, labels, df = self._prepare_subject_list(
@@ -180,7 +194,7 @@ class Oasis(ABaseDataset):
         if not only_data:
             list_of_subjects = self._prepare_list_of_torchio_subjects(df, self._sources)
         labels = df["target"].values
-        if set_id == SetId.TRAIN and self._only_labeled:
+        if set_id == SetId.TRAIN:
             self._set_num_classes(labels)
         return (list_of_subjects, labels, df)
 
@@ -216,8 +230,8 @@ class Oasis(ABaseDataset):
         ), "Separate augmentations have not been implemented"
         self.landmarks = {}
         self._train_histogram_standartization()
-        canonical = tio.transforms.ToCanonical()
-        mask = MNIMaskTransform(template=self._template)
+        #canonical = tio.transforms.ToCanonical()
+        mask = MNIMaskTransform(template=self._mask)
         hist_standard = tio.transforms.HistogramStandardization(
             self._landmarks)
         znorm = tio.transforms.ZNormalization(
@@ -233,7 +247,7 @@ class Oasis(ABaseDataset):
         )
         crop = VolumetricRandomCrop(self._input_size)
         flip = tio.transforms.RandomFlip(axes=(0, 1, 2), p=0.5)
-        transforms = [mask, canonical]
+        transforms = [mask]
         transforms.append(hist_standard)
         transforms.append(znorm)
         if self._task_id == TaskId.PRETRAINING:
@@ -274,9 +288,31 @@ class Oasis(ABaseDataset):
                 # print (filename)
                 subject_dict[f"source_{source_id}"] = ScalarImage(filename)
             subject_dict["label"] = df.at[i, "target"]
+            assert df.at[i, "M/F"] in ['M', 'F']
+            subject_dict["gender"] = 0 if df.at[i, "M/F"] == 'M' else 1
+            subject_dict["age"] = df.at[i, "ageAtEntry"]
             subject = Subject(subject_dict)
             list_of_subjects.append(subject)
         return list_of_subjects
 
     def _set_num_classes(self, targets: Tensor):
         self._num_classes = len(np.unique(targets))
+        if self._unlabelled_as_class:
+            targets[targets == -1] = self._num_classes
+
+    @property
+    def mask(self):
+        return self._mask_image
+
+    @mask.setter
+    def mask(self, new_mask: nib.Nifti1Image):
+        self._mask_image = new_mask
+
+    def header(self):
+        return self._mask_image.header
+
+    def affine(self):
+        return self._mask_image.affine
+
+    def orientation(self):
+        return nib.aff2axcodes(self.affine())

@@ -56,8 +56,10 @@ class SaliencyTaskBuilder(LogRegEvaluationTaskBuilder):
 class SaliencyTask(LogRegEvaluationTask):
     def run(self):
         self._mask_mni = ~torch.BoolTensor(
-            nib.load(self._dataset._template).get_fdata())
+            nib.load(self._dataset._mask).get_fdata())
         sources = self._model.keys()
+        header = self._dataset.header()
+        affine = self._dataset.affine()
         for source_id in sources:
             self._reset_seed()
             logdir = self._task_args["logdir"] + f"/saliency_{source_id}/subjects/"
@@ -71,13 +73,19 @@ class SaliencyTask(LogRegEvaluationTask):
                     batch_images = batch[f'source_{source_id}']['data']
                     logging.info("Saving...")
                     for i in range(batch_images.size(0)):
+                        #print (nib.aff2axcodes(self._dataset.affine()))
+                        #print (self._dataset.affine())
+                        #print (batch_affine[i])
+                        #print (self._dataset.header()['sform_code'])
                         self._save_npy_to_nifti(
                             logdir,
                             source_id,
                             batch_images[i],
                             batch_saliency[i],
                             batch_pathes[i],
-                            batch_affine[i],
+                            #batch_affine[i],
+                            affine,
+                            header,
                             index
                         )
                         index += 1
@@ -85,7 +93,7 @@ class SaliencyTask(LogRegEvaluationTask):
     def _save_npy_to_nifti(
         self, logdir, source_id,
         image, saliency, base_nifti_filename,
-        affine, index
+        affine, header, index
     ):
 
         def generate_saliency_filename(
@@ -106,11 +114,12 @@ class SaliencyTask(LogRegEvaluationTask):
             filename = os.path.join(path, filename)
             return filename
 
-        affine = np.eye(4)
+        #affine = np.eye(4)
         image = image.squeeze(0)
         # save image
         image = image.cpu().numpy()
-        img = nib.Nifti1Image(image, affine)
+        #affine = affine.cpu().numpy()
+        img = nib.Nifti1Image(image, affine, header)
         filename = generate_saliency_filename(
             logdir + f'/{index}/images/',
             'image', index
@@ -122,12 +131,14 @@ class SaliencyTask(LogRegEvaluationTask):
         for i in range(s_data.shape[0]):
             t = s_data[i, :, :, :]
             t[self._mask_mni] = 0
-            img = nib.Nifti1Image(t, affine)
+            img = nib.Nifti1Image(t, affine, header)
             filename = generate_saliency_filename(
                 logdir + f'{index}/saliencies/',
                 'saliency',
                 index,
                 modifier=f'_{i}'
             )
+            print (filename)
             nib.save(img, filename)
+            #exit(0)
             logging.debug(f'Saved image {filename}')
