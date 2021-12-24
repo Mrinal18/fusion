@@ -51,7 +51,7 @@ If you have any questions about implementation and training, don't hesitate to e
 ## Development
 
 ### Roadmap:
-Last updated April 4th, 2021
+Last updated December 23th, 2021
 
 Current ToDo list:
 - Documentation
@@ -61,8 +61,6 @@ Current ToDo list:
     - DCGAN
       - VaeEncoder
       - VaeDecoder
-  - dataset
-    - Dataset class for OASIS3
   - model
     - MMVAE
   - criterion
@@ -73,11 +71,7 @@ Current ToDo list:
     - misc
       - mmvae
   - task
-    - logreg evaluation with optuna
-    - saliency
     - out of distribution generalization
-  - configs
-    - hydra configs for all models
 ---
 ### Package Architecture
 
