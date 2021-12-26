@@ -52,6 +52,7 @@ class LogRegEvaluationTaskBuilder(LinearEvaluationTaskBuilder):
         model_args.pop("pretrained_checkpoint")
         pretrained_model = model_provider.get(model_config.name, **model_args)
         # load checkpoint
+        print (pretrained_checkpoint)
         checkpoint = load_checkpoint(pretrained_checkpoint)
         unpack_checkpoint(checkpoint, pretrained_model)
         # create linear evaluators

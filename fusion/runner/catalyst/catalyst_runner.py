@@ -51,10 +51,11 @@ class CatalystRunner(ABaseRunner, dl.Runner):
                 self.scheduler.step(
                     epoch=int(self.epoch + self.batch_id / len(self._loaders['train'])))
             elif isinstance(self.scheduler, (OneCycleLR, CyclicLR)):
+                #if self.epoch > 10:
                 self.scheduler.step()
             else:
-                raise NotImplementedError
-
+                if self.scheduler is not None:
+                    raise NotImplementedError
 
         self.batch_metrics["loss"] = loss.item()
         for key in ["loss"]:

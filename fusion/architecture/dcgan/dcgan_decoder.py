@@ -196,8 +196,9 @@ class DcganDecoder(ABaseArchitecture):
             DcganDecoder with initialized weights
 
         """
-        for layer in self._layers:
+        for layer in self._layers[:-1]:
             layer.init_weights()
+        self._layers[-1].init_weights(nn.init.calculate_gain('tanh'))
 
     def _parse(self):
         if isinstance(self._conv_layer_class, str):

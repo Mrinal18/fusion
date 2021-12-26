@@ -1,5 +1,5 @@
 name: ${model.name}
-project: new_oasis3
+project: dec25_oasis
 dim_in: [1, 1]
 dim_l: 64
 dim_cls: [8]

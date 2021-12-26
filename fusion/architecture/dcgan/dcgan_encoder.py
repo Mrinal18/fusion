@@ -21,6 +21,7 @@ class DcganEncoder(ABaseArchitecture):
         norm_layer_class: TNorm = nn.BatchNorm2d,
         activation_class: TActivation = nn.LeakyReLU,
         weights_initialization_type: str = "xavier_uniform",
+        negative_slope=0.2
     ):
         """
         The DCGAN Encoder class
@@ -51,7 +52,7 @@ class DcganEncoder(ABaseArchitecture):
         self._input_size = input_size
         self._flatten = Flatten()
         self._layers: nn.ModuleList
-
+        self._negative_slope = negative_slope
         self._construct()
         self.init_weights()
 
@@ -70,7 +71,10 @@ class DcganEncoder(ABaseArchitecture):
                     },
                     input_dim=self._input_dim,
                     activation_class=self._activation_class,
-                    activation_args={"negative_slope": 0.2, "inplace": True},
+                    activation_args={
+                        "negative_slope": self._negative_slope,
+                        "inplace": True
+                    },
                 ),
                 BaseConvLayer(
                     self._conv_layer_class,
@@ -86,7 +90,10 @@ class DcganEncoder(ABaseArchitecture):
                     norm_layer_class=self._norm_layer_class,
                     norm_layer_args={"num_features": 2 * self._dim_h},
                     activation_class=self._activation_class,
-                    activation_args={"negative_slope": 0.2, "inplace": True},
+                    activation_args={
+                        "negative_slope": self._negative_slope,
+                        "inplace": True
+                    },
                 ),
                 BaseConvLayer(
                     self._conv_layer_class,
@@ -102,7 +109,10 @@ class DcganEncoder(ABaseArchitecture):
                     norm_layer_class=self._norm_layer_class,
                     norm_layer_args={"num_features": 4 * self._dim_h},
                     activation_class=self._activation_class,
-                    activation_args={"negative_slope": 0.2, "inplace": True},
+                    activation_args={
+                        "negative_slope": self._negative_slope,
+                        "inplace": True
+                    },
                 ),
             ]
         )
@@ -122,7 +132,10 @@ class DcganEncoder(ABaseArchitecture):
                     norm_layer_class=self._norm_layer_class,
                     norm_layer_args={"num_features": 8 * self._dim_h},
                     activation_class=self._activation_class,
-                    activation_args={"negative_slope": 0.2, "inplace": True},
+                    activation_args={
+                        "negative_slope": self._negative_slope,
+                        "inplace": True
+                    },
                 )
             )
             self._layers.append(
@@ -193,4 +206,6 @@ class DcganEncoder(ABaseArchitecture):
 
         """
         for layer in self._layers:
-            layer.init_weights(gain_type="leaky_relu")
+            layer.init_weights(gain=nn.init.calculate_gain(
+                'leaky_relu', self._negative_slope)
+            )
