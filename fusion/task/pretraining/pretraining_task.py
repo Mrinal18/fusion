@@ -116,7 +116,7 @@ class PretrainingTask(ATask):
                 loader_key="valid",
                 metric_key="loss",
                 minimize=True,
-                save_n_best=3,
+                save_n_best=10,
             ),
         ]
         self._runner.train(

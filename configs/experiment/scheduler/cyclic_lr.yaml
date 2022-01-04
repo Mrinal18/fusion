@@ -1,7 +1,7 @@
 name: "CLR"
 args:
-  base_lr:
-  max_lr: 0.01
+  base_lr: 1e-5
+  max_lr: 5e-04
   verbose: False
   step_size_up: 2000
   step_size_down:

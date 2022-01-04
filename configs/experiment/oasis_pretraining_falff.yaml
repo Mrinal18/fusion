@@ -22,5 +22,5 @@ defaults:
   - criterion: cce
   - task: pretraining
   - optimizer: radam
-  - scheduler: one_cycle_lr
+  # - scheduler: one_cycle_lr
   - runner: oasis_runner
