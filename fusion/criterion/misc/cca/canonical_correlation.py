@@ -25,9 +25,9 @@ from typing import Optional, Tuple, Any, Dict
 class CanonicalCorrelation(ABaseLoss):
     def __init__(
         self,
-        eps: float = 1e-3,
-        r1: float = 1e-7,
-        r2: float = 1e-7,
+        eps: float = 1e-9, # 1e-3
+        r1: float = 1e-3, # 1e-7
+        r2: float = 1e-3, # 1e-7
         use_all_singular_values: bool = True,
         num_top_canonical_components: Optional[int] = None,
     ):
@@ -76,11 +76,12 @@ class CanonicalCorrelation(ABaseLoss):
         del target
         total_loss = None
         raw_losses = {}
-        for source_id_one, z_one in preds.z.items():
-            for source_id_two, z_two in preds.z.items():
+        latents = preds.attrs["latents"]
+        for source_id_one, l_one in latents.items():
+            for source_id_two, l_two in latents.items():
                 if source_id_one != source_id_two:
                     name = f"CCA_{source_id_one}_{source_id_two}"
-                    loss = self._linear_cca(z_one, z_two)
+                    loss = self._linear_cca(l_one[1], l_two[1])
                     raw_losses[name] = loss.item()
                     total_loss = total_loss_summation(total_loss, loss)
         return total_loss, raw_losses
@@ -115,8 +116,10 @@ class CanonicalCorrelation(ABaseLoss):
 
         # Calculate the root inverse of covariance matrices by using
         # eigen decomposition
-        [d1, v1] = torch.symeig(sigma_hat11, eigenvectors=True)
-        [d2, v2] = torch.symeig(sigma_hat22, eigenvectors=True)
+        #[d1, v1] = torch.symeig(sigma_hat11, eigenvectors=True)
+        [d1, v1] = torch.linalg.eigh(sigma_hat11, UPLO='U')
+        #[d2, v2] = torch.symeig(sigma_hat22, eigenvectors=True)
+        [d2, v2] = torch.linalg.eigh(sigma_hat22, UPLO='U')
 
         # Additional code to increase numerical stability
         pos_ind1 = torch.gt(d1, self._eps).nonzero()[:, 0]

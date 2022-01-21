@@ -1,5 +1,5 @@
 name: ${model.name}
-project: dec25_oasis
+project: jan31_oasis
 dim_in: [1, 1]
 dim_l: 64
 dim_cls: [8]
@@ -22,5 +22,5 @@ defaults:
   - criterion: volumetric_multi_dim
   - task: pretraining
   - optimizer: radam
-  - scheduler: one_cycle_lr
+  # - scheduler: one_cycle_lr
   - runner: oasis_runner

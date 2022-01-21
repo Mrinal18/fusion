@@ -186,7 +186,7 @@ class Oasis(ABaseDataset):
     def _prepare_subject_list(self, set_id: SetId, only_data=False):
         df = self._load_csv(self._dataset_dir, set_id)
         logging.info(f"Loaded dataset with {df.shape[0]} inputs.")
-        if set_id == SetId.INFER or self._is_only_one_pair_per_subject:
+        if (set_id in [SetId.VALID, SetId.INFER]) or (self._is_only_one_pair_per_subject):
             df = self._drop_duplicate_pairs(df)
         if self._only_labeled:
             df = self._keep_only_labeled(df)

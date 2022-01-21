@@ -1,6 +1,6 @@
 name: default
 seed: 343
-dir: jan4_oasis
+dir: jan31_oasis
 hydra:
     run:
         dir: ./${dir}/${name}/${experiment.dataset.name}/${experiment.fold}/${seed}/${experiment.task.name}/${experiment.logdir}

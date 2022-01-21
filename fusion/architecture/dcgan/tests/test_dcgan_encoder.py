@@ -22,6 +22,7 @@ class TestDcganEncoder(unittest.TestCase):
         # check outputs
         self.assertEqual(len(output), 2)
         z, latents = output
+        print (z.size())
         self.assertEqual(z.size(0), batch_size)
         self.assertEqual(z.size(1), dim_l)
         for i, (d, l) in enumerate(latents.items()):

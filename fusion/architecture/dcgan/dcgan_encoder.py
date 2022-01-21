@@ -54,7 +54,6 @@ class DcganEncoder(ABaseArchitecture):
         self._layers: nn.ModuleList
         self._negative_slope = negative_slope
         self._construct()
-        self.init_weights()
 
     def _construct(self):
         self._layers = nn.ModuleList(
@@ -145,7 +144,7 @@ class DcganEncoder(ABaseArchitecture):
                         "in_channels": 8 * self._dim_h,
                         "out_channels": self._dim_l,
                         "kernel_size": 4,
-                        "stride": 2,
+                        "stride": 1,
                         "padding": 0,
                         "bias": False,
                     },
@@ -160,7 +159,7 @@ class DcganEncoder(ABaseArchitecture):
                         "in_channels": 4 * self._dim_h,
                         "out_channels": self._dim_l,
                         "kernel_size": 4,
-                        "stride": 2,
+                        "stride": 1,
                         "padding": 0,
                         "bias": False,
                     },

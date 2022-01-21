@@ -66,7 +66,7 @@ class BaseConvLayer(ABaseArchitecture):
             self._layer.append(self._dp_layer_class(**dp_layer_args))
         if self._activation_class:
             self._layer.append(self._activation_class(**activation_args))
-        self.init_weights()
+        # self.init_weights()
 
     def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
         """

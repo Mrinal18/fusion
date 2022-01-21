@@ -37,9 +37,9 @@ class Dim(ABaseModel):
             if "input_dim" in architecture_params.keys()
             else 2
         )
+        self._latent_head_params = latent_head_params
         # create convolutional heads
         self._conv_heads = nn.ModuleDict()
-        conv_head_params = None
         for source_id in self._encoder.keys():
             self._conv_heads[source_id] = nn.ModuleDict()
             for conv_latent_size in architecture_params["dim_cls"]:
@@ -51,8 +51,8 @@ class Dim(ABaseModel):
                 self._conv_heads[str(source_id)][str(conv_latent_size)] = conv_head
         # create latent heads
         self._latent_heads = nn.ModuleDict()
-        latent_head_params = None
         for source_id in self._encoder.keys():
+            latent_head_params = copy.deepcopy(dict(**self._latent_head_params))
             latent_head_params = self._parse_latent_head_params(
                 latent_head_params, architecture_params
             )
@@ -122,21 +122,12 @@ class Dim(ABaseModel):
         latent_head_params: Optional[Dict[str, Any]],
         architecture_params: Dict[str, Any],
     ) -> Dict[str, Any]:
-        if latent_head_params is None:
-            # by design choice
-            latent_head_params = copy.deepcopy(dict(**architecture_params))
-            latent_head_params.pop("dim_cls")
-            latent_head_params.pop("input_size")
-            if "input_dim" in latent_head_params:
-                latent_head_params.pop("input_dim")
-            if "weights_initialization_type" in latent_head_params.keys():
-                latent_head_params.pop("weights_initialization_type")
-            if "conv_layer_class" in latent_head_params.keys():
-                latent_head_params.pop("conv_layer_class")
-            if "norm_layer_class" in latent_head_params.keys():
-                latent_head_params.pop("norm_layer_class")
-            latent_head_params["dim_in"] = latent_head_params["dim_l"]
-            latent_head_params["dim_h"] = latent_head_params["dim_l"]
+        if "dim_in" not in latent_head_params.keys():
+            latent_head_params["dim_in"] = architecture_params["dim_l"]
+        if 'dim_h' not in latent_head_params.keys():
+            latent_head_params["dim_h"] = architecture_params["dim_l"]
+        if 'dim_l' not in latent_head_params.keys():
+            latent_head_params["dim_l"] = architecture_params["dim_l"]
         return latent_head_params
 
     def _find_dim_in(self, conv_latent_size, source_id):

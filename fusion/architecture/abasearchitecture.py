@@ -81,6 +81,3 @@ class ABaseArchitecture(abc.ABC, nn.Module):
                 assert self._input_dim == 3
             else:
                 assert False, 'Only Dropout2d and Dropout3d are supported'
-
-
-

@@ -9,8 +9,8 @@ class LatentHead(ABaseArchitecture):
         self,
         dim_in: int,
         dim_l: int,
-        dim_h: int = 0,
-        num_h_layers: int = 0,
+        dim_h: int,
+        num_h_layers: int = 2,
         use_linear: bool = False,
         use_bias: bool = False,
         use_bn: bool = True,
@@ -55,8 +55,6 @@ class LatentHead(ABaseArchitecture):
                 # add final layer
                 head.append(nn.Linear(dim_h, dim_l, bias=use_bias))
         self._head = nn.Sequential(*head)
-
-        self.init_weights()
 
     def forward(self, x: Tensor) -> Tensor:
         """

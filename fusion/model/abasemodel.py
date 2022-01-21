@@ -27,9 +27,11 @@ class ABaseModel(abc.ABC, nn.Module):
         for i, source_id in enumerate(self._sources):
             new_architecture_params = copy.deepcopy(architecture_params)
             new_architecture_params["dim_in"] = architecture_params["dim_in"][i]
-            self._encoder[str(source_id)] = architecture_provider.get(
+            encoder = architecture_provider.get(
                 architecture, **new_architecture_params
             )
+            encoder.init_weights()
+            self._encoder[str(source_id)] = encoder
 
     @abc.abstractmethod
     def _source_forward(self, source_id: int, x: Tensor) -> Any:
