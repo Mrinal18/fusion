@@ -1,4 +1,5 @@
 from fusion.architecture import ABaseArchitecture
+from fusion.architecture.base_block import Flatten
 
 import torch.nn as nn
 from torch import Tensor
@@ -35,7 +36,7 @@ class LatentHead(ABaseArchitecture):
         self._num_h_layers = num_h_layers
         self._use_linear = use_linear
 
-        head = nn.ModuleList([])
+        head = nn.ModuleList([Flatten()])
         if self._use_linear:
             if self._num_h_layers == 0:
                 head.append(nn.Linear(dim_in, dim_l, bias=use_bias))
