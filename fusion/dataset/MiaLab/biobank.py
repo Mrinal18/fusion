@@ -9,7 +9,8 @@ import torchvision
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
 from torchnet.dataset import TensorDataset, ResampleDataset
-
+from nibabel import load as load_nii
+import nibabel as nib
 from fusion.dataset.utils import seed_worker
 from fusion.dataset.abasedataset import ABaseDataset, SetId
 from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
