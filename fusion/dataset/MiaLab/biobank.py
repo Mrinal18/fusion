@@ -15,9 +15,9 @@ from fusion.dataset.abasedataset import ABaseDataset, SetId
 from fusion.dataset.mnist_svhn.transforms import SVHNTransform, MNISTTransform
 
 
-class OasisDataset(ABaseDataset):
+class BioBankDataset(ABaseDataset):
     """
-    This Class is for the Oasis Dataset which has the information on the 
+    This Class is for the BioBank Dataset which has the information on the 
     """
     
     def __init__(self, 
@@ -55,7 +55,7 @@ class OasisDataset(ABaseDataset):
             shuffle: whether to shuffle the data
             **kwargs: keyword arguments to pass to the data loader with respect to the SMIR dataset
         """
-        train_data = OasisDataset(
+        train_data = BioBankDataset(
             root=self.root,
             set_id=self.set_id,
             transform=self.transform,
